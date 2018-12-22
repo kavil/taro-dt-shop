@@ -1,0 +1,133 @@
+@import "./static/css/mixin.scss";
+@import "./static/iconfont/iconfont.scss";
+body,
+page {
+    background: $bg-color-base;
+}
+
+view,
+text {
+    color: $font-primary;
+    font-size: 30px;
+}
+
+.p {
+    color: $font-info;
+    margin-top: 10px;
+    font-size: 24px;
+}
+
+.tac {
+    text-align: center;
+}
+
+.blue {
+    color: #0d98f1;
+}
+
+.blue-bg {
+    background: #0d98f1;
+}
+
+.green {
+    color: #44b549;
+}
+
+.green-bg {
+    background: #44b549;
+}
+
+.purple {
+    color: purple;
+}
+
+.purple-bg {
+    background: purple;
+}
+
+.gray {
+    color: gray;
+}
+
+.gray-bg {
+    background: gray;
+}
+
+.yellow {
+    color: #f8a101;
+}
+
+.yellow-bg {
+    background: #f8a101;
+}
+
+.red {
+    color: red;
+}
+
+.red-bg {
+    background: red;
+}
+
+.go {
+    transform: rotate(180deg);
+    font-size: 36px;
+    color: $font-info;
+    height: 56px;
+    line-height: 56px;
+    display: inline-block;
+}
+
+.down {
+    transform: rotate(-90deg);
+    font-size: 36px;
+    color: $font-info;
+    height: 56px;
+    line-height: 56px;
+    display: inline-block;
+}
+
+.h1 {
+    font-size: 80px;
+}
+
+.h2 {
+    font-size: 60px;
+}
+
+.h3 {
+    font-size: 40px;
+}
+
+.nodata {
+    text-align: center;
+    display: block;
+    padding: 50px;
+    color: #ddd;
+    .label {
+        margin: -40px 0 0 -20px;
+        color: #ddd;
+    }
+    .erduufont {
+        display: block;
+        font-size: 400px;
+        color: #ddd;
+    }
+}
+
+.pad40 {
+    padding: 40px !important;
+}
+
+// taro-ui
+.at-button__text {
+    color: #fff;
+}
+
+.at-divider {
+    margin: 0 auto;
+    width: 90% !important;
+    .at-divider__content {
+        background: $bg-color-base;
+    }
+}

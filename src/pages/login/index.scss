@@ -1,0 +1,20 @@
+@import "../../static/css/mixin";
+.logo-wrap {
+    padding: 90px 40px;
+    @include fj('space-between');
+    text-align: center;
+    align-items: center;
+    .logo {
+        flex: 1;
+        .image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 10px solid #eee;
+        }
+    }
+    .ed-back {
+        margin-left: -5px;
+        color: #ededed;
+    }
+}
