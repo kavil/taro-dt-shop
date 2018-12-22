@@ -1,8 +1,8 @@
 {
 	"miniprogramRoot": "dist/",
-	"projectname": "%E5%9B%A2%E9%95%BF%E5%8A%A9%E6%89%8B",
+	"projectname": "新邻居",
 	"description": "",
-	"appid": "wx022960c7a872290f",
+	"appid": "wx2ec2acfd16a30a4a",
 	"setting": {
 		"urlCheck": false,
 		"es6": false,

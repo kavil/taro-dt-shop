@@ -6,7 +6,6 @@ export default {
     state: {
         token: Taro.getStorageSync('token'),
         userInfo: Taro.getStorageSync('userInfo'),
-        curCommunity: Taro.getStorageSync('curCommunity'),
         launchInfo: JSON.parse(Taro.getStorageSync('launchInfo') || '{}'),
         manage: 0
     },

@@ -32,21 +32,11 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
-      'pages/apply/index',
-      'pages/pickup/index',
-      'pages/pickup/list',
-      'pages/community/index',
-      'pages/login/index',
-      'pages/order/index',
-      'pages/account/index',
-      'pages/account/withdraw',
-      'pages/account/list',
-      'pages/account/detail',
     ],
     window: {
       backgroundTextStyle: 'dark',
       navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: '团长助手',
+      navigationBarTitleText: '新邻居',
       navigationBarTextStyle: 'black',
       enablePullDownRefresh: true,
       onReachBottomDistance: 10,
@@ -64,10 +54,6 @@ class App extends Component {
 
   componentDidCatchError() { }
 
-  componentWillMount(e) {
-    console.log(e, 'onLaunch');
-    if (e) Taro.setStorageSync('launchInfo', JSON.stringify(e));
-  }
 
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数
