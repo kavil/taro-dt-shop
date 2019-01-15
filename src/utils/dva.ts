@@ -1,7 +1,8 @@
 import Taro from '@tarojs/taro';
 import { create } from 'dva-core';
-import { createLogger } from 'redux-logger';
+// import { createLogger } from 'redux-logger';
 import createLoading from 'dva-loading';
+import sadImg from '../static/images/sad.png';
 
 let app;
 let store;
@@ -10,6 +11,11 @@ let dispatch;
 function createApp(opt) {
   // redux日志
   // opt.onAction = [createLogger()];
+  opt.onError = err => {
+    console.error(err);
+    Taro.hideLoading();
+    Taro.showToast({ title: '服务器错误', image: sadImg });
+  };
   app = create(opt);
   app.use(createLoading({}));
 
@@ -35,5 +41,5 @@ export default {
   createApp,
   getDispatch() {
     return app.dispatch;
-  }
-}
+  },
+};

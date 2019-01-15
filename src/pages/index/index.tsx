@@ -1,11 +1,12 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Text, Image } from '@tarojs/components';
-import { AtCurtain } from 'taro-ui';
+import { View, Image, Text } from '@tarojs/components';
+import { AtSearchBar, AtTabs, AtTabsPane } from 'taro-ui';
 import './index.scss';
 import sadImg from '../../static/images/sad.png';
-
+import communityImg from '../../static/images/community.png';
+import Login from '../../components/login';
 // #region 书写注意
 //
 // 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
@@ -15,60 +16,72 @@ import sadImg from '../../static/images/sad.png';
 // ref: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20796
 //
 // #endregion
-interface DispatchOption {
-  type?: string,
-  payload?: Object,
+
+type PageState = {};
+interface PageDva {
+  dispatch: Function;
+  cateTopList: any[];
+  List: any;
 }
 
-type PageStateProps = {
-  token?: string,
-  manage: number,
+interface PageOwnProps {
+  //父组件要传
 }
 
-type PageDispatchProps = {
-  dispatch: (option: DispatchOption) => any,
+interface PageStateProps {
+  // 自己要用的
+  userInfoLoading: boolean;
+  loginLoading: boolean;
 }
 
-type PageOwnProps = {
-}
+type IProps = PageStateProps & PageDva & PageOwnProps & PageState;
 
-type PageState = {}
-
-type IProps = PageStateProps & PageDispatchProps & PageOwnProps
-
-@connect(({ common }) => ({
+@connect(({ common, goods }) => ({
   ...common,
+  ...goods,
 }))
 class Index extends Component<IProps, {}> {
-
   /**
- * 指定config的类型声明为: Taro.Config
- *
- * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
- * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
- * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
- */
+   * 指定config的类型声明为: Taro.Config
+   *
+   * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
+   * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
+   * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
+   */
   // config: Config = {
   //   navigationBarTitleText: '新邻居',
-  //   // navigationBarBackgroundColor: '#fff',
+  //   navigationBarBackgroundColor: '#fff',
   //   navigationBarTextStyle: 'white',
   //   backgroundTextStyle: 'dark',
   // }
 
-  componentWillReceiveProps(nextProps) {
-    // console.log(this.props, nextProps)
-  }
-
-  componentDidMount() {
+  async componentDidMount() {
     console.log(this.$router.params, 'this.$router.params- -- componentDidMount');
+    await this.props.dispatch({
+      type: 'goods/getCateTop',
+    });
+
+    await this.props.dispatch({
+      type: 'goods/List',
+      payload: {
+        listName: 'cate0',
+        parent_id: this.props.cateTopList[0].id,
+      },
+    });
   }
 
-  async componentWillMount() {
-
-  }
-
-  onPullDownRefresh() {
-
+  async onPullDownRefresh() {
+    const value = this.state.current;
+    await this.props.dispatch({
+      type: 'goods/List',
+      payload: {
+        listName: `cate${value}`,
+        parent_id: this.props.cateTopList[value].id,
+        refresh: true,
+        loadOver: false,
+      },
+    });
+    Taro.stopPullDownRefresh();
   }
 
   nextPage(url) {
@@ -76,29 +89,85 @@ class Index extends Component<IProps, {}> {
       Taro.showToast({
         title: '暂未开放',
         image: sadImg,
-      })
+      });
       return;
     }
     Taro.navigateTo({
-      url: url
-    })
+      url: url,
+    });
   }
 
-  lookBig(img) {
-    Taro.previewImage({
-      current: img, // 当前显示图片的http链接
-      urls: [img] // 需要预览的图片http链接列表
-    })
+  openLoginModal() {
+    Taro.login();
+    this.setState({
+      openLogin: true,
+    });
   }
+
+  loginSuccess() {
+    // 更新状态
+  }
+  handNull = () => {};
+  async handleClick(value) {
+    await this.props.dispatch({
+      type: 'goods/List',
+      payload: {
+        listName: `cate${value}`,
+        parent_id: this.props.cateTopList[value].id,
+      },
+    });
+    this.setState({
+      current: value,
+    });
+    console.log(this.props.List);
+  }
+  state = {
+    openLogin: false,
+    current: 0,
+  };
 
   render() {
-    const { } = this.props;
+    const { cateTopList, List } = this.props;
+    const { openLogin, current } = this.state;
+    const tabList = cateTopList.map(ele => {
+      return { title: ele.name };
+    });
 
     return (
-      <View className='index'>
-index
+      <View className="index wrap">
+        <Login show={openLogin} onChange={this.loginSuccess} />
+        <View className="index-top">
+          <View className="community-wrap">
+            <Image src={communityImg} />
+            景江花园
+            <Text className="erduufont ed-back go" />
+          </View>
+        </View>
+        <View className="search-wrap">
+          <AtSearchBar value="" onChange={this.handNull} />
+        </View>
+
+        <AtTabs
+          className="tabs"
+          current={current}
+          swipeable={false}
+          scroll={true}
+          tabList={tabList}
+          onClick={this.handleClick}
+        >
+          {tabList.map((tab, i) => (
+            <AtTabsPane key={i} current={this.state.current} index={i}>
+              {List[`cate${i}`] ? List[`cate${i}`].list.map(ele => (
+                <View key={ele.id} style={{ display: current === i ? 'block' : 'none' }} className="nodata">
+                  <Text className="erduufont ed-zanwushuju" />
+                  <View className="label">{ele.goods_name}</View>
+                </View>
+              )):null}
+            </AtTabsPane>
+          ))}
+        </AtTabs>
       </View>
-    )
+    );
   }
 }
 
@@ -109,4 +178,4 @@ index
 //
 // #endregion
 
-export default Index as ComponentClass<PageOwnProps, PageState>
+export default Index as ComponentClass<PageOwnProps, PageState>;

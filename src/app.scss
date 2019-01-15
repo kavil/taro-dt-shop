@@ -1,14 +1,13 @@
 @import "./static/css/mixin.scss";
 @import "./static/iconfont/iconfont.scss";
-body,
-page {
-    background: $bg-color-base;
-}
-
 view,
 text {
     color: $font-primary;
     font-size: 30px;
+}
+
+.wrap {
+    padding: 0 20px 20px;
 }
 
 .p {
@@ -73,8 +72,6 @@ text {
     transform: rotate(180deg);
     font-size: 36px;
     color: $font-info;
-    height: 56px;
-    line-height: 56px;
     display: inline-block;
 }
 
@@ -120,14 +117,37 @@ text {
 }
 
 // taro-ui
-.at-button__text {
-    color: #fff;
-}
-
-.at-divider {
-    margin: 0 auto;
-    width: 90% !important;
-    .at-divider__content {
-        background: $bg-color-base;
+.wrap {
+    .at-button__text {
+        color: #fff;
+    }
+    .at-divider {
+        margin: 0 auto;
+        width: 90% !important;
+        .at-divider__content {
+            background: $bg-color-base;
+        }
+    }
+    .at-search-bar:after {
+        border-bottom-width: 0;
+    }
+    .at-tabs__item {
+        padding: 10px 0 5px;
+        margin: 0 25px 0px;
+        font-size: 30px;
+        color: $font-primary;
+        &:after {
+            height: 2PX;
+        }
+    }
+    .at-tabs__item--active {
+        color: $font-active;
+        font-weight: 500;
+        font-size: 36px;
+    }
+    .at-tabs__underline {
+        display: none;
     }
 }
+
+@import "../node_modules/taro-ui/dist/style/index.scss";

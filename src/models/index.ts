@@ -1,9 +1,7 @@
-import orderModel from './orderModel';
-import communityModel from './communityModel';
 import common from './common';
+import goods from './goods';
 
 export default [
-  orderModel,
-  communityModel,
   common,
+  goods
 ]

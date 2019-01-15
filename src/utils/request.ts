@@ -20,7 +20,7 @@ export default (options = { method: 'GET', data: {}, url: '' }) => {
       ...options.data
     },
     header: {
-      'X-Nideshop-Token': Taro.getStorageSync('token'),
+      'x-token': Taro.getStorageSync('token'),
       'Content-Type': 'application/json',
     },
     method: options.method.toUpperCase(),

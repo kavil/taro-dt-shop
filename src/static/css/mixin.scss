@@ -1,8 +1,13 @@
 /* colors
 -------------------------- */
 
-$color-primary: #6190E8 !default;
-$color-deep: #5c89e4 !default;
+$color-brand: #f1836f;
+$color-brand-light: #f39b8b;
+$color-brand-dark: #f5735b;
+$color-info: #f39b8b;
+//
+$color-primary: #f1836f !default;
+$color-deep: #f5735b !default;
 $border: #f1f1f1 !default;
 $font-primary: #333 !default;
 $font-default: #666 !default;
@@ -11,7 +16,7 @@ $font-info: #aaa !default;
 /* button-colors
 -------------------------- */
 
-$btn-active: #f59c1b !default;
+$btn-active: #f5735b !default;
 $btn-disabled: #CCC !default;
 $btn-disabled-else: mix(#fff, $btn-active, 70%) !default;
 /* background-colors

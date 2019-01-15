@@ -1,135 +1,45 @@
 @import "../../static/css/mixin";
 .index {
-    background: $color-primary;
-    overflow: hidden;
+    padding-top: 198px;
 }
 
-.top-wrap {
+.community-wrap {
+    font-size: 36px;
+    font-weight: 400px;
+    @include fj('start');
+    align-items: center;
+    image {
+        margin: 0 10px 0 0;
+        @include wh(40px, 40px);
+    }
+    .ed-back {
+        font-size: 90%;
+        margin: 0 10px;
+    }
+}
+
+@mixin fixTop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 1;
     background: #fff;
-    margin: 30px;
-    border-radius: 10px;
-    .top-head {
-        padding: 20px;
-        color: $font-default;
-        background: $bg-color-base;
-        border-radius: 10px;
-        font-size: 32px;
-        @include fj('space-between');
-        .erduufont {
-            font-size: 32px;
-            color: $font-info;
-        }
-        .left {
-            flex: 1;
-        }
-        .right {
-            color: #aaa;
-            font-size: 26px;
-        }
-    }
-    .top-info {
-        position: relative;
-        padding: 50px 0 50px 150px;
-        font-size: 36px;
-        .ava{
-            @include ct;
-            @include wh(100px, 100px);
-            border-radius: 50%;
-            left: 30px;
-        }
-        .ed-me {
-            @include ct;
-            @include wh(100px, 100px);
-            border-radius: 50%;
-            background: $bg-color-base;
-            left: 30px;
-            font-size: 60px;
-            color: $bg-color-light;
-            text-align: center;
-            line-height: 100px;
-        }
-        .ed-ewm {
-            @include ct;
-            right: 20px;
-            font-size: 60px;
-            color: $bg-color-light;
-        }
-    }
 }
 
-.operate-wrap {
-    @include fj('center');
-    padding: 30px;
-    .li {
-        flex: 1;
-        text-align: center;
-        font-size: 24px;
-        color: #fff;
-        &.disabled {
-            color: #ddd;
-            .erduufont {
-                color: #ddd;
-            }
-        }
-        .erduufont {
-            color: #fff;
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-    }
+.index-top {
+    @include fixTop();
+    padding: 0 20px;
 }
 
-.account-wrap {
-    background: #fff;
-    border-radius: 10px 10px 0 0;
-    padding: 40px;
-    .title {
-        @include fj('space-between');
-        .h1 {
-            font-size: 40px;
-            flex: 1;
-        }
-    }
-    .money-num {
-        text-align: center;
-        color: $btn-active;
-        font-size: 80px;
-        margin-top: 20px;
-        .small {
-            font-size: 60%;
-            color: $btn-active;
-        }
-    }
-    .money-ul {
-        @include fj('space-between');
-        flex-wrap: wrap;
-        margin: 40px 0;
-        .li {
-            flex: 50%;
-            margin-top: 30px;
-            position: relative;
-        }
-        .block {
-            height: 36px;
-            width: 8px;
-            border-radius: 5px;
-            position: absolute;
-            top: 6px;
-            left: -10px;
-        }
-        .money {
-            font-size: 36px;
-            text-indent: 10px;
-        }
-        .p {
-            margin: 0;
-            font-size: 22px;
-        }
-    }
+.search-wrap {
+    @include fixTop();
+    padding-left: 10px;
+    top: 50px;
 }
 
-.ewm{
-    height: 800px;
-    width: 600px;
+.at-tabs .at-tabs__header{
+    @include fixTop();
+    top: 134px;
 }

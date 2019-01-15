@@ -18,24 +18,23 @@ import { View } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
 
-interface DispatchOption {
-  type?: string,
-  payload?: Object,
-}
-type PageStateProps = {
-}
-type PageDispatchProps = {
-  dispatch: (option: DispatchOption) => any,
-}
-type PageOwnProps = {
-}
 // type PageState = {}
-type IProps = PageStateProps & PageDispatchProps & PageOwnProps
+interface PageDvaProps = {
+  dispatch: Function,
+}
 
-@connect(({${dirName}}) => ({
+interface PageOwnProps = {
+  //父组件要传
+}
+interface PageStateProps = {
+  // 自己要用的
+}
+type IProps = PageStateProps & PageDvaProps & PageOwnProps
+
+@connect(({${dirName}, loading}) => ({
   ...${dirName},
 }))
-export default class ${titleCase(dirName)} extends Component<IProps, {}> {
+class ${titleCase(dirName)} extends Component<IProps, {}> {
   config = {
     navigationBarTitleText: '${dirName}',
   };
@@ -53,6 +52,7 @@ export default class ${titleCase(dirName)} extends Component<IProps, {}> {
     )
   }
 }
+export default  ${titleCase(dirName)} as ComponentClass<PageOwnProps, PageState>;
 `;
 
 // scss文件模版

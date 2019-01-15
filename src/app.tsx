@@ -1,12 +1,11 @@
 import '@tarojs/async-await';
 import Taro, { Component, Config } from '@tarojs/taro';
-import Index from './pages/index'
+import Index from './pages/index';
 import dva from './utils/dva';
 import models from './models';
-import { Provider } from '@tarojs/redux'
+import { Provider } from '@tarojs/redux';
 
-
-import './app.scss'
+import './app.scss';
 
 // 如果需要在 h5 环境中开启 React Devtools
 // 取消以下注释：
@@ -21,7 +20,6 @@ const dvaApp = dva.createApp({
 const store = dvaApp.getStore();
 
 class App extends Component {
-
   /**
    * 指定config的类型声明为: Taro.Config
    *
@@ -30,9 +28,7 @@ class App extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    pages: [
-      'pages/index/index',
-    ],
+    pages: ['pages/index/index'],
     window: {
       backgroundTextStyle: 'dark',
       navigationBarBackgroundColor: '#fff',
@@ -41,19 +37,50 @@ class App extends Component {
       enablePullDownRefresh: true,
       onReachBottomDistance: 10,
       backgroundColor: '#f1f1f1',
-    }
-  }
+    },
+    tabBar: {
+      backgroundColor: '#fafafa',
+      borderStyle: 'white',
+      selectedColor: '#1a1a1a',
+      color: '#666',
+      list: [
+        {
+          pagePath: 'pages/index/index',
+          iconPath: 'static/images/home.png',
+          selectedIconPath: 'static/images/home-a.png',
+          text: '首页',
+        },
+        {
+          pagePath: 'pages/index/index',
+          iconPath: 'static/images/circle.png',
+          selectedIconPath: 'static/images/circle-a.png',
+          text: '邻居圈',
+        },
+        {
+          pagePath: 'pages/index/index',
+          iconPath: 'static/images/cart.png',
+          selectedIconPath: 'static/images/cart-a.png',
+          text: '购物车',
+        },
+        {
+          pagePath: 'pages/index/index',
+          iconPath: 'static/images/me.png',
+          selectedIconPath: 'static/images/me-a.png',
+          text: '我的',
+        },
+      ],
+    },
+  };
 
-  componentDidMount() { }
+  componentDidMount() {}
 
-  componentDidShow() { }
+  componentDidShow() {}
 
-  componentDidHide() { }
+  componentDidHide() {}
 
-  componentCatchError() { }
+  componentCatchError() {}
 
-  componentDidCatchError() { }
-
+  componentDidCatchError() {}
 
   // 在 App 类中的 render() 函数没有实际作用
   // 请勿修改此函数
@@ -62,8 +89,8 @@ class App extends Component {
       <Provider store={store}>
         <Index />
       </Provider>
-    )
+    );
   }
 }
 
-Taro.render(<App />, document.getElementById('app'))
+Taro.render(<App />, document.getElementById('app'));
