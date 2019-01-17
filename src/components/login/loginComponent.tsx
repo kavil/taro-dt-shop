@@ -3,7 +3,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
 import { View, Text, Image, Button } from '@tarojs/components';
 import { AtModal, AtModalHeader, AtModalContent, AtModalAction } from 'taro-ui';
-import './index.scss';
+import './loginComponent.scss';
 import wxImg from '../../static/images/wx.png';
 import nbImg from '../../static/images/nb.png';
 
@@ -31,6 +31,13 @@ type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
   loginLoading: loading.effects['common/login'],
 }))
 class Login extends Component<IProps, {}> {
+  static defaultProps = {
+    show: false,
+    onChange: null,
+    userInfoLoading: false,
+    loginLoading: false,
+  };
+
   componentWillReceiveProps(props) {
     this.setState({
       openLogin: props.show,

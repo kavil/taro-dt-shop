@@ -1,0 +1,87 @@
+@import "../../app.scss";
+
+.goods-li {
+    @include fj();
+    padding: 30px 0;
+    border-bottom: 1PX solid $border;
+    .img-wrap {
+        @include wh(240px, 240px);
+        .img {
+            @include wh(240px, 240px);
+        }
+    }
+    .right-wrap {
+        padding: 5px 0 0 25px;
+        flex: 1;
+    }
+    .title {
+        @include ddd();
+        width: 440px;
+        font-weight: 500;
+    }
+    .desc {
+        @include ddd();
+        width: 440px;
+        color: $font-default;
+        font-size: 26px;
+    }
+    .sale-wrap {
+        border: $color-dan 1PX solid;
+        border-radius: 28px;
+        text-align: center;
+        line-height: 28px;
+        height: 28px;
+        color: $color-brand-light;
+        position: relative;
+        width: 216px;
+        margin: 5px 0;
+        font-size: 22px;
+        transform: scale(.9);
+        margin-left: -10px;
+        overflow: hidden;
+        .sale-slide {
+            position: absolute;
+            background: #fdf8f7;
+            height: 34px;
+            z-index: -1;
+        }
+    }
+    .shopping-wrap {
+        @include fj();
+        align-items: center;
+        .price {
+            @include fj('center');
+            flex-direction: column;
+        }
+        .counter {
+            text-decoration: line-through;
+            font-size: 26px;
+            color: $font-info;
+        }
+        .retail {
+            color: $color-brand-light;
+            font-size: 24px;
+        }
+        .vip {
+            color: $color-brand;
+            font-size: 40px;
+            font-weight: 600;
+            @include fj(flex-start);
+            align-items: center;
+            line-height: 1;
+            .label {
+                font-size: 22px;
+                margin-left: 10px;
+                border-radius: 10px;
+                border: 1PX solid $color-dan;
+                color: $color-brand-light;
+                line-height: 1.1;
+                padding: 0 5px;
+            }
+        }
+        .at-button--small {
+            height: 56px;
+            line-height: 54px;
+        }
+    }
+}

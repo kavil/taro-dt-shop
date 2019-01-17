@@ -19,8 +19,9 @@ export default {
   },
 
   effects: {
-    *getCateTop(_, { call, put }) {
-      const res = yield call(Api.getCateTop);
+    *getCateTop(_, { call, put, select }) {
+      const { cityId } = yield select(state => state.common);
+      const res = yield call(Api.getCateTop, { cityId });
       if (res.errno !== 0) return;
       yield put({
         type: 'save',
@@ -32,7 +33,8 @@ export default {
     *List({ payload }, { call, put, select }) {
       let { List } = yield select(state => state.goods);
       if (!List[payload.listName]) {
-        List[payload.listName] = { // 初始化
+        List[payload.listName] = {
+          // 初始化
           listName: payload.listName,
           list: [],
           page: 1,
@@ -45,7 +47,7 @@ export default {
       const { cityId } = yield select(state => state.common);
       let { list, loadOver, refresh, page, size, parent_id, goods_name } = List[payload.listName];
       if (loadOver) return;
-      if(refresh) page = 1;
+      if (refresh) page = 1;
       const res = yield call(Api.getGoodsList, { cityId, page, size, parent_id, goods_name });
       if (res.errno !== 0) return;
       list = refresh ? res.data.data : list.concat(res.data.data);

@@ -1,12 +1,13 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Image, Text } from '@tarojs/components';
-import { AtSearchBar, AtTabs, AtTabsPane } from 'taro-ui';
-import './index.scss';
+import { View, Image, Text, Button } from '@tarojs/components';
+import { AtSearchBar, AtTabs, AtTabsPane, AtButton, AtDivider, AtToast } from 'taro-ui';
 import sadImg from '../../static/images/sad.png';
 import communityImg from '../../static/images/community.png';
-import Login from '../../components/login';
+import Login from '../../components/login/loginComponent';
+import Goods from '../../components/goods/goodsComponent';
+import './index.scss';
 // #region 书写注意
 //
 // 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
@@ -54,6 +55,13 @@ class Index extends Component<IProps, {}> {
   //   navigationBarTextStyle: 'white',
   //   backgroundTextStyle: 'dark',
   // }
+
+  static defaultProps = {
+    cateTopList: [],
+    List: [],
+    userInfoLoading: false,
+    loginLoading: false,
+  };
 
   async componentDidMount() {
     console.log(this.$router.params, 'this.$router.params- -- componentDidMount');
@@ -121,14 +129,20 @@ class Index extends Component<IProps, {}> {
     });
     console.log(this.props.List);
   }
+
+  addCartOk = () => {
+    this.setState({ addCartTip: true });
+  };
+
   state = {
     openLogin: false,
     current: 0,
+    addCartTip: false,
   };
 
   render() {
     const { cateTopList, List } = this.props;
-    const { openLogin, current } = this.state;
+    const { openLogin, current, addCartTip } = this.state;
     const tabList = cateTopList.map(ele => {
       return { title: ele.name };
     });
@@ -136,6 +150,7 @@ class Index extends Component<IProps, {}> {
     return (
       <View className="index wrap">
         <Login show={openLogin} onChange={this.loginSuccess} />
+        <AtToast isOpened={addCartTip} text="已添加到购物车" duration={1500} />
         <View className="index-top">
           <View className="community-wrap">
             <Image src={communityImg} />
@@ -157,12 +172,23 @@ class Index extends Component<IProps, {}> {
         >
           {tabList.map((tab, i) => (
             <AtTabsPane key={i} current={this.state.current} index={i}>
-              {List[`cate${i}`] ? List[`cate${i}`].list.map(ele => (
-                <View key={ele.id} style={{ display: current === i ? 'block' : 'none' }} className="nodata">
-                  <Text className="erduufont ed-zanwushuju" />
-                  <View className="label">{ele.goods_name}</View>
+              {List[`cate${i}`]
+                ? List[`cate${i}`].list.map(ele => (
+                    <View key={ele.id} style={{ display: current === i ? 'flex' : 'none' }}>
+                      {/* <Goods goods={ele} onChange={this.addCartOk} /> */}
+                    </View>
+                  ))
+                : null}
+
+              {List[`cate${i}`] && List[`cate${i}`].list.length && List[`cate${i}`].loadOver ? (
+                <AtDivider content="没有更多了" fontSize="26" fontColor="#ccc" lineColor="#eee" />
+              ) : null}
+              {!(List[`cate${i}`] && List[`cate${i}`].list.length) ? (
+                <View className="nodata">
+                  <Text className="erduufont ed-zanwushangpin" />
+                  <View className="label">暂无商品</View>
                 </View>
-              )):null}
+              ) : null}
             </AtTabsPane>
           ))}
         </AtTabs>

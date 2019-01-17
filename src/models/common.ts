@@ -8,7 +8,7 @@ export default {
     userInfo: Taro.getStorageSync('userInfo'),
     launchInfo: JSON.parse(Taro.getStorageSync('launchInfo') || '{}'),
     wxLoginCode: null,
-    cityId: 163,
+    cityId: 1720, // 渝水区
   },
 
   effects: {

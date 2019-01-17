@@ -123,10 +123,6 @@ text {
     }
     .at-divider {
         margin: 0 auto;
-        width: 90% !important;
-        .at-divider__content {
-            background: $bg-color-base;
-        }
     }
     .at-search-bar:after {
         border-bottom-width: 0;
@@ -147,6 +143,9 @@ text {
     }
     .at-tabs__underline {
         display: none;
+    }
+    .toast-body-content__info text{
+        color: #fff;
     }
 }
 
