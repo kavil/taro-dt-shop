@@ -77,8 +77,12 @@ class GoodsItem extends Component<IProps, {}> {
           <Image className="img" src={goods.primary_pic_url + '@!480X480'} />
         </View>
         <View className="right-wrap">
-          <View className="title" onClick={this.nextPage}>{goods.goods_name}</View>
-          <View className="desc" onClick={this.nextPage}>{goods.goods_brief}</View>
+          <View className="title" onClick={this.nextPage}>
+            {goods.goods_name}
+          </View>
+          <View className="desc" onClick={this.nextPage}>
+            {goods.goods_brief}
+          </View>
           <View className="sale-wrap">
             <View
               className="sale-slide"
@@ -108,7 +112,7 @@ class GoodsItem extends Component<IProps, {}> {
                   onChange={this.changeCartNumber}
                 />
               ) : type === 'mini' ? (
-                <Image className="cartImg" src={cartImg} />
+                <Image className="cartImg" src={cartImg} onClick={this.addCart.bind(this, goods)} />
               ) : (
                 <AtButton
                   type="primary"

@@ -31,7 +31,13 @@ type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
   loginLoading: loading.effects['common/login'],
 }))
 class Login extends Component<IProps, {}> {
-
+  componentDidMount() {
+    Taro.eventCenter.on('login', status => {
+      this.setState({
+        openLogin: status,
+      });
+    });
+  }
   componentWillReceiveProps(props) {
     this.setState({
       openLogin: props.show,

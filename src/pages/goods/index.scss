@@ -213,6 +213,7 @@
         @include fj();
         .zhuye-wrap,
         .cart-wrap {
+            position: relative;
             text-align: center;
             line-height: 100px;
             width: 100px;
@@ -265,7 +266,20 @@
     left: 50%;
     transform: translateX(-50%);
 }
-
+.toast-body-content__info text {
+    color: #fff;
+}
+.badge{
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    padding: 3px 8px;
+    font-size: 20px;
+    color: #fff;
+    background: $color-deep;
+    border-radius: .29867rem .29867rem .29867rem 0;
+    box-shadow: 0 0.08533rem 0.17067rem 0 rgba(233,59,61,.2);
+}
 // datail
 .detail-wrap {
     width: 100%;

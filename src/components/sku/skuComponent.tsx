@@ -90,7 +90,7 @@ class Sku extends Component<IProps, {}> {
     });
   };
   ok = () => {
-    this.props.onChange({ skuId: this.state.selectedSkuId, goodsId: this.props.goods.id });
+    this.props.onChange({ productId: this.state.selectedSkuId, goodsId: this.props.goods.id });
     this.onClose();
   };
 
@@ -176,7 +176,7 @@ class Sku extends Component<IProps, {}> {
           ))}
           <View className="ok">
             <AtButton type="primary" onClick={this.ok}>
-              确定选择
+              <Text className="white">确定选择</Text>
             </AtButton>
           </View>
         </View>

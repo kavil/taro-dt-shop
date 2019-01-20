@@ -129,14 +129,14 @@ class Index extends Component<IProps, {}> {
       // 调出 选择规格组件
       this.setState({ curGoods: goods, openSku: true });
     } else {
-      await this.props.dispatch({
-        type: 'cart/add',
+      const res = await this.props.dispatch({
+        type: 'cart/Add',
         payload: {
           productId: goods.sku[0].id,
           goodsId: goods.id,
         },
       });
-      this.setState({ addCartTip: true });
+      if (res) this.setState({ addCartTip: true });
     }
   };
   handleCloseSku = () => {
@@ -145,11 +145,13 @@ class Index extends Component<IProps, {}> {
   handleChangeSku = async payload => {
     console.log('handleSkuOk', payload);
     // 加入购物车
-    await this.props.dispatch({
-      type: 'cart/add',
+    const res = await this.props.dispatch({
+      type: 'cart/Add',
       payload,
     });
-    this.setState({ addCartTip: true });
+    if (res) {
+      this.setState({ addCartTip: true });
+    }
   };
 
   state = {

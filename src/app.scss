@@ -1,5 +1,6 @@
 @import "./static/css/mixin.scss";
 @import "./static/iconfont/iconfont.scss";
+@import "~taro-ui/dist/style/components/icon.scss";
 @import "~taro-ui/dist/style/components/button.scss";
 @import "~taro-ui/dist/style/components/search-bar.scss";
 @import "~taro-ui/dist/style/components/tabs.scss";
@@ -12,6 +13,9 @@
 @import "~taro-ui/dist/style/components/steps.scss";
 @import "~taro-ui/dist/style/components/toast.scss";
 @import "~taro-ui/dist/style/components/float-layout.scss";
+@import "~taro-ui/dist/style/components/badge.scss";
+@import "~taro-ui/dist/style/components/checkbox.scss";
+@import "~taro-ui/dist/style/components/input-number.scss";
 view,
 text {
     color: $font-primary;
@@ -156,16 +160,17 @@ text {
     .at-tabs__underline {
         display: none;
     }
-    .toast-body-content__info text{
+    .toast-body-content__info text {
         color: #fff;
     }
-    .at-countdown__item .at-countdown__separator{
+    .at-countdown__item .at-countdown__separator {
         padding: 0 3px !important;
     }
-    .center{
+    .center {
         position: absolute;
         top: 40%;
         left: 50;
         transform: translateX(-50%);
     }
+
 }

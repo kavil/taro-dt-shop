@@ -1,19 +1,11 @@
 import Taro, { Component } from '@tarojs/taro';
 import { ComponentClass } from 'react';
-import {
-  View,
-  Swiper,
-  Image,
-  SwiperItem,
-  Text,
-  RichText,
-  ScrollView,
-  Button,
-} from '@tarojs/components';
+import { View, Swiper, Image, SwiperItem, Text, RichText, ScrollView } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
-import { AtActivityIndicator, AtSteps, AtCountdown, AtButton } from 'taro-ui';
+import { AtActivityIndicator, AtSteps, AtCountdown, AtButton, AtToast, AtBadge } from 'taro-ui';
 import GoodsItem from '../../components/goods/goodsComponent';
+import Sku from '../../components/sku/skuComponent';
 const qulity1 = 'https://img.kavil.com.cn/3991547959471_.pic.jpg';
 const qulity2 = 'https://img.kavil.com.cn/4011547959487_.pic.jpg';
 
@@ -27,12 +19,14 @@ interface PageOwnProps {
 }
 interface PageStateProps {
   Detail: any;
+  cartTotal: any;
   // 自己要用的
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
-@connect(({ goods, loading }) => ({
+@connect(({ goods, cart }) => ({
   ...goods,
+  ...cart,
 }))
 class Goods extends Component<IProps, {}> {
   async componentDidMount() {
@@ -44,6 +38,9 @@ class Goods extends Component<IProps, {}> {
       payload: {
         id: this.$router.params.id,
       },
+    });
+    await this.props.dispatch({
+      type: 'cart/Index',
     });
   }
   componentWillUnmount() {
@@ -81,20 +78,55 @@ class Goods extends Component<IProps, {}> {
   clickDetail = a => {
     console.log(a);
   };
-  addCartOk = a => {
-    console.log(a);
+  addCartOk = async goods => {
+    if (goods.sku.length > 1) {
+      // 调出 选择规格组件
+      this.setState({ curGoods: goods, openSku: true });
+    } else {
+      const res = await this.props.dispatch({
+        type: 'cart/Add',
+        payload: {
+          productId: goods.sku[0].id,
+          goodsId: goods.id,
+        },
+      });
+      if (res) this.setState({ addCartTip: true });
+    }
   };
-  lookBig = img => {
-    console.log(img);
+  handleCloseSku = () => {
+    this.setState({ openSku: false });
+  };
+  handleChangeSku = async payload => {
+    console.log('handleSkuOk', payload);
+    // 加入购物车
+    const res = await this.props.dispatch({
+      type: 'cart/Add',
+      payload,
+    });
+    if (res) {
+      this.setState({ addCartTip: true });
+    }
+  };
 
+  lookBig = img => {
     Taro.previewImage({
       current: img + '@!q90',
       urls: [img + '@!q90'],
     });
   };
+  clearToast = () => {
+    this.setState({ addCartTip: false });
+  };
+
+  state = {
+    addCartTip: false,
+    openSku: false,
+    curGoods: {},
+  };
 
   render() {
-    const { Detail } = this.props;
+    const { addCartTip, openSku, curGoods } = this.state;
+    const { Detail, cartTotal } = this.props;
     if (!Detail.info)
       return <AtActivityIndicator className="center" mode="center" color="#f1836f" />;
 
@@ -281,14 +313,24 @@ class Goods extends Component<IProps, {}> {
             <Text className="erduufont ed-zhuye1" />
           </View>
           <View className="cart-wrap">
+            <View className="badge">{cartTotal.checkedGoodsCount}</View>
             <Text className="erduufont ed-gouwuche" />
           </View>
           <View className="add-cart">
-            <AtButton type="primary" onClick={this.addCartOk}>
+            <AtButton type="primary" onClick={this.addCartOk.bind(this, info)}>
               加入购物车
             </AtButton>
           </View>
         </View>
+        {openSku ? (
+          <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />
+        ) : null}
+        <AtToast
+          isOpened={addCartTip}
+          text="已添加到购物车"
+          duration={1000}
+          onClose={this.clearToast}
+        />
       </View>
     );
   }

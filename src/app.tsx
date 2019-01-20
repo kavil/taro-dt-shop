@@ -30,6 +30,7 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
+      'pages/cart/index',
       'pages/goods/index'
     ],
     window: {
@@ -60,7 +61,7 @@ class App extends Component {
           text: '邻居圈',
         },
         {
-          pagePath: 'pages/index/index',
+          pagePath: 'pages/cart/index',
           iconPath: 'static/images/cart.png',
           selectedIconPath: 'static/images/cart-a.png',
           text: '购物车',

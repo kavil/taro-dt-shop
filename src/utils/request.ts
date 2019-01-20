@@ -44,11 +44,15 @@ export default (options: IOption = { method: 'GET', data: {}, url: '', noLoading
         console.log(`${new Date().toLocaleString()}【${options.url} 】【返回】`, res.data);
       }
       if (data.errno !== 0) {
-        Taro.showModal({
-          title: '错误提示',
-          content: res.data.errmsg || res.data.errno,
-          showCancel: false,
-        });
+        if (data.errno === 401) {
+          Taro.eventCenter.trigger('login', true);
+        } else {
+          Taro.showModal({
+            title: '错误提示',
+            content: res.data.errmsg || res.data.errno,
+            showCancel: false,
+          });
+        }
       }
       return data;
     } else {
