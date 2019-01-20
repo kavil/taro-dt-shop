@@ -2,11 +2,11 @@ import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
 import { View, Image, Text, Button } from '@tarojs/components';
-import { AtSearchBar, AtTabs, AtTabsPane, AtButton, AtDivider, AtToast } from 'taro-ui';
-import sadImg from '../../static/images/sad.png';
+import { AtSearchBar, AtTabs, AtTabsPane, AtDivider, AtToast } from 'taro-ui';
 import communityImg from '../../static/images/community.png';
 import Login from '../../components/login/loginComponent';
-import Goods from '../../components/goods/goodsComponent';
+import GoodsItem from '../../components/goods/goodsComponent';
+import Sku from '../../components/sku/skuComponent';
 import './index.scss';
 // #region 书写注意
 //
@@ -56,35 +56,32 @@ class Index extends Component<IProps, {}> {
   //   backgroundTextStyle: 'dark',
   // }
 
-  static defaultProps = {
-    cateTopList: [],
-    List: [],
-    userInfoLoading: false,
-    loginLoading: false,
-  };
-
   async componentDidMount() {
     console.log(this.$router.params, 'this.$router.params- -- componentDidMount');
     await this.props.dispatch({
       type: 'goods/getCateTop',
     });
 
+    const cate = this.props.cateTopList[0];
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
         listName: 'cate0',
-        parent_id: this.props.cateTopList[0].id,
+        parent_id: cate.id,
+        promot_cate_id: cate.type === 0 ? cate.id : null,
       },
     });
   }
 
   async onPullDownRefresh() {
     const value = this.state.current;
+    const cate = this.props.cateTopList[value];
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
         listName: `cate${value}`,
-        parent_id: this.props.cateTopList[value].id,
+        parent_id: cate.id,
+        promot_cate_id: cate.type === 0 ? cate.id : null,
         refresh: true,
         loadOver: false,
       },
@@ -93,16 +90,7 @@ class Index extends Component<IProps, {}> {
   }
 
   nextPage(url) {
-    if (!url) {
-      Taro.showToast({
-        title: '暂未开放',
-        image: sadImg,
-      });
-      return;
-    }
-    Taro.navigateTo({
-      url: url,
-    });
+    Taro.navigateTo({ url });
   }
 
   openLoginModal() {
@@ -115,13 +103,14 @@ class Index extends Component<IProps, {}> {
   loginSuccess() {
     // 更新状态
   }
-  handNull = () => {};
   async handleClick(value) {
+    const cate = this.props.cateTopList[value];
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
         listName: `cate${value}`,
-        parent_id: this.props.cateTopList[value].id,
+        parent_id: cate.id,
+        promot_cate_id: cate.type === 0 ? cate.id : null,
       },
     });
     this.setState({
@@ -130,7 +119,36 @@ class Index extends Component<IProps, {}> {
     console.log(this.props.List);
   }
 
-  addCartOk = () => {
+  handNull = () => {};
+  clearToast = () => {
+    this.setState({ addCartTip: false });
+  };
+
+  addCartOk = async goods => {
+    if (goods.sku.length > 1) {
+      // 调出 选择规格组件
+      this.setState({ curGoods: goods, openSku: true });
+    } else {
+      await this.props.dispatch({
+        type: 'cart/add',
+        payload: {
+          productId: goods.sku[0].id,
+          goodsId: goods.id,
+        },
+      });
+      this.setState({ addCartTip: true });
+    }
+  };
+  handleCloseSku = () => {
+    this.setState({ openSku: false });
+  };
+  handleChangeSku = async payload => {
+    console.log('handleSkuOk', payload);
+    // 加入购物车
+    await this.props.dispatch({
+      type: 'cart/add',
+      payload,
+    });
     this.setState({ addCartTip: true });
   };
 
@@ -138,11 +156,13 @@ class Index extends Component<IProps, {}> {
     openLogin: false,
     current: 0,
     addCartTip: false,
+    openSku: false,
+    curGoods: {},
   };
 
   render() {
     const { cateTopList, List } = this.props;
-    const { openLogin, current, addCartTip } = this.state;
+    const { openLogin, current, addCartTip, openSku, curGoods } = this.state;
     const tabList = cateTopList.map(ele => {
       return { title: ele.name };
     });
@@ -150,7 +170,12 @@ class Index extends Component<IProps, {}> {
     return (
       <View className="index wrap">
         <Login show={openLogin} onChange={this.loginSuccess} />
-        <AtToast isOpened={addCartTip} text="已添加到购物车" duration={1500} />
+        <AtToast
+          isOpened={addCartTip}
+          text="已添加到购物车"
+          duration={1000}
+          onClose={this.clearToast}
+        />
         <View className="index-top">
           <View className="community-wrap">
             <Image src={communityImg} />
@@ -175,7 +200,7 @@ class Index extends Component<IProps, {}> {
               {List[`cate${i}`]
                 ? List[`cate${i}`].list.map(ele => (
                     <View key={ele.id} style={{ display: current === i ? 'flex' : 'none' }}>
-                      {/* <Goods goods={ele} onChange={this.addCartOk} /> */}
+                      <GoodsItem goods={ele} onChange={this.addCartOk} />
                     </View>
                   ))
                 : null}
@@ -192,6 +217,9 @@ class Index extends Component<IProps, {}> {
             </AtTabsPane>
           ))}
         </AtTabs>
+        {openSku ? (
+          <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />
+        ) : null}
       </View>
     );
   }

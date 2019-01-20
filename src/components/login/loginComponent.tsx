@@ -31,12 +31,6 @@ type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
   loginLoading: loading.effects['common/login'],
 }))
 class Login extends Component<IProps, {}> {
-  static defaultProps = {
-    show: false,
-    onChange: null,
-    userInfoLoading: false,
-    loginLoading: false,
-  };
 
   componentWillReceiveProps(props) {
     this.setState({

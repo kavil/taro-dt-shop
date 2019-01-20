@@ -1,21 +1,11 @@
-import Taro from '@tarojs/taro';
 import * as Api from '../service/apiService';
 
 export default {
   namespace: 'goods',
   state: {
     cateTopList: [],
-    List: {
-      // cate1: {
-      //   list: [],
-      //   loadOver: false,
-      //   refresh: true,
-      //   page: 1,
-      //   size: 10,
-      //   parent_id: 1,
-      //   goods_name: undefined,
-      // },
-    },
+    List: {},
+    Detail: {},
   },
 
   effects: {
@@ -43,12 +33,27 @@ export default {
           goods_name: null,
           ...payload,
         };
+      } else {
+        List[payload.listName] = {
+          ...List[payload.listName],
+          ...payload,
+        };
       }
       const { cityId } = yield select(state => state.common);
-      let { list, loadOver, refresh, page, size, parent_id, goods_name } = List[payload.listName];
+
+      let { list, loadOver, refresh, page, size, parent_id, promot_cate_id, goods_name } = List[
+        payload.listName
+      ];
       if (loadOver) return;
       if (refresh) page = 1;
-      const res = yield call(Api.getGoodsList, { cityId, page, size, parent_id, goods_name });
+      const res = yield call(Api.getGoodsList, {
+        cityId,
+        page,
+        size,
+        parent_id,
+        promot_cate_id,
+        goods_name,
+      });
       if (res.errno !== 0) return;
       list = refresh ? res.data.data : list.concat(res.data.data);
       page++;
@@ -60,13 +65,23 @@ export default {
         payload: {
           List: {
             ...List,
-            [payload.listName]: { list, loadOver, refresh, page, size, parent_id, goods_name },
+            [payload.listName]: {
+              list,
+              loadOver,
+              refresh,
+              page,
+              size,
+              parent_id,
+              promot_cate_id,
+              goods_name,
+            },
           },
         },
       });
     },
-    *Detail({ payload }, { call, put }) {
-      const res = yield call(Api.getGoodsDetail, payload);
+    *Detail({ payload }, { call, put, select }) {
+      const { cityId } = yield select(state => state.common);
+      const res = yield call(Api.getGoodsDetail, { ...payload, cityId });
       if (res.errno !== 0) return null;
       yield put({
         type: 'save',
@@ -76,17 +91,19 @@ export default {
       });
       return res.data;
     },
+    *Sku({ payload }, { call }) {
+      const res = yield call(Api.getSku, { ...payload });
+      if (res.errno !== 0) return null;
+      return res.data;
+    },
   },
 
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload };
     },
-    // saveList(state, { payload }) {
-    //   let List = state.List;
-    //   const { listName, ...rest } = payload;
-    //   List[listName] = { ...List[listName], ...rest };
-    //   return { ...state, List };
-    // },
+    clearDetail(state) {
+      return { ...state, Detail: {} };
+    },
   },
 };

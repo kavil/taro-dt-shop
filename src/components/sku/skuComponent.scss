@@ -1,0 +1,99 @@
+@import "../../static/css/mixin";
+.img-wrap {
+    @include wh(140px, 140px);
+    margin-right: 30px;
+    .img {
+        @include wh(140px, 140px);
+    }
+}
+
+.sku-wrap {
+    @include fj();
+    flex-direction: column;
+}
+
+.main {
+    padding: 0 20px 100px;
+}
+
+.top {
+    @include fj(flex-start);
+    margin-bottom: 40px;
+    align-items: center;
+}
+
+.ok {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
+.price {
+    @include fj('center');
+    flex-direction: column;
+    .counter {
+        text-decoration: line-through;
+        font-size: 26px;
+        color: #ccc;
+    }
+    .retail {
+        color: $color-brand-light;
+        font-size: 24px;
+    }
+    .vip {
+        color: $color-brand;
+        font-size: 40px;
+        font-weight: 600;
+        @include fj(flex-start);
+        align-items: center;
+        line-height: 1;
+        .label {
+            font-size: 22px;
+            margin-left: 10px;
+            border-radius: 10px;
+            border: 1PX solid $color-dan;
+            color: $color-brand-light;
+            line-height: 1.1;
+            padding: 0 5px;
+        }
+    }
+}
+
+.b {
+    font-weight: 700;
+    font-size: 26px;
+    margin: 20px 0;
+}
+.p{
+    font-size: 26px;
+    color: $font-default;
+    margin-right: 20px;
+}
+
+.tag {
+    font-size: 26px;
+    padding: 5px 20px;
+    display: inline-block;
+    border: 1PX solid $border;
+    margin: 0 20px 10px 0;
+    &.active {
+        border-color: $color-brand-light;
+        color: $color-primary;
+    }
+    &.disabled {
+        background: $bg-color-base;
+        color: $font-default;
+    }
+}
+.ed-close{
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 0 10px;
+    font-size:50px;
+    line-height: 1;
+    color: $font-default;
+}

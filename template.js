@@ -14,24 +14,25 @@ if (!dirName) {
 
 // 页面模版
 const indexTep = `import Taro, { Component } from '@tarojs/taro';
+import { ComponentClass } from 'react';
 import { View } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
 
-// type PageState = {}
-interface PageDvaProps = {
+type PageState = {}
+interface PageDvaProps {
   dispatch: Function,
 }
 
-interface PageOwnProps = {
+interface PageOwnProps {
   //父组件要传
 }
-interface PageStateProps = {
+interface PageStateProps {
   // 自己要用的
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps
 
-@connect(({${dirName}, loading}) => ({
+@connect(({ ${dirName}, loading }) => ({
   ...${dirName},
 }))
 class ${titleCase(dirName)} extends Component<IProps, {}> {

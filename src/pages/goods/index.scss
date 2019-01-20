@@ -1,0 +1,277 @@
+@import "../../static/css/mixin";
+.goods-page {
+    padding-bottom: 100px;
+    .swiper {
+        height: 500px;
+        .image {
+            width: 100%;
+            height: 500px;
+        }
+    }
+    .h3 {
+        margin-top: 20px;
+        font-weight: 700;
+    }
+    .desc {
+        @include ddd();
+        width: 600px;
+        color: $font-default;
+    }
+    .price-wrap {
+        @include fj();
+        align-items: center;
+        background: $bg-color-danger;
+        margin: 0 20px;
+        padding: 15px 20px;
+        border-radius: 3px;
+    }
+    .selled-wrap {
+        position: relative;
+        z-index: 1;
+        margin-top: -50px;
+        height: 50px;
+    }
+    .selled {
+        color: #fff;
+        font-size: 26px;
+        background: rgba(0, 0, 0, .5);
+        border-radius: 26px;
+        padding: 0 20px;
+        display: inline-block;
+        margin-left: 20px;
+    }
+    .price {
+        @include fj('center');
+        flex-direction: column;
+        .counter {
+            text-decoration: line-through;
+            font-size: 26px;
+            color: #ccc;
+        }
+        .retail {
+            color: $color-brand-light;
+            font-size: 24px;
+        }
+        .vip {
+            color: $color-brand;
+            font-size: 40px;
+            font-weight: 600;
+            @include fj(flex-start);
+            align-items: center;
+            line-height: 1;
+            .label {
+                font-size: 22px;
+                margin-left: 10px;
+                border-radius: 10px;
+                border: 1PX solid $color-dan;
+                color: #fff;
+                background: $color-brand-light;
+                line-height: 1.1;
+                padding: 0 5px;
+            }
+        }
+    }
+    .selledUsers {
+        @include fj(flex-start);
+        align-items: center;
+        .text {
+            margin-left: 10px;
+            font-size: 26px;
+            color: $font-info;
+        }
+        .image {
+            width: 46px;
+            height: 46px;
+            border: 5px solid #fff;
+            border-radius: 50%;
+            &:not(:first-child) {
+                margin-left: -16px;
+            }
+        }
+    }
+    .steps {
+        margin: 20px 0;
+    }
+    .swiper-wrap {
+        position: relative;
+    }
+    .miaosha-wrap {
+        position: absolute;
+        bottom: 0;
+        right: 20px;
+        width: 260px;
+        .miaosha {
+            font-size: 26px;
+            position: absolute;
+            top: 3px;
+            text-align: center;
+            color: #fff;
+            padding-left: 40px;
+            &.end {
+                text-indent: 35px;
+                font-size: 30px;
+                top: 16px;
+            }
+        }
+        .trapezoid {
+            height: 0;
+            border-bottom: 80px solid $color-brand-light;
+            border-left: 50px solid transparent;
+            border-radius: 30px 5px 0 0;
+        }
+    }
+    .goods-type-wrap {
+        position: absolute;
+        top: 0;
+        left: 20px;
+        z-index: 1;
+        .ribbon {
+            width: 0;
+            height: 60px;
+            border-left: 40px solid $color-brand-dark;
+            border-right: 40px solid $color-brand-dark;
+            border-bottom: 25px solid transparent;
+            border-radius: 0 0 10px 10px;
+        }
+        .ribbon-text {
+            position: absolute;
+            padding: 10px 0;
+            color: #fff;
+            width: 80px;
+            top: 0;
+            text-align: center;
+        }
+    }
+    .vip-bar {
+        height: 80px;
+        border-radius: 5px;
+        line-height: 80px;
+        padding: 0 20px;
+        margin-top: 30px;
+        background: linear-gradient(to right, #fbf5f4, $color-dan);
+        .tag {
+            border-radius: 30px;
+            display: inline-block;
+            padding: 0 10px;
+            color: #fff;
+            font-weight: 500;
+            margin-right: 20px;
+            background: $color-ex;
+            font-size: 24px;
+            line-height: 1.5;
+        }
+        .text {
+            color: $color-ex;
+            font-size: 26px;
+        }
+    }
+    .sale-wrap {
+        border: $color-dan 1PX solid;
+        border-radius: 36px;
+        text-align: center;
+        line-height: 36px;
+        height: 36px;
+        color: $color-brand-light;
+        position: relative;
+        width: 300px;
+        margin: 20px 0;
+        font-size: 24px;
+        margin-left: -10px;
+        overflow: hidden;
+        left: 50%;
+        transform: translateX(-50%);
+        .sale-slide {
+            position: absolute;
+            background: #fdf8f7;
+            height: 36px;
+            z-index: -1;
+        }
+    }
+    .rich-wrap,
+    .reco-wrap {
+        border-top: 20px solid $bg-color-base;
+        padding: 0 20px 20px;
+        .h3 {
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+    }
+    .reco-wrap {
+        background: $bg-color-base;
+    }
+    .scroll-view-wrap {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+    .bottom {
+        position: fixed;
+        bottom: 0;
+        height: 100px;
+        width: 100%;
+        background: #fff;
+        box-shadow: 0 0 3px 3px $border;
+        @include fj();
+        .zhuye-wrap,
+        .cart-wrap {
+            text-align: center;
+            line-height: 100px;
+            width: 100px;
+            border-right: 1PX solid $border;
+            .erduufont {
+                color: $font-default;
+            }
+        }
+        .cart-wrap {
+            border: 0;
+        }
+        .add-cart {
+            flex: 1;
+            .at-button--primary {
+                border-radius: 0;
+                height: 100%;
+            }
+            .at-button__text {
+                color: #fff;
+            }
+        }
+    }
+    .at-steps__item .at-icon {
+        color: #fff
+    }
+    .at-steps__title {
+        font-size: 26px;
+        color: $font-info;
+    }
+    .p {
+        font-size: 24px;
+    }
+    .b {
+        font-weight: bold;
+        font-size: 24px;
+    }
+    .qulity-wrap {
+        @include fj(space-around);
+        .image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+        }
+    }
+}
+
+.center {
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+// datail
+.detail-wrap {
+    width: 100%;
+    overflow: hidden;
+}
+
+.img {
+    width: 100%;
+}

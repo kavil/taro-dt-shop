@@ -1,7 +1,7 @@
+import goodsModel from './goodsModel';
 import common from './common';
-import goods from './goods';
 
 export default [
+  goodsModel,
   common,
-  goods
 ]

@@ -4,6 +4,7 @@ import { View, Text, Image } from '@tarojs/components';
 import { AtInputNumber, AtButton } from 'taro-ui';
 import { connect } from '@tarojs/redux';
 import './goodsComponent.scss';
+import cartImg from '../../static/images/cart-in.png';
 
 interface PageState {}
 interface PageDva {
@@ -18,6 +19,7 @@ interface PageOwnProps {
   //父组件要传
   goods: any;
   onChange: Function;
+  type?: 'mini' | null;
 }
 
 type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
@@ -25,10 +27,9 @@ type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
 @connect(({ goods }) => ({
   ...goods,
 }))
-class Goods extends Component<IProps, {}> {
+class GoodsItem extends Component<IProps, {}> {
   static defaultProps = {
     goods: {},
-    onChange: null,
   };
   // 有点麻烦 以后再做
   blurCartNumber = value => {
@@ -51,44 +52,47 @@ class Goods extends Component<IProps, {}> {
       },
     });
   };
+  nextPage() {
+    Taro.navigateTo({ url: `/pages/goods/index?id=${this.props.goods.id}` });
+  }
 
   state = {
     numberStatus: false,
   };
 
   render() {
-    const { goods } = this.props;
+    const { goods, type } = this.props;
     const { numberStatus } = this.state;
     let goodsNumber = 0;
-    let sellVolume = 0;
-    if (!goods.sku) goods.sku = [];
+    if (!goods.sku) return null;
     goods.sku.forEach(ele => {
       goodsNumber += ele.goods_number;
-      sellVolume += ele.sell_volume;
     });
     const { counter_price, retail_price, vip_price } = goods.sku[0];
+    const className = 'goods-li' + (type === 'mini' ? ' mini' : '');
+
     return (
-      <View className="goods-li">
-        <View className="img-wrap">
+      <View className={className}>
+        <View className="img-wrap" onClick={this.nextPage}>
           <Image className="img" src={goods.primary_pic_url + '@!480X480'} />
         </View>
         <View className="right-wrap">
-          <View className="title">{goods.goods_name}</View>
-          <View className="desc">{goods.goods_brief}</View>
+          <View className="title" onClick={this.nextPage}>{goods.goods_name}</View>
+          <View className="desc" onClick={this.nextPage}>{goods.goods_brief}</View>
           <View className="sale-wrap">
             <View
               className="sale-slide"
-              style={{ width: (sellVolume + goodsNumber) / goodsNumber + '%' }}
+              style={{ width: (goodsNumber / (goods.sell_volume + goodsNumber)) * 100 + '%' }}
             />
             仅剩{goodsNumber}
             {goods.goods_unit}
           </View>
           <View className="shopping-wrap">
-            <View className="price">
-              <View className="counter">￥{counter_price}</View>
+            <View className="price" onClick={this.nextPage}>
               <View className="retail">小区价</View>
               <View className="vip">
                 ￥{retail_price}
+                <View className="counter">￥{counter_price}</View>
                 <View className="label">会员{((vip_price / retail_price) * 10).toFixed(1)}折</View>
               </View>
             </View>
@@ -103,13 +107,15 @@ class Goods extends Component<IProps, {}> {
                   onBlur={this.blurCartNumber}
                   onChange={this.changeCartNumber}
                 />
+              ) : type === 'mini' ? (
+                <Image className="cartImg" src={cartImg} />
               ) : (
                 <AtButton
                   type="primary"
                   circle
                   size="small"
                   className="btn-shopping"
-                  onClick={this.addCart.bind(this, 1)}
+                  onClick={this.addCart.bind(this, goods)}
                 >
                   马上抢
                 </AtButton>
@@ -122,4 +128,4 @@ class Goods extends Component<IProps, {}> {
   }
 }
 
-export default Goods as ComponentClass<PageOwnProps, PageState>;
+export default GoodsItem as ComponentClass<PageOwnProps, PageState>;

@@ -1,33 +1,43 @@
 import Taro from '@tarojs/taro';
 import { baseUrl, noConsole } from '../config';
 
-
-export default (options = { method: 'GET', data: {}, url: '' }) => {
-  Taro.showLoading({
-    title: '加载中'
-  })
+interface IOption {
+  method: 'GET' | 'POST' | 'PUT';
+  data: any;
+  url: string;
+  noLoading?: boolean;
+}
+export default (options: IOption = { method: 'GET', data: {}, url: '', noLoading: false }) => {
+  if (!options.noLoading) {
+    Taro.showLoading({
+      title: '加载中',
+    });
+  }
   if (!noConsole) {
     console.log(`${new Date().toLocaleString()}【${options.url} 】【请求】`, options.data);
   }
   for (const key in options.data) {
-    if (options.data.hasOwnProperty(key) && (options.data[key] === undefined || options.data[key] == null)) {
+    if (
+      options.data.hasOwnProperty(key) &&
+      (options.data[key] === undefined || options.data[key] == null)
+    ) {
       delete options.data[key];
     }
   }
   return Taro.request({
     url: baseUrl + options.url,
     data: {
-      ...options.data
+      ...options.data,
     },
     header: {
       'x-token': Taro.getStorageSync('token'),
       'Content-Type': 'application/json',
     },
     method: options.method.toUpperCase(),
-  }).then((res) => {
+  }).then(res => {
     setTimeout(() => {
       Taro.hideLoading();
-    }, 200)
+    }, 200);
     const { statusCode, data } = res;
     if (statusCode >= 200 && statusCode < 300) {
       if (!noConsole) {
@@ -50,5 +60,5 @@ export default (options = { method: 'GET', data: {}, url: '' }) => {
       console.log(`网络请求错误，请重试`);
       return;
     }
-  })
-}
+  });
+};
