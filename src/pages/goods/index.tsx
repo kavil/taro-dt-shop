@@ -3,9 +3,10 @@ import { ComponentClass } from 'react';
 import { View, Swiper, Image, SwiperItem, Text, RichText, ScrollView } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
-import { AtActivityIndicator, AtSteps, AtCountdown, AtButton, AtToast, AtBadge } from 'taro-ui';
+import { AtActivityIndicator, AtSteps, AtCountdown, AtButton, AtToast } from 'taro-ui';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
+import Login from '../../components/login/loginComponent';
 const qulity1 = 'https://img.kavil.com.cn/3991547959471_.pic.jpg';
 const qulity2 = 'https://img.kavil.com.cn/4011547959487_.pic.jpg';
 
@@ -57,7 +58,11 @@ class Goods extends Component<IProps, {}> {
     });
     Taro.stopPullDownRefresh();
   }
-
+  loginSuccess = async _ => {
+    await this.props.dispatch({
+      type: 'cart/Index',
+    });
+  };
   countdown = over_time => {
     const cha = (new Date(over_time).getTime() - new Date().getTime()) / 1000;
     const isShowDay = cha > 86400;
@@ -90,7 +95,8 @@ class Goods extends Component<IProps, {}> {
           goodsId: goods.id,
         },
       });
-      if (res) this.setState({ addCartTip: true });
+      if (res.errno === 0) this.setState({ addCartTip: true });
+      if (res.errno === 401) Taro.eventCenter.trigger('login', true);
     }
   };
   handleCloseSku = () => {
@@ -103,9 +109,8 @@ class Goods extends Component<IProps, {}> {
       type: 'cart/Add',
       payload,
     });
-    if (res) {
-      this.setState({ addCartTip: true });
-    }
+    if (res.errno === 0) this.setState({ addCartTip: true });
+    if (res.errno === 401) Taro.eventCenter.trigger('login', true);
   };
 
   lookBig = img => {
@@ -117,7 +122,9 @@ class Goods extends Component<IProps, {}> {
   clearToast = () => {
     this.setState({ addCartTip: false });
   };
-
+  nextTab(url) {
+    Taro.switchTab({ url });
+  }
   state = {
     addCartTip: false,
     openSku: false,
@@ -140,6 +147,14 @@ class Goods extends Component<IProps, {}> {
       goodsNumber += ele.goods_number;
     });
 
+    let disabled;
+    if (!info.is_on_sale || info.is_delete) {
+      disabled = '已下架';
+    }
+    if (goodsNumber === 0) {
+      disabled = '已售罄';
+    }
+
     const now = new Date().toLocaleString('zh', { hour12: false });
     // 秒杀
     const countdown = this.countdown(info.over_time);
@@ -160,10 +175,13 @@ class Goods extends Component<IProps, {}> {
       ],
       current,
     };
-
+    if (info.goods_type !== 1 && info.over_time < now) {
+      disabled = '已结束';
+    }
     const detailNodes = '<div class="detail-wrap">' + info.goods_desc + '</div>';
     return (
       <View className="goods-page">
+        <Login show={false} onChange={this.loginSuccess} />
         <View className="swiper-wrap">
           {info.goods_type > 1 ? (
             <View className="goods-type-wrap">
@@ -309,15 +327,15 @@ class Goods extends Component<IProps, {}> {
           </View>
         </View>
         <View className="bottom">
-          <View className="zhuye-wrap">
+          <View className="zhuye-wrap" onClick={this.nextTab.bind(this, '/pages/index/index')}>
             <Text className="erduufont ed-zhuye1" />
           </View>
-          <View className="cart-wrap">
-            <View className="badge">{cartTotal.checkedGoodsCount}</View>
+          <View className="cart-wrap" onClick={this.nextTab.bind(this, '/pages/cart/index')}>
+            <View className="badge">{cartTotal.checkedGoodsCount || 0}</View>
             <Text className="erduufont ed-gouwuche" />
           </View>
           <View className="add-cart">
-            <AtButton type="primary" onClick={this.addCartOk.bind(this, info)}>
+            <AtButton type="primary" disabled={disabled} onClick={this.addCartOk.bind(this, info)}>
               加入购物车
             </AtButton>
           </View>

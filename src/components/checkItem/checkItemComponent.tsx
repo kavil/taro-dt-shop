@@ -1,6 +1,6 @@
 import { ComponentClass } from 'react';
 import Taro, { Component } from '@tarojs/taro';
-import { View, Checkbox } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import './checkItemComponent.scss';
 import { AtCheckbox } from 'taro-ui';
 
@@ -29,6 +29,11 @@ class CheckItem extends Component<IProps, {}> {
       this.setState({ checkedAt: [this.props.value] });
     }
   }
+  // componentWillReceiveProps(props) {
+  //   console.log(props);
+    
+  //   this.setState({ checkedAt: [props.checked] });
+  // }
 
   handleCheck = e => {
     if (this.props.onChange) this.props.onChange(e[0] || null);

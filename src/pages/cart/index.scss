@@ -15,7 +15,7 @@
         @include fj();
         align-items: center;
         position: relative;
-        .ed-shanchu{
+        .ed-shanchu {
             position: absolute;
             padding: 10px;
             top: 15px;
@@ -73,7 +73,7 @@
                 padding: 0 5px;
             }
         }
-        .input-number{
+        .input-number {
             position: absolute;
             bottom: 20px;
             right: 20px;
@@ -93,9 +93,24 @@
         box-sizing: border-box;
         height: 80px;
         border-radius: 5px;
-        line-height: 80px;
         padding: 0 20px;
         background: linear-gradient(to right, #fbf5f4, $color-dan);
+        @include fj();
+        align-items: center;
+        .left {
+            flex: 1;
+        }
+        .right {
+            width: 40%;
+            color: $color-primary;
+            @include fj(flex-end);
+            align-items: center;
+            font-size: 26px;
+            .ed-back {
+                color: $color-primary;
+                font-size: 28px;
+            }
+        }
         .tag {
             border-radius: 30px;
             display: inline-block;

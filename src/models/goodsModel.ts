@@ -3,20 +3,20 @@ import * as Api from '../service/apiService';
 export default {
   namespace: 'goods',
   state: {
-    cateTopList: [],
+    cateList: [],
     List: {},
     Detail: {},
   },
 
   effects: {
-    *getCateTop(_, { call, put, select }) {
+    *getCate(_, { call, put, select }) {
       const { cityId } = yield select(state => state.common);
-      const res = yield call(Api.getCateTop, { cityId });
+      const res = yield call(Api.getCate, { cityId });
       if (res.errno !== 0) return;
       yield put({
         type: 'save',
         payload: {
-          cateTopList: res.data,
+          cateList: res.data,
         },
       });
     },

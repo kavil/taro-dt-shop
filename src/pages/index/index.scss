@@ -43,3 +43,12 @@
     @include fixTop();
     top: 134px;
 }
+
+.cate-img {
+    margin: 30px 0 20px;
+    @include wh(100%, auto);
+    .img {
+        border-radius: 5px;
+        @include wh(100%, auto);
+    }
+}

@@ -45,7 +45,8 @@ export default (options: IOption = { method: 'GET', data: {}, url: '', noLoading
       }
       if (data.errno !== 0) {
         if (data.errno === 401) {
-          Taro.eventCenter.trigger('login', true);
+          // Taro.eventCenter.trigger('login', true);
+          console.log(401, '未登录');
         } else {
           Taro.showModal({
             title: '错误提示',

@@ -5,12 +5,14 @@ import { connect } from '@tarojs/redux';
 import './index.scss';
 import { AtButton, AtInputNumber } from 'taro-ui';
 import CheckItem from '../../components/checkItem/checkItemComponent';
+import Login from '../../components/login/loginComponent';
 
 type PageState = {};
 interface PageDvaProps {
   dispatch: Function;
   cartList: any;
   cartTotal: any;
+  userInfo: any;
 }
 
 interface PageOwnProps {
@@ -21,7 +23,7 @@ interface PageStateProps {
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
-@connect(({ cart, loading }) => ({
+@connect(({ cart }) => ({
   ...cart,
 }))
 class Cart extends Component<IProps, {}> {
@@ -40,38 +42,101 @@ class Cart extends Component<IProps, {}> {
     });
     Taro.stopPullDownRefresh();
   }
-  handleCheckAll = e => {
-    console.log(e);
+  loginSuccess = _ => {
+    this.componentDidShow();
   };
-  checkItem = e => {
-    console.log(e);
+  handleCheckAll = async value => {
+    await this.props.dispatch({
+      type: 'cart/Check',
+      payload: {
+        isChecked: value ? 1 : 0,
+        productIds: this.props.cartList.map(ele => ele.product_id),
+      },
+    });
+  };
+  checkItem = async (goods, value) => {
+    await this.props.dispatch({
+      type: 'cart/Check',
+      payload: {
+        isChecked: value ? 1 : 0,
+        productIds: [goods.product_id],
+      },
+    });
   };
   checkOut = () => {};
+  nextTab = url => {
+    Taro.switchTab({ url });
+  };
   nextPage(url) {
     Taro.navigateTo({ url });
   }
-  blurCartNumber = () => {};
-  changeCartNumber = (a, b, c) => {
-    console.log(a, b, c);
+  changeCartNumber = async (goods, value) => {
+    if (isNaN(value)) return;
+    console.log(goods, value);
+    await this.props.dispatch({
+      type: 'cart/Up',
+      payload: {
+        id: goods.id,
+        goodsId: goods.goods_id,
+        productId: goods.product_id,
+        number: value,
+      },
+    });
   };
   state = {};
 
   render() {
-    const { cartList, cartTotal } = this.props;
+    const { cartList, cartTotal, userInfo } = this.props;
     const {} = this.state;
     return (
       <View className="cart-page">
         <View className="vip-bar">
-          <View className="tag">开通会员</View>
-          <Text className="text">会员立省 111 元</Text>
+          <View className="left">
+            {userInfo.level === 0 ? (
+              <View className="tag">开通会员</View>
+            ) : (
+              <View className="tag">您已开通会员</View>
+            )}
+            {cartTotal && (
+              <Text className="text">
+                会员立省
+                <Text style={{ color: '#f5735b' }}>
+                  {cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount}
+                </Text>
+                元
+              </Text>
+            )}
+          </View>
+          <Text className="right">
+            {userInfo.level === 0 ? '立即开通' : '续费'}
+            <Text className="erduufont ed-back go" />
+          </Text>
         </View>
+
+        {cartList && cartList.length ? null : (
+          <View className="nodata">
+            <Text className="erduufont ed-zanwushangpin" />
+            <View className="label">购物车是空的</View>
+            <AtButton
+              size="small"
+              type="secondary"
+              onClick={this.nextTab.bind(this, '/pages/index/index')}
+            >
+              去逛逛
+            </AtButton>
+          </View>
+        )}
 
         <View className="ul">
           {cartList.map(ele => (
-            <View className="li">
+            <View key={ele.id} className="li">
               <Text className="erduufont ed-shanchu" />
               <View className="cb">
-                <CheckItem value={ele.id} checked={!!ele.checked} onChange={this.checkItem} />
+                <CheckItem
+                  value={ele.id}
+                  checked={!!ele.checked}
+                  onChange={this.checkItem.bind(this, ele)}
+                />
               </View>
               <View
                 className="img-wrap"
@@ -95,13 +160,13 @@ class Cart extends Component<IProps, {}> {
                 </View>
                 <View className="input-number">
                   <AtInputNumber
-                    min={0}
-                    max={10}
+                    min={1}
+                    max={100}
                     step={1}
-                    value={1}
+                    value={ele.number}
                     type="number"
                     width={70}
-                    onBlur={this.blurCartNumber}
+                    onBlur={this.changeCartNumber.bind(this, ele)}
                     onChange={this.changeCartNumber.bind(this, ele)}
                   />
                 </View>
@@ -109,21 +174,24 @@ class Cart extends Component<IProps, {}> {
             </View>
           ))}
         </View>
-        <View className="bottom">
-          <View className="check-wrap">
-            <CheckItem value="all" label="全选" onChange={this.handleCheckAll} />
+        {cartList && cartList.length ? (
+          <View className="bottom">
+            <View className="check-wrap">
+              <CheckItem value="all" label="全选" onChange={this.handleCheckAll} />
+            </View>
+            <View className="cart-wrap">
+              合计
+              <Text className="main-color">￥{cartTotal.checkedGoodsAmount}</Text>
+              {cartTotal.checkedGoodsAmount >= 49 ? <Text className="info-color">免邮</Text> : null}
+            </View>
+            <View className="add-cart">
+              <AtButton type="primary" onClick={this.checkOut}>
+                去结算
+              </AtButton>
+            </View>
           </View>
-          <View className="cart-wrap">
-            合计
-            <Text className="main-color">￥{cartTotal.checkedGoodsAmount}</Text>
-            {cartTotal.checkedGoodsAmount >= 49 ? <Text className="info-color">免邮</Text> : null}
-          </View>
-          <View className="add-cart">
-            <AtButton type="primary" onClick={this.checkOut}>
-              去结算
-            </AtButton>
-          </View>
-        </View>
+        ) : null}
+        <Login show={false} onChange={this.loginSuccess} />
       </View>
     );
   }

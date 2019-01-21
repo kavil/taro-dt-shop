@@ -38,6 +38,9 @@ class Login extends Component<IProps, {}> {
       });
     });
   }
+  componentWillUnmount(){
+    Taro.eventCenter.trigger('login', false);
+  }
   componentWillReceiveProps(props) {
     this.setState({
       openLogin: props.show,
@@ -83,7 +86,7 @@ class Login extends Component<IProps, {}> {
 
     return (
       <AtModal isOpened={openLogin}>
-        <AtModalHeader>微信授权</AtModalHeader>
+        <AtModalHeader>微信授权登录</AtModalHeader>
         <AtModalContent>
           <View className="logo-wrap">
             <View className="logo">

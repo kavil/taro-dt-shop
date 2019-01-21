@@ -1,7 +1,7 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Image, Text, Button } from '@tarojs/components';
+import { View, Image, Text } from '@tarojs/components';
 import { AtSearchBar, AtTabs, AtTabsPane, AtDivider, AtToast } from 'taro-ui';
 import communityImg from '../../static/images/community.png';
 import Login from '../../components/login/loginComponent';
@@ -21,7 +21,7 @@ import './index.scss';
 type PageState = {};
 interface PageDva {
   dispatch: Function;
-  cateTopList: any[];
+  cateList: any[];
   List: any;
 }
 
@@ -49,20 +49,27 @@ class Index extends Component<IProps, {}> {
    * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
-  // config: Config = {
-  //   navigationBarTitleText: '新邻居',
-  //   navigationBarBackgroundColor: '#fff',
-  //   navigationBarTextStyle: 'white',
-  //   backgroundTextStyle: 'dark',
-  // }
+  config: Config = {
+    navigationBarTitleText: '新邻居·社区团',
+    // navigationBarBackgroundColor: '#fff',
+    // navigationBarTextStyle: 'white',
+    // backgroundTextStyle: 'dark',
+  };
 
   async componentDidMount() {
     console.log(this.$router.params, 'this.$router.params- -- componentDidMount');
     await this.props.dispatch({
-      type: 'goods/getCateTop',
+      type: 'goods/getCate',
     });
+    const cateTopList: any = [];
+    const cateImgList: any = [];
+    this.props.cateList.forEach((ele: any) => {
+      if (ele.parent_id === 0) cateTopList.push(ele);
+      cateImgList[ele.id] = ele.banner_url;
+    });
+    this.setState({ cateTopList, cateImgList });
 
-    const cate = this.props.cateTopList[0];
+    const cate = this.props.cateList[0];
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
@@ -75,7 +82,7 @@ class Index extends Component<IProps, {}> {
 
   async onPullDownRefresh() {
     const value = this.state.current;
-    const cate = this.props.cateTopList[value];
+    const cate = this.props.cateList[value];
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
@@ -104,7 +111,7 @@ class Index extends Component<IProps, {}> {
     // 更新状态
   }
   async handleClick(value) {
-    const cate = this.props.cateTopList[value];
+    const cate = this.props.cateList[value];
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
@@ -113,10 +120,15 @@ class Index extends Component<IProps, {}> {
         promot_cate_id: cate.type === 0 ? cate.id : null,
       },
     });
-    this.setState({
+    await this.setState({
       current: value,
     });
-    console.log(this.props.List);
+    setTimeout(() => {
+      Taro.pageScrollTo({
+        scrollTop: 0,
+        duration: 0,
+      });
+    }, 100);
   }
 
   handNull = () => {};
@@ -136,7 +148,8 @@ class Index extends Component<IProps, {}> {
           goodsId: goods.id,
         },
       });
-      if (res) this.setState({ addCartTip: true });
+      if (res.errno === 0) this.setState({ addCartTip: true });
+      if (res.errno === 401) Taro.eventCenter.trigger('login', true);
     }
   };
   handleCloseSku = () => {
@@ -160,14 +173,29 @@ class Index extends Component<IProps, {}> {
     addCartTip: false,
     openSku: false,
     curGoods: {},
+    cateTopList: [],
   };
 
   render() {
-    const { cateTopList, List } = this.props;
-    const { openLogin, current, addCartTip, openSku, curGoods } = this.state;
+    const { List } = this.props;
+    const {
+      openLogin,
+      current,
+      addCartTip,
+      openSku,
+      curGoods,
+      cateTopList,
+      cateImgList,
+    }: any = this.state;
     const tabList = cateTopList.map(ele => {
       return { title: ele.name };
     });
+    const getCateImg = (cate_id, j, list) => {
+      const index = j - 1;
+      if (index < 0) return cateImgList[cate_id];
+      if (list[index].category_id === cate_id) return false;
+      return cateImgList[cate_id];
+    };
 
     return (
       <View className="index wrap">
@@ -192,20 +220,38 @@ class Index extends Component<IProps, {}> {
         <AtTabs
           className="tabs"
           current={current}
-          swipeable={false}
+          swipeable={true}
           scroll={true}
           tabList={tabList}
           onClick={this.handleClick}
         >
-          {tabList.map((tab, i) => (
-            <AtTabsPane key={i} current={this.state.current} index={i}>
-              {List[`cate${i}`]
-                ? List[`cate${i}`].list.map(ele => (
-                    <View key={ele.id} style={{ display: current === i ? 'flex' : 'none' }}>
-                      <GoodsItem goods={ele} onChange={this.addCartOk} />
-                    </View>
-                  ))
-                : null}
+          {tabList.map((_, i) => (
+            <AtTabsPane key={i} current={current} index={i}>
+              <View>
+                {List[`cate${i}`]
+                  ? List[`cate${i}`].list.map((ele, j) => (
+                      <View
+                        className="item-wrap"
+                        key={ele.id}
+                        style={{ display: current === i ? 'block' : 'none' }}
+                      >
+                        {getCateImg(ele.category_id, j, List[`cate${i}`].list) ? (
+                          <View className="cate-img">
+                            <Image
+                              lazyLoad
+                              mode="widthFix"
+                              className="img"
+                              src={
+                                getCateImg(ele.category_id, j, List[`cate${i}`].list) + '@!900X200'
+                              }
+                            />
+                          </View>
+                        ) : null}
+                        <GoodsItem goods={ele} onChange={this.addCartOk} />
+                      </View>
+                    ))
+                  : null}
+              </View>
 
               {List[`cate${i}`] && List[`cate${i}`].list.length && List[`cate${i}`].loadOver ? (
                 <AtDivider content="没有更多了" fontSize="26" fontColor="#ccc" lineColor="#eee" />
