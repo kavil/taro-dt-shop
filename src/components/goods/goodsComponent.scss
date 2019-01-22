@@ -57,10 +57,12 @@
             text-decoration: line-through;
             font-size: 26px;
             color: #ccc;
+            letter-spacing: -1px;
         }
         .retail {
             color: $color-brand-light;
             font-size: 24px;
+            letter-spacing: -2px;
         }
         .vip {
             color: $color-brand;
@@ -69,17 +71,20 @@
             @include fj(flex-start);
             align-items: center;
             line-height: 1;
+            margin-left: -5px;
             .label {
+                letter-spacing: -1px;
                 font-size: 22px;
-                margin-left: 10px;
+                margin-left: 8px;
                 border-radius: 10px;
                 border: 1PX solid $color-dan;
                 color: $color-brand-light;
                 line-height: 1.1;
-                padding: 0 5px;
+                padding: 0 4px;
             }
         }
         .at-button--small {
+            letter-spacing: -3px;
             height: 56px;
             line-height: 54px;
         }

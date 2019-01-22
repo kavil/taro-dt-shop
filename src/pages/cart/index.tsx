@@ -35,17 +35,20 @@ class Cart extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'cart/Index',
     });
+    this.setState({ checkAll: !this.props.cartList.find(ele => !ele.checked) });
   }
   async onPullDownRefresh() {
     await this.props.dispatch({
       type: 'cart/Index',
     });
+    this.setState({ checkAll: !this.props.cartList.find(ele => !ele.checked) });
     Taro.stopPullDownRefresh();
   }
   loginSuccess = _ => {
     this.componentDidShow();
   };
   handleCheckAll = async value => {
+    this.setState({ checkAll: value });
     await this.props.dispatch({
       type: 'cart/Check',
       payload: {
@@ -62,6 +65,7 @@ class Cart extends Component<IProps, {}> {
         productIds: [goods.product_id],
       },
     });
+    this.setState({ checkAll: !this.props.cartList.find(ele => !ele.checked) });
   };
   checkOut = () => {};
   nextTab = url => {
@@ -83,11 +87,21 @@ class Cart extends Component<IProps, {}> {
       },
     });
   };
-  state = {};
+  delCart = async goods => {
+    await this.props.dispatch({
+      type: 'cart/Del',
+      payload: {
+        productIds: [goods.product_id],
+      },
+    });
+  };
+  state = {
+    checkAll: false,
+  };
 
   render() {
     const { cartList, cartTotal, userInfo } = this.props;
-    const {} = this.state;
+    const { checkAll } = this.state;
     return (
       <View className="cart-page">
         <View className="vip-bar">
@@ -101,7 +115,7 @@ class Cart extends Component<IProps, {}> {
               <Text className="text">
                 会员立省
                 <Text style={{ color: '#f5735b' }}>
-                  {cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount}
+                  {(cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount).toFixed(1)}
                 </Text>
                 元
               </Text>
@@ -130,7 +144,7 @@ class Cart extends Component<IProps, {}> {
         <View className="ul">
           {cartList.map(ele => (
             <View key={ele.id} className="li">
-              <Text className="erduufont ed-shanchu" />
+              <Text className="erduufont ed-shanchu" onClick={this.delCart.bind(this, ele)} />
               <View className="cb">
                 <CheckItem
                   value={ele.id}
@@ -148,15 +162,27 @@ class Cart extends Component<IProps, {}> {
                 <View className="b">{ele.goods_name}</View>
                 <View className="p">{ele.specifition_names}</View>
                 <View className="price-wrap">
-                  <View className="price">
-                    <View className="retail">小区价</View>
-                    <View className="vip">
-                      ￥{ele.retail_price}
-                      <View className="label">
-                        会员{((ele.vip_price / ele.retail_price) * 10).toFixed(1)}折
+                  {userInfo.level === 0 ? (
+                    <View className="price">
+                      <View className="retail">小区价</View>
+                      <View className="vip">
+                        ￥{(ele.retail_price * ele.number).toFixed(1)}
+                        <View className="label">
+                          会员{((ele.vip_price / ele.retail_price) * 10 * ele.number).toFixed(1)}折
+                        </View>
                       </View>
                     </View>
-                  </View>
+                  ) : (
+                    <View className="price">
+                      <View className="retail">会员价</View>
+                      <View className="vip">
+                        ￥{(ele.vip_price * ele.number).toFixed(1)}
+                        <View className="label">
+                          省{((ele.retail_price - ele.vip_price) * ele.number).toFixed(1)}元
+                        </View>
+                      </View>
+                    </View>
+                  )}
                 </View>
                 <View className="input-number">
                   <AtInputNumber
@@ -177,13 +203,35 @@ class Cart extends Component<IProps, {}> {
         {cartList && cartList.length ? (
           <View className="bottom">
             <View className="check-wrap">
-              <CheckItem value="all" label="全选" onChange={this.handleCheckAll} />
+              <CheckItem
+                checked={checkAll}
+                value="all"
+                label="全选"
+                onChange={this.handleCheckAll}
+              />
             </View>
-            <View className="cart-wrap">
-              合计
-              <Text className="main-color">￥{cartTotal.checkedGoodsAmount}</Text>
-              {cartTotal.checkedGoodsAmount >= 49 ? <Text className="info-color">免邮</Text> : null}
-            </View>
+            {userInfo.level === 0 ? (
+              <View className="cart-wrap">
+                合计
+                <Text className="main-color">￥{cartTotal.checkedGoodsAmount.toFixed(1)}</Text>
+                {cartTotal.checkedGoodsAmount >= 49 ? (
+                  <Text className="info-color">免配送费</Text>
+                ) : null}
+              </View>
+            ) : (
+              <View className="cart-wrap">
+                合计
+                <Text className="main-color">
+                  ￥
+                  {cartTotal && cartTotal.checkedGoodsVipAmount
+                    ? cartTotal.checkedGoodsVipAmount.toFixed(1)
+                    : 0}
+                </Text>
+                {cartTotal.checkedGoodsVipAmount >= 39 ? (
+                  <Text className="info-color">免配送费</Text>
+                ) : null}
+              </View>
+            )}
             <View className="add-cart">
               <AtButton type="primary" onClick={this.checkOut}>
                 去结算

@@ -54,6 +54,21 @@ export default {
       }
       return res;
     },
+    *Del({ payload }, { call, put }) {
+      const res = yield call(Api.delCart, payload);
+      if (res.errno === 0) {
+        const { cartList, cartTotal, userInfo } = res.data;
+        yield put({
+          type: 'save',
+          payload: {
+            cartList,
+            cartTotal,
+            userInfo,
+          },
+        });
+      }
+      return res;
+    },
     *Check({ payload }, { call, put }) {
       const res = yield call(Api.postCheckCart, payload);
       if (res.errno === 0) {

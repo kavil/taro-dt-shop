@@ -143,12 +143,29 @@
         }
     }
     .vip-bar {
+        width: 100%;
+        margin-bottom: 20px;
+        box-sizing: border-box;
         height: 80px;
         border-radius: 5px;
-        line-height: 80px;
         padding: 0 20px;
-        margin-top: 30px;
         background: linear-gradient(to right, #fbf5f4, $color-dan);
+        @include fj();
+        align-items: center;
+        .left {
+            flex: 1;
+        }
+        .right {
+            width: 40%;
+            color: $color-primary;
+            @include fj(flex-end);
+            align-items: center;
+            font-size: 26px;
+            .ed-back {
+                color: $color-primary;
+                font-size: 28px;
+            }
+        }
         .tag {
             border-radius: 30px;
             display: inline-block;
@@ -266,10 +283,12 @@
     left: 50%;
     transform: translateX(-50%);
 }
+
 .toast-body-content__info text {
     color: #fff;
 }
-.badge{
+
+.badge {
     position: absolute;
     line-height: 1.1;
     top: 3px;
@@ -279,8 +298,9 @@
     color: #fff;
     background: $color-deep;
     border-radius: .29867rem .29867rem .29867rem 0;
-    box-shadow: 0 0.08533rem 0.17067rem 0 rgba(233,59,61,.2);
+    box-shadow: 0 0.08533rem 0.17067rem 0 rgba(233, 59, 61, .2);
 }
+
 // datail
 .detail-wrap {
     width: 100%;

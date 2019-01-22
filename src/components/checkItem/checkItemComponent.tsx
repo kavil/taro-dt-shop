@@ -29,11 +29,14 @@ class CheckItem extends Component<IProps, {}> {
       this.setState({ checkedAt: [this.props.value] });
     }
   }
-  // componentWillReceiveProps(props) {
-  //   console.log(props);
-    
-  //   this.setState({ checkedAt: [props.checked] });
-  // }
+  componentWillReceiveProps(props) {
+    console.log(props);
+    if (!props.checked) {
+      this.setState({ checkedAt: [] });
+    } else {
+      this.setState({ checkedAt: [props.value] });
+    }
+  }
 
   handleCheck = e => {
     if (this.props.onChange) this.props.onChange(e[0] || null);

@@ -209,7 +209,7 @@ class Index extends Component<IProps, {}> {
         <View className="index-top">
           <View className="community-wrap">
             <Image src={communityImg} />
-            景江花园
+            绑定小区享低价
             <Text className="erduufont ed-back go" />
           </View>
         </View>
@@ -256,7 +256,7 @@ class Index extends Component<IProps, {}> {
               {List[`cate${i}`] && List[`cate${i}`].list.length && List[`cate${i}`].loadOver ? (
                 <AtDivider content="没有更多了" fontSize="26" fontColor="#ccc" lineColor="#eee" />
               ) : null}
-              {!(List[`cate${i}`] && List[`cate${i}`].list.length) ? (
+              {!(List[`cate${i}`] && List[`cate${i}`].list.length) && List[`cate${i}`].loadOver ? (
                 <View className="nodata">
                   <Text className="erduufont ed-zanwushangpin" />
                   <View className="label">暂无商品</View>

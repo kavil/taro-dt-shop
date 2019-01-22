@@ -19,9 +19,10 @@ interface PageOwnProps {
   //父组件要传
 }
 interface PageStateProps {
+  // 自己要用的
   Detail: any;
   cartTotal: any;
-  // 自己要用的
+  userInfo: any;
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
@@ -133,7 +134,7 @@ class Goods extends Component<IProps, {}> {
 
   render() {
     const { addCartTip, openSku, curGoods } = this.state;
-    const { Detail, cartTotal } = this.props;
+    const { Detail, cartTotal, userInfo } = this.props;
     if (!Detail.info)
       return <AtActivityIndicator className="center" mode="center" color="#f1836f" />;
 
@@ -238,8 +239,8 @@ class Goods extends Component<IProps, {}> {
           <View className="price">
             <View className="retail">小区价</View>
             <View className="vip">
-              ￥{info.sku[0].retail_price}
-              <View className="counter">￥{info.sku[0].counter_price}</View>
+              ￥{info.sku[0].retail_price.toFixed(1)}
+              <View className="counter">￥{info.sku[0].counter_price.toFixed(1)}</View>
               <View className="label">
                 会员{((info.sku[0].vip_price / info.sku[0].retail_price) * 10).toFixed(1)}折
               </View>
@@ -266,9 +267,23 @@ class Goods extends Component<IProps, {}> {
             {info.goods_unit}
           </View>
           <View className="vip-bar">
-            <View className="tag">开通会员</View>
-            <Text className="text">
-              会员立省{(info.sku[0].retail_price - info.sku[0].vip_price).toFixed(1)}元
+            <View className="left">
+              {userInfo && userInfo.level !== 0 ? (
+                <View className="tag">您已开通会员</View>
+              ) : (
+                <View className="tag">开通会员</View>
+              )}
+              <Text className="text">
+                会员立省
+                <Text style={{ color: '#f5735b' }}>
+                  {(info.sku[0].retail_price - info.sku[0].vip_price).toFixed(1)}
+                </Text>
+                元
+              </Text>
+            </View>
+            <Text className="right">
+              {userInfo && userInfo.level !== 0 ? '续费' : '立即开通'}
+              <Text className="erduufont ed-back go" />
             </Text>
           </View>
 

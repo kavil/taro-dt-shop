@@ -95,8 +95,8 @@ class GoodsItem extends Component<IProps, {}> {
             <View className="price" onClick={this.nextPage}>
               <View className="retail">小区价</View>
               <View className="vip">
-                ￥{retail_price}
-                <View className="counter">￥{counter_price}</View>
+                ￥{retail_price.toFixed(1)}
+                {type !== 'mini' && <View className="counter">￥{counter_price.toFixed(1)}</View>}
                 <View className="label">会员{((vip_price / retail_price) * 10).toFixed(1)}折</View>
               </View>
             </View>
