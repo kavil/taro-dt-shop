@@ -4,6 +4,7 @@ import Index from './pages/index';
 import dva from './utils/dva';
 import models from './models';
 import { Provider } from '@tarojs/redux';
+import { connect } from '@tarojs/redux';
 
 import './app.scss';
 
@@ -30,8 +31,11 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
+      'pages/index/search',
+      'pages/neighbor/index',
+      'pages/neighbor/search',
+      'pages/goods/index',
       'pages/cart/index',
-      'pages/goods/index'
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -55,7 +59,7 @@ class App extends Component {
           text: '首页',
         },
         {
-          pagePath: 'pages/index/index',
+          pagePath: 'pages/neighbor/index',
           iconPath: 'static/images/circle.png',
           selectedIconPath: 'static/images/circle-a.png',
           text: '邻居圈',
@@ -74,9 +78,21 @@ class App extends Component {
         },
       ],
     },
+    permission: {
+      'scope.userLocation': {
+        desc: '你的位置信息将用于查询附近小区',
+      },
+    },
+    navigateToMiniProgramAppIdList: ['wx022960c7a872290f'],
   };
 
-  componentDidMount() {}
+  async componentDidMount() {
+    if (Taro.getStorageSync('token')) {
+      store.dispatch({
+        type: 'common/UserInfo',
+      });
+    }
+  }
 
   componentDidShow() {}
 

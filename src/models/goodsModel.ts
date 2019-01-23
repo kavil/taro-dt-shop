@@ -6,6 +6,7 @@ export default {
     cateList: [],
     List: {},
     Detail: {},
+    SearchList: [],
   },
 
   effects: {
@@ -87,6 +88,18 @@ export default {
         type: 'save',
         payload: {
           Detail: res.data,
+        },
+      });
+      return res.data;
+    },
+    *SearchList({ payload }, { call, put, select }) {
+      const { cityId } = yield select(state => state.common);
+      const res = yield call(Api.getGoodsList, { ...payload, cityId });
+      if (res.errno !== 0) return null;
+      yield put({
+        type: 'save',
+        payload: {
+          SearchList: res.data.data,
         },
       });
       return res.data;

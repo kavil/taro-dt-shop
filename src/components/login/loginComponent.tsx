@@ -38,7 +38,10 @@ class Login extends Component<IProps, {}> {
       });
     });
   }
-  componentWillUnmount(){
+  componentWillUnmount() {
+    Taro.eventCenter.trigger('login', false);
+  }
+  componentDidHide() {
     Taro.eventCenter.trigger('login', false);
   }
   componentWillReceiveProps(props) {

@@ -16,14 +16,17 @@
 @import "~taro-ui/dist/style/components/badge.scss";
 @import "~taro-ui/dist/style/components/checkbox.scss";
 @import "~taro-ui/dist/style/components/input-number.scss";
-view,
-text {
-    color: $font-primary;
-    font-size: 30px;
-}
+@import "~taro-ui/dist/style/components/avatar.scss";
+@import "~taro-ui/dist/style/components/noticebar.scss";
+// view,
+// text {
+//     color: $font-primary;
+//     font-size: 30px;
+// }
 
 .wrap {
     padding: 0 20px 20px;
+    color: $font-primary;
 }
 
 .p {
@@ -45,19 +48,19 @@ text {
 }
 
 .green {
-    color: #44b549;
+    color: #5fbfa7;
 }
 
 .green-bg {
-    background: #44b549;
+    background: #5fbfa7;
 }
 
 .purple {
-    color: purple;
+    color: #bc86bc;
 }
 
 .purple-bg {
-    background: purple;
+    background: #bc86bc;
 }
 
 .gray {
@@ -69,19 +72,23 @@ text {
 }
 
 .yellow {
-    color: #f8a101;
+    color: #f3b427;
 }
 
 .yellow-bg {
-    background: #f8a101;
+    background: #f3b427;
 }
 
 .red {
-    color: red;
+    color: #f0836f;
+}
+
+.white {
+    color: #fff;
 }
 
 .red-bg {
-    background: red;
+    background: #f0836f;
 }
 
 .go {
@@ -129,7 +136,20 @@ text {
 }
 
 .pad40 {
-    padding: 40px !important;
+    padding: 40px 20px;
+}
+
+.pad30 {
+    padding: 30px 20px;
+}
+
+.search-mask{
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 9999;
 }
 
 // taro-ui
@@ -172,5 +192,4 @@ text {
         left: 50;
         transform: translateX(-50%);
     }
-
 }

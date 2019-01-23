@@ -1,0 +1,65 @@
+@import "../../static/css/mixin";
+.neighbor-page {
+    .p {
+        font-size: 28px;
+    }
+    .h3 {
+        margin: 20px 0;
+    }
+    .padtb40 {
+        padding: 40px 0;
+    }
+    .pad20 {
+        padding: 0 20px 20px;
+    }
+    .search-wrap {
+        position: relative;
+    }
+    .community-wrap {
+        font-size: 36px;
+        font-weight: 400px;
+        @include fj();
+        align-items: center;
+        image {
+            margin: 0 10px 0 0;
+            @include wh(40px, 40px);
+        }
+        .left {
+            flex: 1;
+            @include fj(start);
+            align-items: center;
+        }
+        .right {
+            color: $font-info;
+            font-size: 26px;
+            width: 100px;
+            text-align: right;
+        }
+        .go {
+            vertical-align: -2px;
+        }
+    }
+    .top{
+        box-shadow: 0 0 8px 8px #eee;
+    }
+    .announcement{
+        margin: 40px 0 20px;
+    }
+    .features{
+        font-size: 24px;
+        color: $font-default;
+        @include fj(space-around);
+        margin-top: 30px;
+        .erduufont{
+            border-radius: 50%;
+            height: 50px;
+            width: 50px;
+            color: #fff;
+            padding: 18px;
+            display: block;
+            text-align: center;
+            line-height: 1;
+            margin: 0 auto 10px;
+        }
+    }
+}

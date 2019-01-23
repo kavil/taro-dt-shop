@@ -1,54 +1,53 @@
 @import "../../static/css/mixin";
 .index {
     padding-top: 198px;
-}
-
-.community-wrap {
-    font-size: 36px;
-    font-weight: 400px;
-    @include fj('start');
-    align-items: center;
-    image {
-        margin: 0 10px 0 0;
-        @include wh(40px, 40px);
+    .community-wrap {
+        font-size: 36px;
+        font-weight: 400px;
+        @include fj('start');
+        display: inline-flex;
+        align-items: center;
+        image {
+            margin: 0 10px 0 0;
+            @include wh(40px, 40px);
+        }
+        .ed-back {
+            font-size: 90%;
+            margin: 0 10px;
+        }
     }
-    .ed-back {
-        font-size: 90%;
-        margin: 0 10px;
+    @mixin fixTop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 1;
+        background: #fff;
     }
-}
-
-@mixin fixTop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    box-sizing: border-box;
-    z-index: 1;
-    background: #fff;
-}
-
-.index-top {
-    @include fixTop();
-    padding: 0 20px;
-}
-
-.search-wrap {
-    @include fixTop();
-    padding-left: 10px;
-    top: 50px;
-}
-
-.at-tabs .at-tabs__header {
-    @include fixTop();
-    top: 134px;
-}
-
-.cate-img {
-    margin: 30px 0 20px;
-    @include wh(100%, auto);
-    .img {
-        border-radius: 5px;
+    .index-top {
+        @include fixTop();
+        padding: 0 20px;
+    }
+    .search-wrap {
+        @include fixTop();
+        padding-left: 10px;
+        top: 50px;
+    }
+    .at-tabs .at-tabs__header {
+        @include fixTop();
+        top: 134px;
+    }
+    .cate-img {
+        margin: 30px 0 20px;
         @include wh(100%, auto);
+        .img {
+            border-radius: 5px;
+            @include wh(100%, auto);
+        }
     }
+}
+
+.index-search{
+    padding: 30px 0;
 }

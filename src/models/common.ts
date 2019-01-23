@@ -4,8 +4,8 @@ import * as Api from '../service/apiService';
 export default {
   namespace: 'common',
   state: {
+    userInfo: null,
     token: Taro.getStorageSync('token'),
-    userInfo: Taro.getStorageSync('userInfo'),
     launchInfo: JSON.parse(Taro.getStorageSync('launchInfo') || '{}'),
     wxLoginCode: null,
     cityId: 1720, // 渝水区
@@ -17,7 +17,7 @@ export default {
       if (!wxLoginCode) {
         const res = yield Taro.login();
         wxLoginCode = res.code;
-        put({
+        yield put({
           type: 'save',
           payload: {
             wxLoginCode,
@@ -34,11 +34,18 @@ export default {
       });
       return userInfo;
     },
-    *login({ payload }, { call }) {
+    *login({ payload }, { call, put }) {
       const res = yield call(Api.loginByWeixin, payload);
       if (res && res.errno === 0) {
-        Taro.setStorageSync('userInfo', res.data.userInfo);
-        Taro.setStorageSync('token', res.data.token);
+        const { userInfo, token } = res.data;
+        Taro.setStorageSync('token', token);
+        yield put({
+          type: 'save',
+          payload: {
+            userInfo,
+            token,
+          },
+        });
       } else {
         Taro.showToast({
           title: '登录失败，请重试',
@@ -47,32 +54,25 @@ export default {
       }
       return res && res.errno === 0;
     },
-    *bindPhone({ payload }, { call, put, select }) {
-      const res = yield call(Api.bindPhone, payload);
+    *UserInfo({ payload }, { call, put }) {
+      const res = yield call(Api.userInfo, payload);
       if (res && res.errno === 0) {
-        Taro.setStorageSync('userInfo', res.data.userInfo);
-        Taro.setStorageSync('token', res.data.token);
-      }
-      return res && res.errno === 0;
-    },
-    *loadColonelInfo({ payload }, { call, put, select }) {
-      const res = yield call(Api.colonelInfo, payload);
-      Taro.stopPullDownRefresh();
-      if (res.errno === 0 && res.data.id) {
+        const userInfo = res.data;
         yield put({
           type: 'save',
           payload: {
-            colonelInfo: res.data,
-            communityList: res.data.community,
-            manage: res.data.manage,
+            userInfo,
           },
         });
-        const curCommunity = yield select(state => state.common.curCommunity);
-
-        if (!curCommunity && res.data.community.length) {
-          Taro.setStorageSync('curCommunity', res.data.community[0].id);
-        }
       }
+      return res && res.errno === 0;
+    },
+    *bindPhone({ payload }, { call, put, select }) {
+      const res = yield call(Api.bindPhone, payload);
+      if (res && res.errno === 0) {
+        Taro.setStorageSync('token', res.data.token);
+      }
+      return res && res.errno === 0;
     },
   },
 

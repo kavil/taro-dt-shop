@@ -1,10 +1,29 @@
 @import "../../static/css/mixin";
+@import "../../static/iconfont/iconfont.scss";
 .goods-li {
     @include fj();
     padding: 30px 0;
     border-bottom: 1PX solid $border;
     .img-wrap {
         @include wh(240px, 240px);
+        position: relative;
+        .type-tag {
+            position: absolute;
+            top: -5px;
+            left: 0;
+            font-size: 22px;
+            line-height: 2.2;
+            border-radius: 15px 15px 15px 0;
+            padding: 0 10px;
+        }
+        .ed-ms {
+            background: $bg-color-panel;
+            color: #fff;
+        }
+        .ed-ys {
+            background: $color-ex;
+            color: #fff;
+        }
         .img {
             @include wh(240px, 240px);
         }
@@ -106,7 +125,7 @@
             text-align: center;
         }
     }
-    .sale-wrap{
+    .sale-wrap {
         width: 170px;
     }
     .right-wrap {

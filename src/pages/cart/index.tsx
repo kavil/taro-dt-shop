@@ -44,9 +44,7 @@ class Cart extends Component<IProps, {}> {
     this.setState({ checkAll: !this.props.cartList.find(ele => !ele.checked) });
     Taro.stopPullDownRefresh();
   }
-  loginSuccess = _ => {
-    this.componentDidShow();
-  };
+
   handleCheckAll = async value => {
     this.setState({ checkAll: value });
     await this.props.dispatch({
@@ -102,30 +100,33 @@ class Cart extends Component<IProps, {}> {
   render() {
     const { cartList, cartTotal, userInfo } = this.props;
     const { checkAll } = this.state;
+
     return (
       <View className="cart-page">
-        <View className="vip-bar">
-          <View className="left">
-            {userInfo.level === 0 ? (
-              <View className="tag">开通会员</View>
-            ) : (
-              <View className="tag">您已开通会员</View>
-            )}
-            {cartTotal && (
-              <Text className="text">
-                会员立省
-                <Text style={{ color: '#f5735b' }}>
-                  {(cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount).toFixed(1)}
+        {userInfo.level && (
+          <View className="vip-bar">
+            <View className="left">
+              {userInfo.level === 0 ? (
+                <View className="tag">开通会员</View>
+              ) : (
+                <View className="tag">您已开通会员</View>
+              )}
+              {cartTotal && (
+                <Text className="text">
+                  会员立省
+                  <Text style={{ color: '#f5735b' }}>
+                    {(cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount).toFixed(1)}
+                  </Text>
+                  元
                 </Text>
-                元
-              </Text>
-            )}
+              )}
+            </View>
+            <Text className="right">
+              {userInfo.level === 0 ? '立即开通' : '续费'}
+              <Text className="erduufont ed-back go" />
+            </Text>
           </View>
-          <Text className="right">
-            {userInfo.level === 0 ? '立即开通' : '续费'}
-            <Text className="erduufont ed-back go" />
-          </Text>
-        </View>
+        )}
 
         {cartList && cartList.length ? null : (
           <View className="nodata">
@@ -239,7 +240,6 @@ class Cart extends Component<IProps, {}> {
             </View>
           </View>
         ) : null}
-        <Login show={false} onChange={this.loginSuccess} />
       </View>
     );
   }

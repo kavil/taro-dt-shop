@@ -1,6 +1,6 @@
 import { ComponentClass } from 'react';
 import Taro, { Component } from '@tarojs/taro';
-import { View, Image } from '@tarojs/components';
+import { View, Image, Text } from '@tarojs/components';
 import { AtInputNumber, AtButton } from 'taro-ui';
 import { connect } from '@tarojs/redux';
 import './goodsComponent.scss';
@@ -74,6 +74,8 @@ class GoodsItem extends Component<IProps, {}> {
     return (
       <View className={className}>
         <View className="img-wrap" onClick={this.nextPage}>
+          {goods.goods_type === 2 && <Text className="type-tag erduufont ed-ms" />}
+          {goods.goods_type === 3 && <Text className="type-tag erduufont ed-ys" />}
           <Image lazyLoad className="img" src={goods.primary_pic_url + '@!480X480'} />
         </View>
         <View className="right-wrap">

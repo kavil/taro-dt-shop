@@ -23,6 +23,7 @@ interface PageDva {
   dispatch: Function;
   cateList: any[];
   List: any;
+  userInfo: any;
 }
 
 interface PageOwnProps {
@@ -100,15 +101,9 @@ class Index extends Component<IProps, {}> {
     Taro.navigateTo({ url });
   }
 
-  openLoginModal() {
-    Taro.login();
-    this.setState({
-      openLogin: true,
-    });
-  }
-
-  loginSuccess() {
-    // 更新状态
+  loginSuccess() {}
+  nextTab(url) {
+    Taro.switchTab({ url });
   }
   async handleClick(value) {
     const cate = this.props.cateList[value];
@@ -149,7 +144,10 @@ class Index extends Component<IProps, {}> {
         },
       });
       if (res.errno === 0) this.setState({ addCartTip: true });
-      if (res.errno === 401) Taro.eventCenter.trigger('login', true);
+      if (res.errno === 401) {
+        Taro.login(); // 经验 先获取到code 不容易失效
+        Taro.eventCenter.trigger('login', true);
+      }
     }
   };
   handleCloseSku = () => {
@@ -168,7 +166,6 @@ class Index extends Component<IProps, {}> {
   };
 
   state = {
-    openLogin: false,
     current: 0,
     addCartTip: false,
     openSku: false,
@@ -177,9 +174,8 @@ class Index extends Component<IProps, {}> {
   };
 
   render() {
-    const { List } = this.props;
+    const { List, userInfo } = this.props;
     const {
-      openLogin,
       current,
       addCartTip,
       openSku,
@@ -199,7 +195,7 @@ class Index extends Component<IProps, {}> {
 
     return (
       <View className="index wrap">
-        <Login show={openLogin} onChange={this.loginSuccess} />
+        <Login show={false} onChange={this.loginSuccess} />
         <AtToast
           isOpened={addCartTip}
           text="已添加到购物车"
@@ -207,14 +203,18 @@ class Index extends Component<IProps, {}> {
           onClose={this.clearToast}
         />
         <View className="index-top">
-          <View className="community-wrap">
+          <View
+            className="community-wrap"
+            onClick={this.nextTab.bind(this, '/pages/neighbor/index')}
+          >
             <Image src={communityImg} />
-            绑定小区享低价
+            {userInfo && userInfo.community ? userInfo.community.name : '绑定小区享低价'}
             <Text className="erduufont ed-back go" />
           </View>
         </View>
         <View className="search-wrap">
           <AtSearchBar value="" onChange={this.handNull} />
+          <View className="search-mask" onClick={this.nextPage.bind(this, '/pages/index/search')} />
         </View>
 
         <AtTabs
@@ -265,9 +265,9 @@ class Index extends Component<IProps, {}> {
             </AtTabsPane>
           ))}
         </AtTabs>
-        {openSku ? (
+        {openSku && (
           <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />
-        ) : null}
+        )}
       </View>
     );
   }
