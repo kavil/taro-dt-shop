@@ -12,7 +12,6 @@ type PageState = {};
 interface PageDvaProps {
   dispatch: Function;
   token: any;
-  userInfo: any;
   NearbyList: any[];
 }
 
@@ -21,12 +20,13 @@ interface PageOwnProps {
 }
 interface PageStateProps {
   // 自己要用的
+  userInfo: any;
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ neighbor, common }) => ({
-  ...common,
   ...neighbor,
+  ...common,
 }))
 class Neighbor extends Component<IProps, {}> {
   config = {
@@ -34,20 +34,16 @@ class Neighbor extends Component<IProps, {}> {
   };
 
   async componentDidShow() {
+    this.setState({ userInfo: this.props.userInfo });
     if (!this.props.token) {
       this.setState({ init: true });
-      setTimeout(() => {
-        Taro.login();
-        Taro.eventCenter.trigger('login', true);
-      });
       return;
     }
-    if (this.props.userInfo.community) {
+    if (this.props.userInfo.uid) {
       // 获取正常数据
-      await this.props.dispatch({
-        type: 'neighbor/Status',
-      });
-      
+      // await this.props.dispatch({
+      //   type: 'neighbor/Status',
+      // });
     } else {
       // 获取地理位置
       let local;
@@ -105,23 +101,25 @@ class Neighbor extends Component<IProps, {}> {
     myCommunity: false,
     init: false,
     localSetting: true,
+    userInfo: {},
   };
 
   render() {
-    const { NearbyList, token, userInfo } = this.props;
-    const { init, localSetting } = this.state;
+    const { NearbyList, token } = this.props;
+    const { init, localSetting, userInfo }: any = this.state;
+    console.log(userInfo.uid);
 
     return (
       <View className="neighbor-page">
         <Login show={false} onChange={this.loginSuccess} />
         {init && (
           <View>
-            {userInfo && userInfo.community ? (
+            {userInfo && userInfo.name ? (
               <View className="pad20 top">
                 <View className="community-wrap">
                   <View className="left">
                     <Image src={communityImg} />
-                    {userInfo.community.name}
+                    {userInfo.name}
                   </View>
                   <View className="right" onClick={this.gotoSearch}>
                     更换
@@ -129,11 +127,26 @@ class Neighbor extends Component<IProps, {}> {
                   </View>
                 </View>
                 <View className="features">
-                  <View className="li"><Text className="erduufont ed-write blue-bg" />写评测</View>
-                  <View className="li"><Text className="erduufont ed-paizhao purple-bg" />小区美拍</View>
-                  <View className="li"><Text className="erduufont ed-car yellow-bg" />小区拼车</View>
-                  <View className="li"><Text className="erduufont ed-wuye red-bg" />小区物业</View>
-                  <View className="li"><Text className="erduufont ed-weixiu gray-bg" />维修装修</View>
+                  <View className="li">
+                    <Text className="erduufont ed-write blue-bg" />
+                    写评测
+                  </View>
+                  <View className="li">
+                    <Text className="erduufont ed-paizhao purple-bg" />
+                    小区美拍
+                  </View>
+                  <View className="li">
+                    <Text className="erduufont ed-car yellow-bg" />
+                    小区拼车
+                  </View>
+                  <View className="li">
+                    <Text className="erduufont ed-wuye red-bg" />
+                    小区物业
+                  </View>
+                  <View className="li">
+                    <Text className="erduufont ed-weixiu gray-bg" />
+                    维修装修
+                  </View>
                 </View>
                 <View className="announcement">
                   <AtNoticebar icon="volume-plus">小区公告</AtNoticebar>

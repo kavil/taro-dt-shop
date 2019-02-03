@@ -18,6 +18,8 @@
 @import "~taro-ui/dist/style/components/input-number.scss";
 @import "~taro-ui/dist/style/components/avatar.scss";
 @import "~taro-ui/dist/style/components/noticebar.scss";
+@import "~taro-ui/dist/style/components/list.scss";
+@import "~taro-ui/dist/style/components/tag.scss";
 // view,
 // text {
 //     color: $font-primary;
@@ -189,7 +191,7 @@
     .center {
         position: absolute;
         top: 40%;
-        left: 50;
+        left: 50%;
         transform: translateX(-50%);
     }
 }

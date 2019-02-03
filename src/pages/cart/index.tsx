@@ -23,8 +23,9 @@ interface PageStateProps {
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
-@connect(({ cart }) => ({
+@connect(({ cart, common }) => ({
   ...cart,
+  ...common,
 }))
 class Cart extends Component<IProps, {}> {
   config = {
@@ -32,9 +33,14 @@ class Cart extends Component<IProps, {}> {
   };
 
   async componentDidShow() {
-    await this.props.dispatch({
+    const res = await this.props.dispatch({
       type: 'cart/Index',
     });
+    if (res.errno === 401) {
+      this.setState({
+        nologin: true,
+      });
+    }
     this.setState({ checkAll: !this.props.cartList.find(ele => !ele.checked) });
   }
   async onPullDownRefresh() {
@@ -44,6 +50,12 @@ class Cart extends Component<IProps, {}> {
     this.setState({ checkAll: !this.props.cartList.find(ele => !ele.checked) });
     Taro.stopPullDownRefresh();
   }
+  loginBtn = () => {
+    Taro.eventCenter.trigger('login', true);
+  };
+  loginSuccess = () => {
+    this.onPullDownRefresh();
+  };
 
   handleCheckAll = async value => {
     this.setState({ checkAll: value });
@@ -65,7 +77,6 @@ class Cart extends Component<IProps, {}> {
     });
     this.setState({ checkAll: !this.props.cartList.find(ele => !ele.checked) });
   };
-  checkOut = () => {};
   nextTab = url => {
     Taro.switchTab({ url });
   };
@@ -74,7 +85,6 @@ class Cart extends Component<IProps, {}> {
   }
   changeCartNumber = async (goods, value) => {
     if (isNaN(value)) return;
-    console.log(goods, value);
     await this.props.dispatch({
       type: 'cart/Up',
       payload: {
@@ -95,14 +105,16 @@ class Cart extends Component<IProps, {}> {
   };
   state = {
     checkAll: false,
+    nologin: false,
   };
 
   render() {
     const { cartList, cartTotal, userInfo } = this.props;
-    const { checkAll } = this.state;
+    const { checkAll, nologin } = this.state;
 
     return (
       <View className="cart-page">
+        <Login show={false} onChange={this.loginSuccess} />
         {userInfo.level && (
           <View className="vip-bar">
             <View className="left">
@@ -132,13 +144,19 @@ class Cart extends Component<IProps, {}> {
           <View className="nodata">
             <Text className="erduufont ed-zanwushangpin" />
             <View className="label">购物车是空的</View>
-            <AtButton
-              size="small"
-              type="secondary"
-              onClick={this.nextTab.bind(this, '/pages/index/index')}
-            >
-              去逛逛
-            </AtButton>
+            {nologin ? (
+              <AtButton size="small" type="secondary" onClick={this.loginBtn}>
+                登录
+              </AtButton>
+            ) : (
+              <AtButton
+                size="small"
+                type="secondary"
+                onClick={this.nextTab.bind(this, '/pages/index/index')}
+              >
+                去逛逛
+              </AtButton>
+            )}
           </View>
         )}
 
@@ -234,7 +252,15 @@ class Cart extends Component<IProps, {}> {
               </View>
             )}
             <View className="add-cart">
-              <AtButton type="primary" onClick={this.checkOut}>
+              <AtButton
+                type="primary"
+                disabled={
+                  userInfo.level === 0
+                    ? cartTotal.checkedGoodsAmount === 0
+                    : cartTotal.checkedGoodsVipAmount === 0
+                }
+                onClick={this.nextPage.bind(this, '/pages/cart/checkout')}
+              >
                 去结算
               </AtButton>
             </View>

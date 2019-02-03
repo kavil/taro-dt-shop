@@ -3,10 +3,11 @@ import { ComponentClass } from 'react';
 import { View, Swiper, Image, SwiperItem, Text, RichText, ScrollView } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
-import { AtActivityIndicator, AtSteps, AtCountdown, AtButton, AtToast } from 'taro-ui';
+import { AtActivityIndicator, AtSteps, AtCountdown, AtButton } from 'taro-ui';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
 import Login from '../../components/login/loginComponent';
+import { tip } from '../../utils/tool';
 const qulity1 = 'https://img.kavil.com.cn/3991547959471_.pic.jpg';
 const qulity2 = 'https://img.kavil.com.cn/4011547959487_.pic.jpg';
 
@@ -26,9 +27,10 @@ interface PageStateProps {
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
-@connect(({ goods, cart }) => ({
+@connect(({ goods, cart, common }) => ({
   ...goods,
   ...cart,
+  ...common,
 }))
 class Goods extends Component<IProps, {}> {
   async componentDidMount() {
@@ -96,7 +98,7 @@ class Goods extends Component<IProps, {}> {
           goodsId: goods.id,
         },
       });
-      if (res.errno === 0) this.setState({ addCartTip: true });
+      if (res.errno === 0) tip('已添加到购物车');
       if (res.errno === 401) Taro.eventCenter.trigger('login', true);
     }
   };
@@ -110,7 +112,7 @@ class Goods extends Component<IProps, {}> {
       type: 'cart/Add',
       payload,
     });
-    if (res.errno === 0) this.setState({ addCartTip: true });
+    if (res.errno === 0) tip('已添加到购物车');
     if (res.errno === 401) Taro.eventCenter.trigger('login', true);
   };
 
@@ -120,20 +122,17 @@ class Goods extends Component<IProps, {}> {
       urls: [img + '@!q90'],
     });
   };
-  clearToast = () => {
-    this.setState({ addCartTip: false });
-  };
+
   nextTab(url) {
     Taro.switchTab({ url });
   }
   state = {
-    addCartTip: false,
     openSku: false,
     curGoods: {},
   };
 
   render() {
-    const { addCartTip, openSku, curGoods } = this.state;
+    const { openSku, curGoods } = this.state;
     const { Detail, cartTotal, userInfo } = this.props;
     if (!Detail.info)
       return <AtActivityIndicator className="center" mode="center" color="#f1836f" />;
@@ -358,12 +357,6 @@ class Goods extends Component<IProps, {}> {
         {openSku ? (
           <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />
         ) : null}
-        <AtToast
-          isOpened={addCartTip}
-          text="已添加到购物车"
-          duration={1000}
-          onClose={this.clearToast}
-        />
       </View>
     );
   }

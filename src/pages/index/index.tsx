@@ -2,12 +2,13 @@ import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
 import { View, Image, Text } from '@tarojs/components';
-import { AtSearchBar, AtTabs, AtTabsPane, AtDivider, AtToast } from 'taro-ui';
+import { AtSearchBar, AtTabs, AtTabsPane, AtDivider } from 'taro-ui';
 import communityImg from '../../static/images/community.png';
 import Login from '../../components/login/loginComponent';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
 import './index.scss';
+import { tip } from '../../utils/tool';
 // #region 书写注意
 //
 // 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
@@ -127,9 +128,6 @@ class Index extends Component<IProps, {}> {
   }
 
   handNull = () => {};
-  clearToast = () => {
-    this.setState({ addCartTip: false });
-  };
 
   addCartOk = async goods => {
     if (goods.sku.length > 1) {
@@ -143,7 +141,7 @@ class Index extends Component<IProps, {}> {
           goodsId: goods.id,
         },
       });
-      if (res.errno === 0) this.setState({ addCartTip: true });
+      if (res.errno === 0) tip('已添加到购物车');
       if (res.errno === 401) {
         Taro.login(); // 经验 先获取到code 不容易失效
         Taro.eventCenter.trigger('login', true);
@@ -161,13 +159,12 @@ class Index extends Component<IProps, {}> {
       payload,
     });
     if (res) {
-      this.setState({ addCartTip: true });
+      tip('已添加到购物车');
     }
   };
 
   state = {
     current: 0,
-    addCartTip: false,
     openSku: false,
     curGoods: {},
     cateTopList: [],
@@ -177,7 +174,6 @@ class Index extends Component<IProps, {}> {
     const { List, userInfo } = this.props;
     const {
       current,
-      addCartTip,
       openSku,
       curGoods,
       cateTopList,
@@ -196,19 +192,13 @@ class Index extends Component<IProps, {}> {
     return (
       <View className="index wrap">
         <Login show={false} onChange={this.loginSuccess} />
-        <AtToast
-          isOpened={addCartTip}
-          text="已添加到购物车"
-          duration={1000}
-          onClose={this.clearToast}
-        />
         <View className="index-top">
           <View
             className="community-wrap"
             onClick={this.nextTab.bind(this, '/pages/neighbor/index')}
           >
             <Image src={communityImg} />
-            {userInfo && userInfo.community ? userInfo.community.name : '绑定小区享低价'}
+            {userInfo && userInfo.uid ? userInfo.name : '绑定小区享低价'}
             <Text className="erduufont ed-back go" />
           </View>
         </View>

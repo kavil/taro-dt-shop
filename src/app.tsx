@@ -31,11 +31,15 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
+      'pages/ucenter/index',
+      'pages/ucenter/coupon',
+      'pages/order/index',
       'pages/index/search',
       'pages/neighbor/index',
       'pages/neighbor/search',
       'pages/goods/index',
       'pages/cart/index',
+      'pages/cart/checkout',
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -71,7 +75,7 @@ class App extends Component {
           text: '购物车',
         },
         {
-          pagePath: 'pages/index/index',
+          pagePath: 'pages/ucenter/index',
           iconPath: 'static/images/me.png',
           selectedIconPath: 'static/images/me-a.png',
           text: '我的',

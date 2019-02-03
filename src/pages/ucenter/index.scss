@@ -1,0 +1,127 @@
+@import "../../static/css/mixin";
+.ucenter-page {}
+
+.me-wrap {
+    @include fj();
+    padding: 40px 20px;
+    .p {
+        font-size: 28px;
+    }
+    .info {
+        flex: 1;
+        .tag {
+            font-size: 24px;
+            padding: 4px 10px;
+            border: 1PX solid $color-brand-light;
+        }
+    }
+    .ava-wrap {
+        @include wh(160px, 160px);
+        .image {
+            @include wh(160px, 160px);
+            border-radius: 50%;
+        }
+    }
+}
+
+.divsion {
+    border-top: 1PX solid $border;
+    border-bottom: 1PX solid $border;
+    height: 30px;
+    width: 100%;
+    background: $bg-color-base;
+}
+
+.operate-wrap {
+    @include fj('center');
+    padding: 30px;
+    .li {
+        flex: 1;
+        text-align: center;
+        font-size: 24px;
+        color: $font-default;
+        .erduufont {
+            color: $font-default;
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+    }
+    .at-list::after {
+        border: none !important;
+    }
+    .at-list__item::after {
+        border-color: $border;
+    }
+}
+
+.center {
+    padding: 100px 0;
+    text-align: center;
+}
+
+.coupon-page {
+    background: $bg-color-base;
+    .coupon-ul {
+        padding: 0 40px 50px;
+        overflow: hidden;
+    }
+    .cli {
+        &.disabled {
+            filter: gray;
+            filter: grayscale(100%);
+        }
+        margin-top: 40px;
+        border-radius: 10px;
+        background: #fff;
+        position: relative;
+        box-shadow: 0 0 1px 1px $border;
+        .cicle {
+            width: 40px;
+            height: 40px;
+            background: $bg-color-base;
+            border-radius: 50%;
+            position: absolute;
+            top: 60px;
+            &.l {
+                left: -20px;
+            }
+            &.r {
+                right: -20px;
+            }
+        }
+        .name{
+            margin-right: 15px;
+        }
+        .top {
+            @include fj;
+            border-bottom: 1px dashed $border;
+        }
+        .left {
+            width: 200px;
+            text-align: center;
+            margin: 15px;
+            border-right: 1px dashed $border;
+            .money {
+                font-size: 100px;
+                padding-top: 20px;
+                line-height: 1;
+                color: $color-primary;
+                .mini {
+                    font-size: 40%;
+                    vertical-align: 6px;
+                }
+            }
+        }
+        .right {
+            flex: 1;
+            padding-left: 40px;
+            display: flex;
+            align-items: center;
+        }
+        .bottom {
+            line-height: 2.5;
+            padding-left: 20px;
+        }
+    }
+}

@@ -67,12 +67,20 @@ export default {
       }
       return res && res.errno === 0;
     },
-    *bindPhone({ payload }, { call, put, select }) {
-      const res = yield call(Api.bindPhone, payload);
+    *BindPhone({ payload }, { call, put, select }) {
+      const { wxLoginCode } = yield select(state => state.common);
+      const res = yield call(Api.bindPhone, { ...payload, code: wxLoginCode });
       if (res && res.errno === 0) {
-        Taro.setStorageSync('token', res.data.token);
+        const { userInfo } = yield select(state => state.common);
+        yield put({
+          type: 'save',
+          payload: {
+            userInfo: { ...userInfo, mobile: res.data },
+          },
+        });
+        console.log(userInfo, { ...userInfo, mobile: res.data });
       }
-      return res && res.errno === 0;
+      return res;
     },
   },
 

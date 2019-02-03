@@ -10,7 +10,6 @@ type PageState = {};
 interface PageDvaProps {
   dispatch: Function;
   token: any;
-  userInfo: any;
   NearbyList: any[];
   SearchList: any[];
 }
@@ -104,13 +103,13 @@ class NeighborSearch extends Component<IProps, {}> {
             onConfirm={this.searchCommunity}
           />
         </View>
-        <View className="pad20">
+        <View className="pad20 pt">
           {SearchList.map(ele => (
             <CommunityItem key={ele.id} item={ele} onChange={this.bindOk.bind(this, ele)} />
           ))}
         </View>
         {!localSetting && (
-          <View className="pad20">
+          <View className="pad20 pt">
             <AtButton type="primary" onClick={this.openSetting}>
               <Text className="white">打开位置权限</Text>
             </AtButton>

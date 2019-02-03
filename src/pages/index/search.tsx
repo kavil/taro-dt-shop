@@ -1,12 +1,13 @@
 import Taro, { Component } from '@tarojs/taro';
 import { ComponentClass } from 'react';
-import { View, Text } from '@tarojs/components';
+import { View } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
-import { AtSearchBar, AtToast } from 'taro-ui';
+import { AtSearchBar } from 'taro-ui';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
 import Login from '../../components/login/loginComponent';
 import './index.scss';
+import { tip } from '../../utils/tool';
 
 type PageState = {};
 interface PageDvaProps {
@@ -86,34 +87,24 @@ class IndexSearch extends Component<IProps, {}> {
       payload,
     });
     if (res) {
-      this.setState({ addCartTip: true });
+      tip('已添加到购物车');
     }
-  };
-  clearToast = () => {
-    this.setState({ addCartTip: false });
   };
   state = {
     searchValue: '',
     openSku: false,
     curGoods: {},
-    addCartTip: false,
   };
 
   render() {
     const { SearchList } = this.props;
-    const { searchValue, openSku, curGoods, addCartTip } = this.state;
+    const { searchValue, openSku, curGoods } = this.state;
     return (
       <View className="index-search">
         {openSku && (
           <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />
         )}
         <Login show={false} onChange={this.loginSuccess} />
-        <AtToast
-          isOpened={addCartTip}
-          text="已添加到购物车"
-          duration={1000}
-          onClose={this.clearToast}
-        />
         <View className="search-wrap">
           <AtSearchBar
             focus
