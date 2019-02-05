@@ -1,0 +1,60 @@
+@import "../../static/css/mixin";
+.score-page{
+    padding-top:79px;
+}
+.pick {
+    width: 100%;
+    padding: 10px;
+    border-top: 1px solid $border;
+    border-bottom: 1px solid $border;
+    background: #fff;
+    margin-bottom: 20px;
+    text-align: center;
+    color: $font-default;
+    position: fixed;
+    top: 0;
+    .ed-back {
+        vertical-align: -2px;
+        margin-left:10px;
+    }
+}
+
+.base-ul {
+    border-top: 1px solid $border;
+    border-bottom: 1px solid $border;
+    background: #fff;
+    .li {
+        margin: 20px 20px 0;
+        padding-bottom: 20px;
+        border-bottom: 1px solid $border;
+        &:last-child {
+            border: none;
+        }
+        @include fj('space-between');
+        .left {
+            width: 70%;
+        }
+        .right {
+            width: 30%;
+            text-align: right;
+        }
+        .h2 {
+            @include ddd;
+            font-size: 32px;
+            width: 100%;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+        .type {
+            color: $font-info;
+            font-size: 24px;
+        }
+        .time {
+            color: $font-default;
+            font-size: 26px;
+        }
+        .money {
+            font-size: 50px;
+        }
+    }
+}

@@ -21,8 +21,9 @@ type PageOwnProps = {
 
 type IProps = PageOwnProps & DispatchOption & PageDispatchProps;
 
-@connect(({ order, common }) => ({
+@connect(({ order, cart, common }) => ({
   ...order,
+  ...cart,
   ...common,
 }))
 export class OrderLi extends Component<IProps, {}> {
@@ -48,6 +49,37 @@ export class OrderLi extends Component<IProps, {}> {
     }
   };
 
+  pay = async () => {
+    Taro.redirectTo({
+      url: `/pages/order/purchased?orderId=${this.props.order.id}&type=ok`,
+    });
+    return;
+    const payParam = await this.props.dispatch({
+      type: 'cart/Prepay',
+      payload: {
+        orderId: this.props.order.id,
+      },
+    });
+    if (!payParam) {
+      return;
+    }
+    const res = await Taro.requestPayment({
+      timeStamp: payParam.timeStamp,
+      nonceStr: payParam.nonceStr,
+      package: payParam.package,
+      signType: payParam.signType,
+      paySign: payParam.paySign,
+    });
+    if (res) {
+      Taro.redirectTo({
+        url: `/pages/order/purchased?orderId=${this.props.order.id}&type=ok`,
+      });
+    } else {
+      Taro.redirectTo({
+        url: `/pages/order/purchased?orderId=${this.props.order.id}&type=no`,
+      });
+    }
+  };
   onTimeUp = () => {};
   countdown = add_time => {
     const cha = (new Date(add_time).getTime() + 3600000 - new Date().getTime()) / 1000;
@@ -127,7 +159,7 @@ export class OrderLi extends Component<IProps, {}> {
         <View className="bottom">
           <View className="left">
             <Text className={`st st-${order.order_status}`}>{orderRange[order.order_status]}</Text>
-            {order.order_status ? '实付：￥' + order.actual_price : ''}
+            {order.order_status ? '实付:￥' + order.actual_price : ''}
           </View>
           <View className="right">
             {op.delete && <Text className="secondary">删除订单</Text>}
@@ -142,15 +174,15 @@ export class OrderLi extends Component<IProps, {}> {
               </AtButton>
             )}
             {op.pay && (
-              <AtButton size="small" circle type="secondary">
+              <AtButton size="small" circle type="secondary" onClick={this.pay}>
                 去付款
               </AtButton>
             )}
-            {op.buy && (
+            {/* {op.buy && (
               <AtButton size="small" circle type="secondary">
                 再次购买
               </AtButton>
-            )}
+            )} */}
           </View>
         </View>
       </View>

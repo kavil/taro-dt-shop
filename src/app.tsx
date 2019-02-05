@@ -31,10 +31,12 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
+      'pages/index/search',
       'pages/ucenter/index',
       'pages/ucenter/coupon',
+      'pages/ucenter/score',
       'pages/order/index',
-      'pages/index/search',
+      'pages/order/purchased',
       'pages/neighbor/index',
       'pages/neighbor/search',
       'pages/goods/index',

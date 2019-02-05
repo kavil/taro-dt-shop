@@ -1,0 +1,26 @@
+@import "../../static/css/mixin";
+
+.purchased-page {
+    padding: 50px 0;
+    .result{
+        text-align: center;
+    }
+    .erduufont{
+        font-size: 100px;
+    }
+    .ed-cuo{
+        color: red;
+    }
+    .p{
+        text-align: left;
+        text-indent: 300px;
+    }
+    .op{
+        @include fj(space-around);
+        padding-top: 40px;
+    }
+    .h4{
+        padding: 30px 0;
+    }
+}
+

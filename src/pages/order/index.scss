@@ -106,11 +106,12 @@ page, .page{
             }
         }
         .left {
-            width: 200px;
+            width: 300px;
             color: $btn-active;
             font-size: 24px;
             display: flex;
-            align-items: stretch
+            align-items: stretch;
+            line-height: 48px;
         }
     }
     .coupon {

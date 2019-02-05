@@ -11,6 +11,7 @@ export default {
     refresh: true,
     search: undefined,
     orderList: [],
+    Detail: null,
   },
 
   effects: {

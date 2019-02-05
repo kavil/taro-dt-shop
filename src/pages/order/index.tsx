@@ -137,7 +137,7 @@ export default class Order extends Component<IProps, {}> {
       { title: '待付款' },
       { title: '待收货' },
       { title: '待评价' },
-      { title: '退换' },
+      // { title: '退换' },
     ];
     return (
       <View className="order-page">
@@ -158,10 +158,12 @@ export default class Order extends Component<IProps, {}> {
                 })}
               </View>
             ) : (
-              <View className="nodata">
-                <Text className="erduufont ed-zanwushuju" />
-                <View className="label">暂无订单</View>
-              </View>
+              orderList && (
+                <View className="nodata">
+                  <Text className="erduufont ed-zanwushuju" />
+                  <View className="label">暂无订单</View>
+                </View>
+              )
             )}
           </AtTabsPane>
           <AtTabsPane current={current} index={1}>
@@ -172,10 +174,12 @@ export default class Order extends Component<IProps, {}> {
                 })}
               </View>
             ) : (
-              <View className="nodata">
-                <Text className="erduufont ed-zanwushuju" />
-                <View className="label">暂无订单</View>
-              </View>
+              orderList && (
+                <View className="nodata">
+                  <Text className="erduufont ed-zanwushuju" />
+                  <View className="label">暂无订单</View>
+                </View>
+              )
             )}
           </AtTabsPane>
           <AtTabsPane current={current} index={2}>
@@ -186,10 +190,12 @@ export default class Order extends Component<IProps, {}> {
                 })}
               </View>
             ) : (
-              <View className="nodata">
-                <Text className="erduufont ed-zanwushuju" />
-                <View className="label">暂无数据</View>
-              </View>
+              orderList && (
+                <View className="nodata">
+                  <Text className="erduufont ed-zanwushuju" />
+                  <View className="label">暂无订单</View>
+                </View>
+              )
             )}
           </AtTabsPane>
           <AtTabsPane current={current} index={3}>
@@ -200,10 +206,12 @@ export default class Order extends Component<IProps, {}> {
                 })}
               </View>
             ) : (
-              <View className="nodata">
-                <Text className="erduufont ed-zanwushuju" />
-                <View className="label">暂无数据</View>
-              </View>
+              orderList && (
+                <View className="nodata">
+                  <Text className="erduufont ed-zanwushuju" />
+                  <View className="label">暂无订单</View>
+                </View>
+              )
             )}
           </AtTabsPane>
           <AtTabsPane current={current} index={4}>
@@ -214,15 +222,19 @@ export default class Order extends Component<IProps, {}> {
                 })}
               </View>
             ) : (
-              <View className="nodata">
-                <Text className="erduufont ed-zanwushuju" />
-                <View className="label">暂无数据</View>
-              </View>
+              orderList && (
+                <View className="nodata">
+                  <Text className="erduufont ed-zanwushuju" />
+                  <View className="label">暂无订单</View>
+                </View>
+              )
             )}
           </AtTabsPane>
         </AtTabs>
         {loadOver && orderList && orderList.length && (
-          <AtDivider content="没有更多了" fontSize="24" fontColor="#ddd" lineColor="#ddd" />
+          <View className="pad40">
+            <AtDivider content="没有更多了" fontSize="24" fontColor="#ddd" lineColor="#ddd" />
+          </View>
         )}
       </View>
     );

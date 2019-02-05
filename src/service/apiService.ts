@@ -23,9 +23,11 @@ export const nearbyList = data => Request({ url: '/community/nearbyList', method
 export const communitySearch = data => Request({ url: '/community/search', method: 'GET', data });
 export const communityBind = data => Request({ url: '/community/bind', method: 'POST', data });
 
-export const getCoupon = data => Request({ url: '/coupon/list', method: 'GET', data });
 export const orderList = data => Request({ url: '/order', method: 'GET', data });
 export const orderCancel = data => Request({ url: '/order/cancel', method: 'POST', data });
+
+export const getCoupon = data => Request({ url: '/coupon/list', method: 'GET', data });
+export const scoreList = data => Request({ url: '/score', method: 'GET', data });
 
 // 模板自动生成占位 勿删
 

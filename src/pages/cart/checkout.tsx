@@ -170,12 +170,15 @@ class CheckOut extends Component<IProps, {}> {
       signType: payParam.signType,
       paySign: payParam.paySign,
     });
-    if (res) {
-      console.log(res, 'ok');
-      Taro.redirectTo({ url: '/pages/cart/buyed?type=ok' });
+
+    if (res === 'requestPayment:fail cancel') {
+      Taro.redirectTo({
+        url: `/pages/order/purchased?orderId=${orderRes.id}&type=no`,
+      });
     } else {
-      console.log(res, 'no');
-      Taro.redirectTo({ url: '/pages/cart/buyed?type=no' });
+      Taro.redirectTo({
+        url: `/pages/order/purchased?orderId=${orderRes.id}&type=ok`,
+      });
     }
   };
 
