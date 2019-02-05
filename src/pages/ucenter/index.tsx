@@ -35,6 +35,10 @@ class Ucenter extends Component<IProps, {}> {
       Taro.setStorageSync('gotoOrder', '');
       this.nextPage('/pages/order/index');
     }
+    const vipSave = this.props.dispatch({
+      type: 'ucenter/VipSave',
+    });
+    this.setState({ vipSave });
   }
 
   componentDidMount() {}
@@ -53,8 +57,13 @@ class Ucenter extends Component<IProps, {}> {
     // this.onPullDownRefresh();
   };
 
+  state = {
+    vipSave: 0,
+  };
+
   render() {
     const { userInfo } = this.props;
+    const { vipSave } = this.state;
     return (
       <View className="ucenter-page">
         <Login show={false} onChange={this.loginSuccess} />
@@ -81,6 +90,27 @@ class Ucenter extends Component<IProps, {}> {
             <View className="ava-wrap">
               <Image className="image" mode="scaleToFill" src={userInfo.avatarUrl} />
             </View>
+          </View>
+        )}
+        {userInfo.level && (
+          <View className="vip-bar">
+            <View className="left">
+              {userInfo.level === 0 ? (
+                <View className="tag">开通会员</View>
+              ) : (
+                <View className="tag">您已开通会员</View>
+              )}
+              {vipSave && (
+                <Text className="text">
+                  已为您省
+                  <Text style={{ color: '#f5735b' }}>{vipSave.toFixed(1)}</Text>元
+                </Text>
+              )}
+            </View>
+            <Text className="right">
+              {userInfo.level === 0 ? '立即开通' : '续费'}
+              <Text className="erduufont ed-back go" />
+            </Text>
           </View>
         )}
         <View className="divsion" />

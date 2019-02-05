@@ -1,4 +1,5 @@
 @import "../../static/css/mixin";
+@import "../../static/css/vipbar";
 .cart-page {
     padding-bottom: 100px;
     &.bg {
@@ -93,46 +94,7 @@
     .main-color {
         color: $color-brand;
     }
-    .vip-bar {
-        width: 100%;
-        margin-bottom: 20px;
-        box-sizing: border-box;
-        height: 80px;
-        border-radius: 5px;
-        padding: 0 20px;
-        background: linear-gradient(to right, #fbf5f4, $color-dan);
-        @include fj();
-        align-items: center;
-        .left {
-            flex: 1;
-        }
-        .right {
-            width: 40%;
-            color: $color-primary;
-            @include fj(flex-end);
-            align-items: center;
-            font-size: 26px;
-            .ed-back {
-                color: $color-primary;
-                font-size: 28px;
-            }
-        }
-        .tag {
-            border-radius: 30px;
-            display: inline-block;
-            padding: 0 10px;
-            color: #fff;
-            font-weight: 500;
-            margin-right: 20px;
-            background: $color-ex;
-            font-size: 24px;
-            line-height: 1.5;
-        }
-        .text {
-            color: $color-ex;
-            font-size: 26px;
-        }
-    }
+
     .bottom {
         position: fixed;
         bottom: 0;

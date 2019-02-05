@@ -18,6 +18,13 @@ export default {
         });
       }
     },
+    *VipSave(_, { call, put }) {
+      const res = yield call(Api.vipSave);
+      if (res.errno === 0) {
+        return res.data;
+      }
+      return null;
+    },
   },
 
   reducers: {
