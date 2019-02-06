@@ -61,6 +61,9 @@ class Goods extends Component<IProps, {}> {
     });
     Taro.stopPullDownRefresh();
   }
+  nextPage = url => {
+    Taro.navigateTo({ url });
+  };
   loginSuccess = async _ => {
     await this.props.dispatch({
       type: 'cart/Index',
@@ -265,7 +268,7 @@ class Goods extends Component<IProps, {}> {
             仅剩{goodsNumber}
             {info.goods_unit}
           </View>
-          <View className="vip-bar">
+          <View className="vip-bar" onClick={this.nextPage.bind(this, '/pages/vip/index')}>
             <View className="left">
               {userInfo && userInfo.level !== 0 ? (
                 <View className="tag">您已开通会员</View>

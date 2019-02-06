@@ -171,7 +171,7 @@ class CheckOut extends Component<IProps, {}> {
       paySign: payParam.paySign,
     });
 
-    if (res === 'requestPayment:fail cancel') {
+    if (res.errMsg === 'requestPayment:fail cancel') {
       Taro.redirectTo({
         url: `/pages/order/purchased?orderId=${orderRes.id}&type=no`,
       });

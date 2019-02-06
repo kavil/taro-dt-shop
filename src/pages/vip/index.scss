@@ -1,0 +1,144 @@
+@import "../../static/css/mixin";
+page,
+.page {
+    background: $bg-color-base;
+}
+
+.vip-page {
+    .top {
+        @include fj;
+        padding: 20px 40px;
+        align-items: flex-end;
+        .left {
+            flex: 1;
+            @include fj(flex-start);
+        }
+        .h2 {
+            color: #fff;
+            font-size: 30px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .p {
+            color: #fff;
+        }
+        .right {
+            width: 200px;
+            color: #fff;
+            @include fj(flex-end);
+            align-items: center;
+            font-size: 28px;
+            .erduufont {
+                font-size: 28px;
+                margin-left: 8px;
+            }
+        }
+    }
+}
+
+.center {
+    text-align: center;
+}
+
+.vip-list {
+    border-radius: 50px;
+    margin: 0 40px;
+    padding: 40px 20px;
+    background: #fff;
+    box-shadow: 0 4px 8px 0 $border;
+    .desc {
+        text-align: center;
+    }
+    .h4 {
+        margin: 0 20px;
+        color: $font-default;
+    }
+    .center {
+        @include fj;
+        flex-direction: column;
+        align-items: center;
+    }
+    .h4 .erduufont {
+        font-size: 80%;
+        color: $color-brand-dark;
+    }
+    .likebtn {
+        border-radius: 50px;
+        text-align: center;
+        display: inline-block;
+        padding: 0 30px;
+        color: #fff;
+        background: $color-ex;
+        margin: 30px 0;
+    }
+    .link {
+        text-decoration: underline;
+        font-size: 30px;
+        margin-bottom: 30px;
+        color: $font-info;
+        .go {
+            vertical-align: -2px;
+        }
+    }
+    .ul {
+        view {
+            color: $font-default;
+        }
+        @include fj;
+        padding: 0 20px;
+        .li {
+            flex: 1;
+            text-align: center;
+        }
+        .erduufont {
+            border-radius: 15px;
+            background: $color-ex;
+            padding: 20px;
+            margin-bottom: 10px;
+            display: inline-block;
+            color: #fff;
+        }
+    }
+}
+
+.choose {
+    @include fj;
+    margin: 30px 0 60px;
+    .item {
+        border-radius: 20px;
+        background: #fff;
+        color: $font-default;
+        padding: 0 35px 35px;
+        box-shadow: 0 4px 8px 0 $border;
+    }
+    .money {
+        font-size: 28px;
+    }
+    .del {
+        text-decoration: line-through;
+        color: $font-info;
+    }
+}
+
+.ava-wrap {
+    @include wh(100px, 100px);
+    background: $bg-color-light;
+    border-radius: 50%;
+    margin-right: 20px;
+    .img {
+        @include wh(100px, 100px);
+        border-radius: 50%;
+    }
+}
+
+.circle {
+    width: 3000px;
+    height: 3000px;
+    position: absolute;
+    top: -2600px;
+    border-radius: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: $color-brand-light;
+    z-index: -1;
+}

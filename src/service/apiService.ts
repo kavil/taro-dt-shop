@@ -29,6 +29,8 @@ export const orderCancel = data => Request({ url: '/order/cancel', method: 'POST
 export const getCoupon = data => Request({ url: '/coupon/list', method: 'GET', data });
 export const scoreList = data => Request({ url: '/score', method: 'GET', data });
 export const vipSave = data => Request({ url: '/user/vipSave', method: 'GET', data });
+export const vipOpenDays = data => Request({ url: '/user/vipOpenDays', method: 'GET', data });
+export const vipPrepay = data => Request({ url: '/user/vipPrepay', method: 'POST', data });
 
 // 模板自动生成占位 勿删
 

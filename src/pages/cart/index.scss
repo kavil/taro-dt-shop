@@ -94,7 +94,6 @@
     .main-color {
         color: $color-brand;
     }
-
     .bottom {
         position: fixed;
         bottom: 0;
@@ -184,7 +183,6 @@
             @include wh(40px,
             40px);
         }
-
     }
     .colonel-wrap {
         position: relative;
@@ -228,7 +226,8 @@
             140px);
             margin: 10px 10px 10px 0;
             .img {
-                @include wh(140px, 140px);
+                @include wh(140px,
+                140px);
             }
         }
         .goods-simple-item {
