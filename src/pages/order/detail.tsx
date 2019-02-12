@@ -66,16 +66,18 @@ export default class orderDetail extends Component<IProps, {}> {
       package: payParam.package,
       signType: payParam.signType,
       paySign: payParam.paySign,
+      success: res => {
+        if (res.errMsg === 'requestPayment:fail cancel') {
+          Taro.redirectTo({
+            url: `/pages/order/purchased?orderId=${Detail.id}&type=no`,
+          });
+        } else {
+          Taro.redirectTo({
+            url: `/pages/order/purchased?orderId=${Detail.id}&type=ok`,
+          });
+        }
+      },
     });
-    if (res) {
-      Taro.redirectTo({
-        url: `/pages/order/purchased?orderId=${Detail.id}&type=ok`,
-      });
-    } else {
-      Taro.redirectTo({
-        url: `/pages/order/purchased?orderId=${Detail.id}&type=no`,
-      });
-    }
   };
 
   render() {

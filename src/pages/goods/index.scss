@@ -14,8 +14,6 @@
         font-weight: 700;
     }
     .desc {
-        @include ddd();
-        width: 600px;
         color: $font-default;
     }
     .price-wrap {
@@ -269,5 +267,9 @@
 }
 
 .img {
+    width: 100%;
+}
+
+.image-wrap img {
     width: 100%;
 }

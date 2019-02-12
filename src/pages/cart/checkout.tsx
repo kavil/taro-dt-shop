@@ -163,23 +163,35 @@ class CheckOut extends Component<IProps, {}> {
       Taro.switchTab({ url: '/pages/ucenter/index?to=order' });
       return;
     }
-    const res = await Taro.requestPayment({
+    await Taro.requestPayment({
       timeStamp: payParam.timeStamp,
       nonceStr: payParam.nonceStr,
       package: payParam.package,
       signType: payParam.signType,
       paySign: payParam.paySign,
+      success: res => {
+        if (res.errMsg === 'requestPayment:fail cancel') {
+          Taro.redirectTo({
+            url: `/pages/order/purchased?orderId=${orderRes.id}&type=no`,
+          });
+        } else {
+          Taro.redirectTo({
+            url: `/pages/order/purchased?orderId=${orderRes.id}&type=ok`,
+          });
+        }
+      },
+      fail: res => {
+        if (res.errMsg === 'requestPayment:fail cancel') {
+          Taro.redirectTo({
+            url: `/pages/order/purchased?orderId=${orderRes.id}&type=no`,
+          });
+        } else {
+          Taro.redirectTo({
+            url: `/pages/order/purchased?orderId=${orderRes.id}&type=ok`,
+          });
+        }
+      },
     });
-
-    if (res.errMsg === 'requestPayment:fail cancel') {
-      Taro.redirectTo({
-        url: `/pages/order/purchased?orderId=${orderRes.id}&type=no`,
-      });
-    } else {
-      Taro.redirectTo({
-        url: `/pages/order/purchased?orderId=${orderRes.id}&type=ok`,
-      });
-    }
   };
 
   state = {
@@ -343,10 +355,10 @@ class CheckOut extends Component<IProps, {}> {
             <View className="total-num">
               共<Text className="b">{cgl2.length}</Text>件
             </View>
-            <View className="send">
+            {/* <View className="send">
               <View className="label">预计配送</View>
               <View className="value">时间</View>
-            </View>
+            </View> */}
           </View>
         )}
         <View className="block-wrap">
@@ -379,7 +391,7 @@ class CheckOut extends Component<IProps, {}> {
             <View className="value">{goodsTotalPrice.toFixed(1)}</View>
           </View>
           <View className="item">
-            <View className="label">运费</View>
+            <View className="label">配送费</View>
             <View className="value red">+ {freightPrice.toFixed(1)}</View>
           </View>
           <View className="item">

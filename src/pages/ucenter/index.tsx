@@ -50,7 +50,7 @@ class Ucenter extends Component<IProps, {}> {
   }
 
   nextPage = url => {
-    if (!this.props.userInfo) {
+    if (!this.props.userInfo.id) {
       tip('请先授权登录');
       return;
     }
@@ -74,7 +74,7 @@ class Ucenter extends Component<IProps, {}> {
       <View className="ucenter-page">
         <Login show={false} onChange={this.loginSuccess} />
 
-        {!userInfo ? (
+        {!userInfo.id ? (
           <View className="center">
             <AtButton size="small" type="secondary" onClick={this.loginBtn}>
               登录
@@ -98,25 +98,27 @@ class Ucenter extends Component<IProps, {}> {
             </View>
           </View>
         )}
-        <View className="vip-bar" onClick={this.nextPage.bind(this, '/pages/vip/index')}>
-          <View className="left">
-            {userInfo.level === 0 ? (
-              <View className="tag">开通会员</View>
-            ) : (
-              <View className="tag">您已开通会员</View>
-            )}
-            {vipSave && (
-              <Text className="text">
-                已为您省了
-                <Text style={{ color: '#f5735b' }}>{vipSave.toFixed(1)}</Text>元
-              </Text>
-            )}
+        {userInfo.id && (
+          <View className="vip-bar" onClick={this.nextPage.bind(this, '/pages/vip/index')}>
+            <View className="left">
+              {userInfo.level === 0 ? (
+                <View className="tag">开通会员</View>
+              ) : (
+                <View className="tag">您已开通会员</View>
+              )}
+              {vipSave && (
+                <Text className="text">
+                  已为您省了
+                  <Text style={{ color: '#f5735b' }}>{vipSave.toFixed(1)}</Text>元
+                </Text>
+              )}
+            </View>
+            <Text className="right">
+              {userInfo.level === 0 ? '立即开通' : '续费'}
+              <Text className="erduufont ed-back go" />
+            </Text>
           </View>
-          <Text className="right">
-            {userInfo.level === 0 ? '立即开通' : '续费'}
-            <Text className="erduufont ed-back go" />
-          </Text>
-        </View>
+        )}
         <View className="divsion" />
         <View className="operate-wrap">
           <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index')}>
@@ -158,7 +160,11 @@ class Ucenter extends Component<IProps, {}> {
         <View className="divsion" />
         <View className="ul">
           <AtList>
-            <AtListItem arrow="right" title="小区长申请" />
+            <AtListItem
+              arrow="right"
+              title="小区长申请"
+              onClick={this.nextPage.bind(this, '/pages/colonelApply/index')}
+            />
             <AtListItem arrow="right" title="供应商联系" />
           </AtList>
         </View>

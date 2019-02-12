@@ -20,12 +20,12 @@
 @import "~taro-ui/dist/style/components/noticebar.scss";
 @import "~taro-ui/dist/style/components/list.scss";
 @import "~taro-ui/dist/style/components/tag.scss";
+@import "~taro-ui/dist/style/components/image-picker.scss";
 // view,
 // text {
 //     color: $font-primary;
 //     font-size: 30px;
 // }
-
 .wrap {
     padding: 0 20px 20px;
     color: $font-primary;
@@ -145,7 +145,7 @@
     padding: 30px 20px;
 }
 
-.search-mask{
+.search-mask {
     width: 100%;
     position: absolute;
     top: 0;

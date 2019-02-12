@@ -4,11 +4,12 @@ import * as Api from '../service/apiService';
 export default {
   namespace: 'common',
   state: {
-    userInfo: null,
+    userInfo: {},
     token: Taro.getStorageSync('token'),
     launchInfo: JSON.parse(Taro.getStorageSync('launchInfo') || '{}'),
     wxLoginCode: null,
     cityId: 1720, // 渝水区
+    uploadSign: {},
   },
 
   effects: {
@@ -67,6 +68,20 @@ export default {
       }
       return res && res.errno === 0;
     },
+    // *CityOpenName({ payload }, { call, select }) {
+    //   let cityOpen = Taro.getStorageSync('cityOpen');
+    //   const { cityId } = yield select(state => state.common);
+    //   if (cityOpen && cityOpen[cityId]) {
+    //     return cityOpen[cityId];
+    //   } else {
+    //     const res = yield call(Api.cityOpen, payload);
+    //     if (res && res.errno === 0) {
+    //       cityOpen = res.data;
+    //       Taro.setStorageSync('cityOpen', cityOpen);
+    //       return cityOpen[cityId];
+    //     }
+    //   }
+    // },
     *BindPhone({ payload }, { call, put, select }) {
       const { wxLoginCode } = yield select(state => state.common);
       const res = yield call(Api.bindPhone, { ...payload, code: wxLoginCode });
@@ -81,6 +96,23 @@ export default {
         console.log(userInfo, { ...userInfo, mobile: res.data });
       }
       return res;
+    },
+    *UploadSign(_, { call, put, select }) {
+      let { uploadSign } = yield select(state => state.common);
+      if (!uploadSign.expire)
+        uploadSign = JSON.parse(
+          Taro.getStorageSync('uploadSign') ? Taro.getStorageSync('uploadSign') : '{}'
+        );
+      if (uploadSign.expire > new Date().getTime() / 1000) {
+        return uploadSign;
+      }
+      const res = yield call(Api.uploadSign);
+      yield put({
+        type: 'save',
+        payload: { uploadSign: res.data },
+      });
+      Taro.setStorageSync('uploadSign', JSON.stringify(res.data));
+      return res.data;
     },
   },
 

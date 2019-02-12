@@ -28,12 +28,19 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 export default class purchased extends Component<IProps, {}> {
   config = {
     navigationBarTitleText: '支付结果',
-    // backgroundColor: '#f8f8f8',
   };
 
-  async componentDidMount() {}
+  state = { Detail: null };
+  async componentDidMount() {
+    const Detail = await this.props.dispatch({
+      type: 'order/Detail',
+      payload: {
+        id: this.$router.params.orderId,
+      },
+    });
+    this.setState({ Detail });
+  }
   componentWillUnmount() {}
-  state = {};
 
   async onPullDownRefresh() {
     Taro.stopPullDownRefresh();
@@ -52,42 +59,44 @@ export default class purchased extends Component<IProps, {}> {
     const payParam = await this.props.dispatch({
       type: 'cart/Prepay',
       payload: {
-        orderId: this.$router.params.id,
+        orderId: this.$router.params.orderId,
       },
     });
     if (!payParam) {
       return;
     }
-    const res = await Taro.requestPayment({
+    await Taro.requestPayment({
       timeStamp: payParam.timeStamp,
       nonceStr: payParam.nonceStr,
       package: payParam.package,
       signType: payParam.signType,
       paySign: payParam.paySign,
+      success: res => {
+        if (res.errMsg === 'requestPayment:fail cancel') {
+          Taro.redirectTo({
+            url: `/pages/order/purchased?orderId=${this.$router.params.id}&type=no`,
+          });
+        } else {
+          Taro.redirectTo({
+            url: `/pages/order/purchased?orderId=${this.$router.params.id}&type=ok`,
+          });
+        }
+      },
     });
-    if (res) {
-      Taro.redirectTo({
-        url: `/pages/order/purchased?orderId=${this.$router.params.id}&type=ok`,
-      });
-    } else {
-      Taro.redirectTo({
-        url: `/pages/order/purchased?orderId=${this.$router.params.id}&type=no`,
-      });
-    }
   };
 
   render() {
     const {} = this.props;
-    const {} = this.state;
+    const { Detail }: any = this.state;
     const result = this.$router.params.type;
     return (
       <View className="purchased-page">
-        {result ? (
+        {result === 'ok' ? (
           <View className="result">
             <Text className="erduufont ed-dui green" />
             <View className="h4">支付成功</View>
-            <View className="p">订单金额：34.1元</View>
-            <View className="p">获得积分：34</View>
+            <View className="p">订单金额：{Detail.actual_price}元</View>
+            <View className="p">获得积分：{Detail.score ? Detail.score.score || 0 : '无'}</View>
             <View className="op">
               <AtButton
                 type="secondary"

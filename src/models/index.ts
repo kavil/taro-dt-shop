@@ -5,6 +5,7 @@ import ucenterModel from './ucenterModel';
 import orderModel from './orderModel';
 import scoreModel from './scoreModel';
 import vipModel from './vipModel';
+import colonelApplyModel from './colonelApplyModel';
 import common from './common';
 
 export default [
@@ -15,5 +16,6 @@ export default [
   orderModel,
   ucenterModel,
   vipModel,
+  colonelApplyModel,
   common,
 ]

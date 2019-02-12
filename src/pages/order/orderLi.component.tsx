@@ -50,10 +50,6 @@ export class OrderLi extends Component<IProps, {}> {
   };
 
   pay = async () => {
-    Taro.redirectTo({
-      url: `/pages/order/purchased?orderId=${this.props.order.id}&type=ok`,
-    });
-    return;
     const payParam = await this.props.dispatch({
       type: 'cart/Prepay',
       payload: {
@@ -63,23 +59,27 @@ export class OrderLi extends Component<IProps, {}> {
     if (!payParam) {
       return;
     }
-    const res = await Taro.requestPayment({
+    await Taro.requestPayment({
       timeStamp: payParam.timeStamp,
       nonceStr: payParam.nonceStr,
       package: payParam.package,
       signType: payParam.signType,
       paySign: payParam.paySign,
+
+      success: res => {
+        if (res.errMsg === 'requestPayment:fail cancel') {
+          Taro.redirectTo({
+            url: `/pages/order/purchased?orderId=${this.props.order.id}&type=no`,
+          });
+        } else {
+          Taro.redirectTo({
+            url: `/pages/order/purchased?orderId=${this.props.order.id}&type=ok`,
+          });
+        }
+      },
     });
-    if (res) {
-      Taro.redirectTo({
-        url: `/pages/order/purchased?orderId=${this.props.order.id}&type=ok`,
-      });
-    } else {
-      Taro.redirectTo({
-        url: `/pages/order/purchased?orderId=${this.props.order.id}&type=no`,
-      });
-    }
   };
+  refund = () => {};
   onTimeUp = () => {};
   countdown = add_time => {
     const cha = (new Date(add_time).getTime() + 3600000 - new Date().getTime()) / 1000;
@@ -158,7 +158,7 @@ export class OrderLi extends Component<IProps, {}> {
         {order.score_price && <View className="coupon">积分抵扣：￥{order.score_price}</View>}
         <View className="bottom">
           <View className="left">
-            <Text className={`st st-${order.order_status}`}>{orderRange[order.order_status]}</Text>
+            <Text className={`st st-${order.order_status}`}>{order.order_status_text}</Text>
             {order.order_status ? '实付:￥' + order.actual_price : ''}
           </View>
           <View className="right">
@@ -178,6 +178,11 @@ export class OrderLi extends Component<IProps, {}> {
                 去付款
               </AtButton>
             )}
+            {/* {op.return && order.order_status === 300 && (
+              <AtButton size="small" circle onClick={this.refund}>
+                退款
+              </AtButton>
+            )} */}
             {/* {op.buy && (
               <AtButton size="small" circle type="secondary">
                 再次购买

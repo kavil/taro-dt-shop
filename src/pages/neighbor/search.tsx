@@ -32,6 +32,7 @@ class NeighborSearch extends Component<IProps, {}> {
   };
 
   async componentDidMount() {
+    if (this.$router.params.noApply) this.setState({ noApply: true });
     // 获取地理位置
     let local;
     try {
@@ -86,11 +87,12 @@ class NeighborSearch extends Component<IProps, {}> {
   state = {
     localSetting: true,
     searchValue: '',
+    noApply: false,
   };
 
   render() {
     const { SearchList } = this.props;
-    const { localSetting, searchValue } = this.state;
+    const { localSetting, searchValue, noApply } = this.state;
     return (
       <View className="neighbor-page">
         <View className="search-wrap">
@@ -105,7 +107,12 @@ class NeighborSearch extends Component<IProps, {}> {
         </View>
         <View className="pad20 pt">
           {SearchList.map(ele => (
-            <CommunityItem key={ele.id} item={ele} onChange={this.bindOk.bind(this, ele)} />
+            <CommunityItem
+              key={ele.id}
+              item={ele}
+              noApply={noApply}
+              onChange={this.bindOk.bind(this, ele)}
+            />
           ))}
         </View>
         {!localSetting && (

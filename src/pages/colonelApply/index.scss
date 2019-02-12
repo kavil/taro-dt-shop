@@ -1,0 +1,58 @@
+@import "../../static/css/mixin";
+.apply-page {
+    .ava-wrap {
+        @include wh(100px, auto);
+        border-radius: 50%;
+        left: 50%;
+        position: relative;
+        transform: translateX(-50%);
+        margin-bottom: 20px;
+        text-align: center;
+        .img {
+            @include wh(100px, 100px);
+            border-radius: 50%;
+        }
+    }
+    .p {
+        margin-top: 0;
+    }
+    .label,
+    .at-input__title {
+        margin-top: 40px;
+        color: $font-default;
+    }
+    .input-wrap,
+    .at-input__input {
+        padding: 18px 5px;
+        border-bottom: 1PX solid $border;
+        font-size: 32px;
+    }
+    .at-input {
+        margin-top: 40px;
+    }
+    .community-wrap {
+        font-size: 36px;
+        font-weight: 400px;
+        @include fj('start');
+        display: inline-flex;
+        align-items: center;
+        width: 100%;
+        .at-input {
+            margin-top: 0;
+        }
+        image {
+            margin: 0 10px 0 0;
+            @include wh(40px, 40px);
+        }
+        .flex {
+            flex: 1;
+        }
+    }
+    .ptb20 {
+        padding: 40px 0;
+    }
+    .b {
+        font-weight: 500;
+        color: $color-primary;
+    }
+}

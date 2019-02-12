@@ -114,43 +114,46 @@ class Neighbor extends Component<IProps, {}> {
         <Login show={false} onChange={this.loginSuccess} />
         {init && (
           <View>
-            {userInfo && userInfo.name ? (
-              <View className="pad20 top">
-                <View className="community-wrap">
-                  <View className="left">
-                    <Image src={communityImg} />
-                    {userInfo.name}
+            {userInfo && userInfo.communityId ? (
+              <View>
+                <View className="pad20 top">
+                  <View className="community-wrap">
+                    <View className="left">
+                      <Image src={communityImg} />
+                      {userInfo.name}
+                    </View>
+                    <View className="right" onClick={this.gotoSearch}>
+                      更换
+                      <Text className="erduufont ed-back go" />
+                    </View>
                   </View>
-                  <View className="right" onClick={this.gotoSearch}>
-                    更换
-                    <Text className="erduufont ed-back go" />
+                  <View className="features">
+                    <View className="li">
+                      <Text className="erduufont ed-write blue-bg" />
+                      写评测
+                    </View>
+                    <View className="li">
+                      <Text className="erduufont ed-paizhao purple-bg" />
+                      小区美拍
+                    </View>
+                    <View className="li">
+                      <Text className="erduufont ed-car yellow-bg" />
+                      小区拼车
+                    </View>
+                    <View className="li">
+                      <Text className="erduufont ed-wuye red-bg" />
+                      小区物业
+                    </View>
+                    <View className="li">
+                      <Text className="erduufont ed-weixiu gray-bg" />
+                      维修装修
+                    </View>
+                  </View>
+                  <View className="announcement">
+                    <AtNoticebar icon="volume-plus">小区公告</AtNoticebar>
                   </View>
                 </View>
-                <View className="features">
-                  <View className="li">
-                    <Text className="erduufont ed-write blue-bg" />
-                    写评测
-                  </View>
-                  <View className="li">
-                    <Text className="erduufont ed-paizhao purple-bg" />
-                    小区美拍
-                  </View>
-                  <View className="li">
-                    <Text className="erduufont ed-car yellow-bg" />
-                    小区拼车
-                  </View>
-                  <View className="li">
-                    <Text className="erduufont ed-wuye red-bg" />
-                    小区物业
-                  </View>
-                  <View className="li">
-                    <Text className="erduufont ed-weixiu gray-bg" />
-                    维修装修
-                  </View>
-                </View>
-                <View className="announcement">
-                  <AtNoticebar icon="volume-plus">小区公告</AtNoticebar>
-                </View>
+                <View className="pad40 h2" style={{color: '#aaa', textAlign: 'center'}}>即将开放</View>
               </View>
             ) : (
               <View>

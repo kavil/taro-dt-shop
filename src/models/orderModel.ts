@@ -36,6 +36,16 @@ export default {
         },
       });
     },
+    *Detail({ payload }, { call, put, select }) {
+      const { orderList } = yield select(state => state.order);
+      let detail = orderList.find(ele => ele.id === payload.id);
+      if (detail) return detail;
+      const res = yield call(Api.orderDetail, payload);
+      if (res.errno === 0) {
+        return res.data;
+      }
+      return null;
+    },
     *Cancel({ payload }, { call, put, select }) {
       const { orderList } = yield select(state => state.order);
       const res = yield call(Api.orderCancel, payload);

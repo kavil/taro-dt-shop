@@ -180,8 +180,7 @@
         width: 100%;
         image {
             margin: 0 10px 0 0;
-            @include wh(40px,
-            40px);
+            @include wh(40px, 40px);
         }
     }
     .colonel-wrap {

@@ -111,32 +111,35 @@ class Cart extends Component<IProps, {}> {
   render() {
     const { cartList, cartTotal, userInfo } = this.props;
     const { checkAll, nologin } = this.state;
+    console.log(userInfo, nologin);
 
     return (
       <View className="cart-page">
         <Login show={false} onChange={this.loginSuccess} />
-        <View className="vip-bar" onClick={this.nextPage.bind(this, '/pages/vip/index')}>
-          <View className="left">
-            {userInfo.level === 0 ? (
-              <View className="tag">开通会员</View>
-            ) : (
-              <View className="tag">您已开通会员</View>
-            )}
-            {cartTotal && cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount > 0 && (
-              <Text className="text">
-                会员立省
-                <Text style={{ color: '#f5735b' }}>
-                  {(cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount).toFixed(1)}
+        {userInfo.id && (
+          <View className="vip-bar" onClick={this.nextPage.bind(this, '/pages/vip/index')}>
+            <View className="left">
+              {userInfo.level === 0 ? (
+                <View className="tag">开通会员</View>
+              ) : (
+                <View className="tag">您已开通会员</View>
+              )}
+              {cartTotal && cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount > 0 && (
+                <Text className="text">
+                  会员立省
+                  <Text style={{ color: '#f5735b' }}>
+                    {(cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount).toFixed(1)}
+                  </Text>
+                  元
                 </Text>
-                元
-              </Text>
-            )}
+              )}
+            </View>
+            <Text className="right">
+              {userInfo.level === 0 ? '立即开通' : '续费'}
+              <Text className="erduufont ed-back go" />
+            </Text>
           </View>
-          <Text className="right">
-            {userInfo.level === 0 ? '立即开通' : '续费'}
-            <Text className="erduufont ed-back go" />
-          </Text>
-        </View>
+        )}
 
         {cartList && cartList.length ? null : (
           <View className="nodata">
@@ -185,7 +188,7 @@ class Cart extends Component<IProps, {}> {
                       <View className="vip">
                         ￥{(ele.retail_price * ele.number).toFixed(1)}
                         <View className="label">
-                          会员{((ele.vip_price / ele.retail_price) * 10 * ele.number).toFixed(1)}折
+                          会员{((ele.vip_price / ele.retail_price) * 10).toFixed(1)}折
                         </View>
                       </View>
                     </View>

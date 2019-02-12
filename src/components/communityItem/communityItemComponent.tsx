@@ -18,6 +18,7 @@ interface PageOwnProps {
   //父组件要传
   item: any;
   onChange: Function;
+  noApply?: boolean;
 }
 
 type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
@@ -38,12 +39,23 @@ class CommunityItem extends Component<IProps, {}> {
     });
     if (res) this.props.onChange('bind ok');
   };
-  apply = async () => {};
+  apply = async () => {
+    const res = await this.props.dispatch({
+      type: 'neighbor/Bind',
+      payload: {
+        ...this.props.item,
+      },
+    });
+    await this.props.dispatch({
+      type: 'common/UserInfo',
+    });
+    if (res) Taro.navigateTo({ url: '/pages/coloneApply/index' });
+  };
 
   state = {};
 
   render() {
-    const { item } = this.props;
+    const { item, noApply } = this.props;
     const {} = this.state;
 
     return (
@@ -64,12 +76,14 @@ class CommunityItem extends Component<IProps, {}> {
               </View>
             ) : (
               <View className="colonel-wrap">
-                <View className="colonel">
-                  <AtButton type="secondary" circle size="small" onClick={this.apply}>
-                    <Text className="main-color">申请</Text>
-                  </AtButton>
-                  <View className="name">暂无团长</View>
-                </View>
+                {!noApply && (
+                  <View className="colonel">
+                    <AtButton type="secondary" circle size="small" onClick={this.apply}>
+                      <Text className="main-color">申请</Text>
+                    </AtButton>
+                    <View className="name">暂无团长</View>
+                  </View>
+                )}
               </View>
             )}
           </View>

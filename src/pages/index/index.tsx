@@ -84,7 +84,9 @@ class Index extends Component<IProps, {}> {
 
   async onPullDownRefresh() {
     const value = this.state.current;
-    const cate = this.props.cateList[value];
+    const { cateTopList }: any = this.state;
+
+    const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
@@ -98,6 +100,21 @@ class Index extends Component<IProps, {}> {
     Taro.stopPullDownRefresh();
   }
 
+  async onReachBottom() {
+    const value = this.state.current;
+    const { cateTopList }: any = this.state;
+
+    const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
+    await this.props.dispatch({
+      type: 'goods/List',
+      payload: {
+        listName: `cate${value}`,
+        parent_id: cate.id,
+        promot_cate_id: cate.type === 0 ? cate.id : null,
+      },
+    });
+  }
+
   nextPage(url) {
     Taro.navigateTo({ url });
   }
@@ -107,7 +124,10 @@ class Index extends Component<IProps, {}> {
     Taro.switchTab({ url });
   }
   async handleClick(value) {
-    const cate = this.props.cateList[value];
+    const { cateTopList }: any = this.state;
+    console.log(cateTopList);
+    const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
+    console.log(this.props.cateList, cate, value);
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
@@ -141,7 +161,10 @@ class Index extends Component<IProps, {}> {
           goodsId: goods.id,
         },
       });
-      if (res.errno === 0) tip('已添加到购物车');
+      if (res.errno === 0)
+        setTimeout(() => {
+          tip('已添加到购物车');
+        });
       if (res.errno === 401) {
         Taro.login(); // 经验 先获取到code 不容易失效
         Taro.eventCenter.trigger('login', true);
@@ -172,13 +195,7 @@ class Index extends Component<IProps, {}> {
 
   render() {
     const { List, userInfo } = this.props;
-    const {
-      current,
-      openSku,
-      curGoods,
-      cateTopList,
-      cateImgList,
-    }: any = this.state;
+    const { current, openSku, curGoods, cateTopList, cateImgList }: any = this.state;
     const tabList = cateTopList.map(ele => {
       return { title: ele.name };
     });
@@ -210,7 +227,7 @@ class Index extends Component<IProps, {}> {
         <AtTabs
           className="tabs"
           current={current}
-          swipeable={true}
+          swipeable={false}
           scroll={true}
           tabList={tabList}
           onClick={this.handleClick}
