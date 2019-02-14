@@ -33,7 +33,7 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
   ...common,
 }))
 class Goods extends Component<IProps, {}> {
-  async componentDidMount() {
+  async componentDidShow() {
     Taro.showShareMenu({
       withShareTicket: true,
     });
@@ -43,6 +43,7 @@ class Goods extends Component<IProps, {}> {
         id: this.$router.params.id,
       },
     });
+    if (this.props.Detail.info.over_time) this.countdown(this.props.Detail.info.over_time);
     await this.props.dispatch({
       type: 'cart/Index',
     });
@@ -59,6 +60,7 @@ class Goods extends Component<IProps, {}> {
         id: this.$router.params.id,
       },
     });
+    if (this.props.Detail.info.over_time) this.countdown(this.props.Detail.info.over_time);
     Taro.stopPullDownRefresh();
   }
   nextPage = url => {
@@ -79,8 +81,10 @@ class Goods extends Component<IProps, {}> {
     const lastMin = lasthour - 3600 * time[0];
     time.push(Math.floor(lastMin / 60));
     const lastSec = lastMin - 60 * time[1];
-    time.push(lastSec);
-    return { isShowDay, day, time };
+    time.push(Math.floor(lastSec));
+    this.setState({
+      countdown: { isShowDay, day, time },
+    });
   };
   onChangeStep = () => {};
   onTimeUp = () => {
@@ -132,10 +136,11 @@ class Goods extends Component<IProps, {}> {
   state = {
     openSku: false,
     curGoods: {},
+    countdown: {},
   };
 
   render() {
-    const { openSku, curGoods } = this.state;
+    const { openSku, curGoods, countdown }: any = this.state;
     const { Detail, cartTotal, userInfo } = this.props;
     if (!Detail.info)
       return <AtActivityIndicator className="center" mode="center" color="#f1836f" />;
@@ -160,15 +165,19 @@ class Goods extends Component<IProps, {}> {
 
     const now = new Date().toLocaleString('zh', { hour12: false });
     // 秒杀
-    const countdown = this.countdown(info.over_time);
+
+    console.log(countdown);
 
     // 预售
     let current = 0;
-    if (info.over_time > now) current = 1;
-    if (info.over_time < now) current = 2;
+    if (new Date(info.over_time) > new Date(now)) current = 1;
+    if (new Date(info.over_time) < new Date(now)) current = 2;
     const formate = date => {
       if (!date) return '';
       return date.substr(5, 5);
+    };
+    const newDate = date => {
+      return new Date(date);
     };
     const type3 = {
       items: [
@@ -178,7 +187,8 @@ class Goods extends Component<IProps, {}> {
       ],
       current,
     };
-    if (info.goods_type !== 1 && info.over_time < now) {
+
+    if (info.goods_type !== 1 && new Date(info.over_time) < new Date(now)) {
       disabled = '已结束';
     }
     const detailNodes = '<div class="detail-wrap">' + info.goods_desc + '</div>';
@@ -199,31 +209,35 @@ class Goods extends Component<IProps, {}> {
               </SwiperItem>
             ))}
           </Swiper>
-          {info.goods_type === 2 ? (
+          {info.goods_type >= 2 ? (
             <View className="miaosha-wrap">
               <View className="trapezoid" />
-              {info.start_time > now ? (
+              {newDate(info.start_time) > newDate(now) ? (
                 <View className="miaosha">
                   即将开始
                   <View>info.start_time</View>
                 </View>
               ) : (
                 <View>
-                  {info.over_time > now ? (
-                    <View className="miaosha">
-                      马上结束
-                      <AtCountdown
-                        format={{ day: '天', hours: ':', minutes: ':', seconds: '' }}
-                        isShowDay={countdown.isShowDay}
-                        day={countdown.day}
-                        hours={countdown.time[0]}
-                        minutes={countdown.time[1]}
-                        seconds={countdown.time[2]}
-                        onTimeUp={this.onTimeUp.bind(this)}
-                      />
+                  {newDate(info.over_time) > newDate(now) ? (
+                    <View>
+                      {countdown.time ? (
+                        <View className="miaosha">
+                          马上结束
+                          <AtCountdown
+                            format={{ day: '天', hours: ':', minutes: ':', seconds: '' }}
+                            isShowDay={countdown.isShowDay}
+                            day={countdown.day}
+                            hours={countdown.time[0]}
+                            minutes={countdown.time[1]}
+                            seconds={countdown.time[2]}
+                            onTimeUp={this.onTimeUp.bind(this)}
+                          />
+                        </View>
+                      ) : null}
                     </View>
                   ) : (
-                    <View className="miaosha end">秒杀已结束</View>
+                    <View className="miaosha end">已结束</View>
                   )}
                 </View>
               )}
@@ -353,7 +367,7 @@ class Goods extends Component<IProps, {}> {
           </View>
           <View className="add-cart">
             <AtButton type="primary" disabled={disabled} onClick={this.addCartOk.bind(this, info)}>
-              加入购物车
+              {disabled || '加入购物车'}
             </AtButton>
           </View>
         </View>

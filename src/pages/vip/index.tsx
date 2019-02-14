@@ -32,6 +32,9 @@ class Vip extends Component<IProps, {}> {
   };
 
   async componentDidMount() {
+    Taro.showShareMenu({
+      withShareTicket: true,
+    });
     const vipSave = await this.props.dispatch({
       type: 'ucenter/VipSave',
     });
@@ -44,6 +47,15 @@ class Vip extends Component<IProps, {}> {
     await this.componentDidMount();
     Taro.stopPullDownRefresh();
   }
+
+  onShareAppMessage(event) {
+    console.log(event);
+    return {
+      title: `小区团购超低价，用会员再省${this.state.vipSave}元`,
+      path: `/pages/index/index?sharefrom=${this.props.userInfo.id}`,
+    };
+  }
+
   payVip = async () => {
     const payParam = await this.props.dispatch({
       type: 'vip/Prepay',
@@ -57,16 +69,32 @@ class Vip extends Component<IProps, {}> {
       package: payParam.package,
       signType: payParam.signType,
       paySign: payParam.paySign,
+      success: async res => {
+        if (res.errMsg !== 'requestPayment:fail cancel') {
+          await this.props.dispatch({
+            type: 'common/UserInfo',
+          });
+          this.componentDidMount();
+          Taro.showToast({
+            title: '恭喜！开通成功',
+            icon: 'success',
+          });
+        } else {
+          Taro.showToast({
+            title: '付款失败，请重试',
+            icon: 'none',
+          });
+        }
+      },
+      fail: async res => {
+        if (res.errMsg !== 'requestPayment:fail cancel') {
+          Taro.showToast({
+            title: '付款失败，请重试',
+            icon: 'none',
+          });
+        }
+      },
     });
-
-    if (res.errMsg !== 'requestPayment:fail cancel') {
-      this.componentDidMount();
-    } else {
-      Taro.showToast({
-        title: '付款失败，请重试',
-        icon: 'none',
-      });
-    }
   };
 
   checkItem = async checked => {

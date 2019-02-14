@@ -77,7 +77,7 @@ class Index extends Component<IProps, {}> {
       payload: {
         listName: 'cate0',
         parent_id: cate.id,
-        promot_cate_id: cate.type === 0 ? cate.id : null,
+        promot_cate_id: cate.type === 2 ? cate.id : null,
       },
     });
   }
@@ -92,7 +92,7 @@ class Index extends Component<IProps, {}> {
       payload: {
         listName: `cate${value}`,
         parent_id: cate.id,
-        promot_cate_id: cate.type === 0 ? cate.id : null,
+        promot_cate_id: cate.type === 2 ? cate.id : null,
         refresh: true,
         loadOver: false,
       },
@@ -110,7 +110,7 @@ class Index extends Component<IProps, {}> {
       payload: {
         listName: `cate${value}`,
         parent_id: cate.id,
-        promot_cate_id: cate.type === 0 ? cate.id : null,
+        promot_cate_id: cate.type === 2 ? cate.id : null,
       },
     });
   }
@@ -125,15 +125,16 @@ class Index extends Component<IProps, {}> {
   }
   async handleClick(value) {
     const { cateTopList }: any = this.state;
-    console.log(cateTopList);
     const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
-    console.log(this.props.cateList, cate, value);
+    console.log(cate);
+    
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
         listName: `cate${value}`,
         parent_id: cate.id,
-        promot_cate_id: cate.type === 0 ? cate.id : null,
+        promot_cate_id: cate.type === 2 ? cate.id : null,
+        goods_type: cate.name === '预售' ? 3 : null,
       },
     });
     await this.setState({

@@ -62,6 +62,11 @@ class Ucenter extends Component<IProps, {}> {
   loginSuccess = () => {
     // this.onPullDownRefresh();
   };
+  callme = () => {
+    Taro.makePhoneCall({
+      phoneNumber: '18503050275',
+    });
+  };
 
   state = {
     vipSave: 0,
@@ -165,7 +170,7 @@ class Ucenter extends Component<IProps, {}> {
               title="小区长申请"
               onClick={this.nextPage.bind(this, '/pages/colonelApply/index')}
             />
-            <AtListItem arrow="right" title="供应商联系" />
+            <AtListItem arrow="right" title="供应商联系" onClick={this.callme} />
           </AtList>
         </View>
       </View>

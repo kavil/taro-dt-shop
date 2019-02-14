@@ -13,7 +13,7 @@ export const getGoodsDetail = data => Request({ url: '/goods/info', method: 'GET
 export const getSku = data => Request({ url: '/goods/sku', method: 'GET', data, noLoading: true });
 
 export const addCart = data => Request({ url: '/cart/add', method: 'POST', data, noLoading: true });
-export const getCart = data => Request({ url: '/cart', method: 'GET', data });
+export const getCart = data => Request({ url: '/cart', method: 'GET', data, noLoading: true });
 export const postCart = data => Request({ url: '/cart/update', method: 'POST', data });
 export const delCart = data => Request({ url: '/cart/delete', method: 'POST', data });
 export const postCheckCart = data => Request({ url: '/cart/checked', method: 'POST', data });

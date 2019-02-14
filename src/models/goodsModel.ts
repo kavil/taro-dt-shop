@@ -32,6 +32,7 @@ export default {
           size: 10,
           parent_id: null,
           goods_name: null,
+          goods_type: null,
           ...payload,
         };
       } else {
@@ -42,7 +43,7 @@ export default {
       }
       const { cityId } = yield select(state => state.common);
 
-      let { list, loadOver, refresh, page, size, parent_id, promot_cate_id, goods_name } = List[
+      let { list, loadOver, refresh, page, size, parent_id, promot_cate_id, goods_name, goods_type } = List[
         payload.listName
       ];
       if (loadOver) return;
@@ -54,6 +55,7 @@ export default {
         parent_id,
         promot_cate_id,
         goods_name,
+        goods_type,
       });
       if (res.errno !== 0) return;
       list = refresh ? res.data.data : list.concat(res.data.data);
@@ -75,6 +77,7 @@ export default {
               parent_id,
               promot_cate_id,
               goods_name,
+              goods_type,
             },
           },
         },
