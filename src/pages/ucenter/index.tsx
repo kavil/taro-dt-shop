@@ -67,6 +67,16 @@ class Ucenter extends Component<IProps, {}> {
       phoneNumber: '18503050275',
     });
   };
+  nextMini = () => {
+    Taro.navigateToMiniProgram({
+      appId: 'wx022960c7a872290f',
+      path: '/pages/index/index?colonelId=' + this.props.userInfo.id,
+      envVersion: 'trial',
+      extraData: {
+        colonelId: this.props.userInfo.id,
+      },
+    });
+  };
 
   state = {
     vipSave: 0,
@@ -147,6 +157,17 @@ class Ucenter extends Component<IProps, {}> {
             退换/售后
           </View> */}
         </View>
+
+        {userInfo.isColonel && (
+          <View>
+            <View className="divsion" />
+            <View className="ul">
+              <AtList>
+                <AtListItem arrow="right" title="管理我的小区" onClick={this.nextMini} />
+              </AtList>
+            </View>
+          </View>
+        )}
         <View className="divsion" />
         <View className="ul">
           <AtList>

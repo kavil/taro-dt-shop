@@ -51,7 +51,7 @@ class Vip extends Component<IProps, {}> {
   onShareAppMessage(event) {
     console.log(event);
     return {
-      title: `小区团购超低价，用会员再省${this.state.vipSave}元`,
+      title: `小区团购超低价，用会员狂省${this.state.vipSave}元`,
       path: `/pages/index/index?sharefrom=${this.props.userInfo.id}`,
     };
   }

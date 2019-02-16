@@ -59,6 +59,9 @@ class Index extends Component<IProps, {}> {
   };
 
   async componentDidMount() {
+    Taro.showShareMenu({
+      withShareTicket: true,
+    });
     console.log(this.$router.params, 'this.$router.params- -- componentDidMount');
     const curtainRes = await this.props.dispatch({
       // A D

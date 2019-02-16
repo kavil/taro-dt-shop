@@ -48,6 +48,12 @@ class Goods extends Component<IProps, {}> {
       type: 'cart/Index',
     });
   }
+  onShareAppMessage() {
+    return {
+      title: this.props.Detail.info.goods_name,
+      // path: `/pages/goods/index?id=${this.$router.params.id}`,
+    };
+  }
   componentWillUnmount() {
     this.props.dispatch({
       type: 'goods/clearDetail',
