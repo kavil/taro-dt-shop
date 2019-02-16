@@ -42,7 +42,7 @@ class Coupon extends Component<IProps, {}> {
     if (!this.$router.params.type) return;
     const now = new Date().toLocaleString('zh', { hour12: false });
     if (ele.info.use_start_date > now || ele.info.use_end_date < now) {
-      tip('已过期')
+      tip('已过期');
       return;
     }
     await this.props.dispatch({
@@ -67,7 +67,7 @@ class Coupon extends Component<IProps, {}> {
     return (
       <View className="coupon-page">
         <View className="coupon-ul">
-          {couponList &&
+          {couponList && couponList.length ? (
             couponList.map((ele, i) => (
               <View key={i} className={classText(ele.info)} onClick={this.useIt.bind(this, ele)}>
                 <View className="cicle l" />
@@ -93,7 +93,13 @@ class Coupon extends Component<IProps, {}> {
                   有效期：{ele.info.use_start_date} ~ {ele.info.use_end_date || '无限制'}
                 </View>
               </View>
-            ))}
+            ))
+          ) : (
+            <View className="nodata">
+              <Text className="erduufont ed-zanwushuju" />
+              <View className="label">暂无数据</View>
+            </View>
+          )}
         </View>
       </View>
     );

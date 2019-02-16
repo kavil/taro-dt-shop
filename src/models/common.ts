@@ -13,6 +13,13 @@ export default {
   },
 
   effects: {
+    *spread({ payload }, { call }) {
+      const res = yield call(Api.spread, payload);
+      if (res && res.errno === 0) {
+        return res.data;
+      }
+      return {};
+    },
     *wxCode(_, { put, select }) {
       let { wxLoginCode } = yield select(state => state.common);
       if (!wxLoginCode) {

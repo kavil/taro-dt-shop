@@ -72,7 +72,7 @@ class Goods extends Component<IProps, {}> {
     });
   };
   countdown = over_time => {
-    const cha = (new Date(over_time).getTime() - new Date().getTime()) / 1000;
+    const cha = (new Date(over_time.replace(/-/g, '/')).getTime() - new Date().getTime()) / 1000;
     const isShowDay = cha > 86400;
     const day = Math.floor(cha / 86400);
     const time: any = [];
@@ -167,18 +167,19 @@ class Goods extends Component<IProps, {}> {
     // 秒杀
 
     console.log(countdown);
-
+    const newDate = date => {
+      if (!date) return 0;
+      return new Date(date.replace(/-/g, '/'));
+    };
     // 预售
     let current = 0;
-    if (new Date(info.over_time) > new Date(now)) current = 1;
-    if (new Date(info.over_time) < new Date(now)) current = 2;
+    if (newDate(info.over_time) > newDate(now)) current = 1;
+    if (newDate(info.over_time) < newDate(now)) current = 2;
     const formate = date => {
       if (!date) return '';
       return date.substr(5, 5);
     };
-    const newDate = date => {
-      return new Date(date);
-    };
+
     const type3 = {
       items: [
         { title: formate(info.start_time) + '开始', icon: { value: 'clock' } },
@@ -188,7 +189,7 @@ class Goods extends Component<IProps, {}> {
       current,
     };
 
-    if (info.goods_type !== 1 && new Date(info.over_time) < new Date(now)) {
+    if (info.goods_type !== 1 && newDate(info.over_time) < newDate(now)) {
       disabled = '已结束';
     }
     const detailNodes = '<div class="detail-wrap">' + info.goods_desc + '</div>';
@@ -253,13 +254,17 @@ class Goods extends Component<IProps, {}> {
         ) : null}
         <View className="price-wrap">
           <View className="price">
-            <View className="retail">小区价</View>
+            <View className="retail">
+              小区价
+              <View className="counter">￥{info.sku[0].counter_price.toFixed(1)}</View>
+            </View>
             <View className="vip">
               ￥{info.sku[0].retail_price.toFixed(1)}
-              <View className="counter">￥{info.sku[0].counter_price.toFixed(1)}</View>
-              <View className="label">
-                会员{((info.sku[0].vip_price / info.sku[0].retail_price) * 10).toFixed(1)}折
-              </View>
+              {info.sku[0].vip_price !== info.sku[0].retail_price && (
+                <View className="label">
+                  会员再打{((info.sku[0].vip_price / info.sku[0].retail_price) * 10).toFixed(1)}折
+                </View>
+              )}
             </View>
           </View>
           {selledUsers && selledUsers.data.length ? (

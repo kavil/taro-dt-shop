@@ -38,7 +38,10 @@ export default class Order extends Component<IProps, {}> {
   };
 
   async componentDidMount() {
-    this.handleClick(0);
+    const current = Number(this.$router.params.tab);
+    console.log(current, '[][][');
+    
+    this.handleClick(current || 0);
   }
   componentWillUnmount() {
     this.props.dispatch({

@@ -130,15 +130,15 @@ class Ucenter extends Component<IProps, {}> {
             <Text className="erduufont ed-peihuodan red" />
             全部订单
           </View>
-          <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index?tab=0')}>
+          <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index?tab=1')}>
             <Text className="erduufont ed-tixian" />
             待付款
           </View>
-          <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index?tab=201')}>
+          <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index?tab=2')}>
             <Text className="erduufont ed-quhuo" />
             待收货
           </View>
-          <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index?tab=301')}>
+          <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index?tab=3')}>
             <Text className="erduufont ed-comment" />
             待评价
           </View>

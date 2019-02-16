@@ -66,7 +66,7 @@
     }
     .shopping-wrap {
         @include fj();
-        margin-top: 40px;
+        margin-top: 16px;
         align-items: center;
         .price {
             @include fj('center');

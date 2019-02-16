@@ -2,7 +2,7 @@ import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
 import { View, Image, Text } from '@tarojs/components';
-import { AtSearchBar, AtTabs, AtTabsPane, AtDivider } from 'taro-ui';
+import { AtSearchBar, AtTabs, AtTabsPane, AtDivider, AtCurtain } from 'taro-ui';
 import communityImg from '../../static/images/community.png';
 import Login from '../../components/login/loginComponent';
 import GoodsItem from '../../components/goods/goodsComponent';
@@ -60,6 +60,13 @@ class Index extends Component<IProps, {}> {
 
   async componentDidMount() {
     console.log(this.$router.params, 'this.$router.params- -- componentDidMount');
+    const curtainRes = await this.props.dispatch({
+      // A D
+      type: 'common/spread',
+    });
+    if (Taro.getStorageSync('index-curtain') !== curtainRes.id) {
+      this.setState({ curtainRes, curtainOpened: true, curtainPng: curtainRes.image_url });
+    }
     await this.props.dispatch({
       type: 'goods/getCate',
     });
@@ -119,6 +126,10 @@ class Index extends Component<IProps, {}> {
     Taro.navigateTo({ url });
   }
 
+  onCloseCurtain = () => {
+    this.setState({ curtainOpened: false });
+    Taro.setStorageSync('index-curtain', this.state.curtainRes['id']);
+  };
   loginSuccess() {}
   nextTab(url) {
     Taro.switchTab({ url });
@@ -127,7 +138,7 @@ class Index extends Component<IProps, {}> {
     const { cateTopList }: any = this.state;
     const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
     console.log(cate);
-    
+
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
@@ -186,17 +197,27 @@ class Index extends Component<IProps, {}> {
       tip('已添加到购物车');
     }
   };
-
   state = {
     current: 0,
     openSku: false,
     curGoods: {},
     cateTopList: [],
+    curtainOpened: false,
+    curtainPng: null,
+    curtainRes: {},
   };
 
   render() {
     const { List, userInfo } = this.props;
-    const { current, openSku, curGoods, cateTopList, cateImgList }: any = this.state;
+    const {
+      current,
+      openSku,
+      curGoods,
+      cateTopList,
+      cateImgList,
+      curtainOpened,
+      curtainPng,
+    }: any = this.state;
     const tabList = cateTopList.map(ele => {
       return { title: ele.name };
     });
@@ -210,6 +231,9 @@ class Index extends Component<IProps, {}> {
     return (
       <View className="index wrap">
         <Login show={false} onChange={this.loginSuccess} />
+        <AtCurtain isOpened={curtainOpened} onClose={this.onCloseCurtain.bind(this)}>
+          {curtainPng && <Image className="curtain-img" src={curtainPng + '@!640X800'} />}
+        </AtCurtain>
         <View className="index-top">
           <View
             className="community-wrap"

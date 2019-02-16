@@ -46,6 +46,7 @@
         @include fj('center');
         flex-direction: column;
         .counter {
+            display: inline;
             text-decoration: line-through;
             font-size: 26px;
             color: #ccc;

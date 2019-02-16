@@ -1,5 +1,8 @@
 @import "../../static/css/mixin";
 .index {
+    .curtain-img{
+        @include wh(640px, 800px)
+    }
     padding-top: 198px;
     .community-wrap {
         font-size: 36px;

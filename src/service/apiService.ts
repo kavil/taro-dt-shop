@@ -1,6 +1,7 @@
 import Request from '../utils/request';
 
 // start
+export const spread = data => Request({ url: '/index/spread', method: 'GET', data });
 export const loginByWeixin = data => Request({ url: '/auth/loginByWeixin', method: 'POST', data });
 export const userInfo = data => Request({ url: '/user/info', method: 'GET', data });
 export const bindPhone = data => Request({ url: '/user/bindPhone', method: 'POST', data });
