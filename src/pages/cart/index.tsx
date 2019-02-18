@@ -40,6 +40,10 @@ class Cart extends Component<IProps, {}> {
       this.setState({
         nologin: true,
       });
+    } else {
+      this.setState({
+        nologin: false,
+      });
     }
     this.setState({ checkAll: !this.props.cartList.find(ele => !ele.checked) });
   }
@@ -233,7 +237,9 @@ class Cart extends Component<IProps, {}> {
             {userInfo.level === 0 ? (
               <View className="cart-wrap">
                 合计
-                <Text className="main-color">￥{cartTotal.checkedGoodsAmount.toFixed(1)}</Text>
+                <Text className="main-color">
+                  ￥{cartTotal.checkedGoodsAmount ? cartTotal.checkedGoodsAmount.toFixed(1) : ''}
+                </Text>
                 {cartTotal.checkedGoodsAmount >= 49 ? (
                   <Text className="info-color">免配送费</Text>
                 ) : null}

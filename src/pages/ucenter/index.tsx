@@ -106,7 +106,7 @@ class Ucenter extends Component<IProps, {}> {
                   </AtTag>
                 )}
               </View>
-              <View className="p">{userInfo.mobile}</View>
+              <View className="p">{userInfo.mobile || ''}</View>
             </View>
             <View className="ava-wrap">
               <Image className="image" mode="scaleToFill" src={userInfo.avatarUrl} />

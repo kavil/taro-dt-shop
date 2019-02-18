@@ -21,17 +21,17 @@ export default {
       return {};
     },
     *wxCode(_, { put, select }) {
-      let { wxLoginCode } = yield select(state => state.common);
-      if (!wxLoginCode) {
-        const res = yield Taro.login();
-        wxLoginCode = res.code;
-        yield put({
-          type: 'save',
-          payload: {
-            wxLoginCode,
-          },
-        });
-      }
+      // let { wxLoginCode } = yield select(state => state.common);
+      // if (!wxLoginCode) {
+      const res = yield Taro.login();
+      const wxLoginCode = res.code;
+      // yield put({
+      //   type: 'save',
+      //   payload: {
+      //     wxLoginCode,
+      //   },
+      // });
+      // }
       return wxLoginCode;
     },
     *getUserInfo(_) {
@@ -90,8 +90,8 @@ export default {
     //   }
     // },
     *BindPhone({ payload }, { call, put, select }) {
-      const { wxLoginCode } = yield select(state => state.common);
-      const res = yield call(Api.bindPhone, { ...payload, code: wxLoginCode });
+      // const { wxLoginCode } = yield select(state => state.common);
+      const res = yield call(Api.bindPhone, { ...payload, code: (yield Taro.login()).code });
       if (res && res.errno === 0) {
         const { userInfo } = yield select(state => state.common);
         yield put({
