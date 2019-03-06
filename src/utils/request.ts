@@ -37,7 +37,7 @@ export default (options: IOption = { method: 'GET', data: {}, url: '', noLoading
   }).then(res => {
     setTimeout(() => {
       Taro.hideLoading();
-    }, 200);
+    }, 100);
     const { statusCode, data } = res;
     if (statusCode >= 200 && statusCode < 300) {
       if (!noConsole) {

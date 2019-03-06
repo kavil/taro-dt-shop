@@ -1,6 +1,6 @@
 @import "../../static/css/mixin";
 .index {
-    .curtain-img{
+    .curtain-img {
         @include wh(640px, 800px)
     }
     padding-top: 198px;
@@ -31,11 +31,13 @@
     .index-top {
         @include fixTop();
         padding: 0 20px;
+        z-index: 2;
     }
     .search-wrap {
         @include fixTop();
         padding-left: 10px;
-        top: 50px;
+        padding-bottom: 70px;
+        padding-top: 50px;
     }
     .at-tabs .at-tabs__header {
         @include fixTop();
@@ -51,6 +53,6 @@
     }
 }
 
-.index-search{
+.index-search {
     padding: 30px 0;
 }

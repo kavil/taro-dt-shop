@@ -98,6 +98,9 @@ class App extends Component {
       store.dispatch({
         type: 'common/UserInfo',
       });
+      store.dispatch({
+        type: 'cart/Index',
+      });
     }
   }
 

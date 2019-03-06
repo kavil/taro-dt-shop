@@ -112,6 +112,10 @@ export default {
       if (res.errno !== 0) return null;
       return res.data;
     },
+    *GetWXACodeUnlimit({ payload }, { call }) {
+      const res = yield call(Api.getWXACodeUnlimit, { ...payload });
+      return res;
+    },
   },
 
   reducers: {

@@ -1,4 +1,5 @@
 import * as Api from '../service/apiService';
+import Taro from '@tarojs/taro';
 
 export default {
   namespace: 'cart',
@@ -108,6 +109,22 @@ export default {
 
   reducers: {
     save(state, { payload }) {
+      if (payload.cartTotal) {
+        try {
+          let text = payload.cartTotal.checkedGoodsCount;
+          if (text > 99) text = '99+';
+          if (text === 0) {
+            Taro.removeTabBarBadge({ index: 2 });
+          } else {
+            Taro.setTabBarBadge({
+              index: 2,
+              text: payload.cartTotal.checkedGoodsCount.toString(),
+            });
+          }
+        } catch (error) {
+          console.warn(error);
+        }
+      }
       return { ...state, ...payload };
     },
   },

@@ -1,6 +1,15 @@
-import Taro, { Component } from '@tarojs/taro';
+import Taro, { Component, Config } from '@tarojs/taro';
 import { ComponentClass } from 'react';
-import { View, Swiper, Image, SwiperItem, Text, RichText, ScrollView } from '@tarojs/components';
+import {
+  View,
+  Swiper,
+  Image,
+  SwiperItem,
+  Text,
+  RichText,
+  ScrollView,
+  Button,
+} from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
 import { AtActivityIndicator, AtSteps, AtCountdown, AtButton } from 'taro-ui';
@@ -10,6 +19,8 @@ import Login from '../../components/login/loginComponent';
 import { tip } from '../../utils/tool';
 const qulity1 = 'https://img.kavil.com.cn/3991547959471_.pic.jpg';
 const qulity2 = 'https://img.kavil.com.cn/4011547959487_.pic.jpg';
+import { goodsShare } from '../../config/goodsShare';
+import { baseUrl } from '../../config/index';
 
 type PageState = {};
 interface PageDvaProps {
@@ -33,7 +44,24 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
   ...common,
 }))
 class Goods extends Component<IProps, {}> {
+  config: Config = {
+    usingComponents: {
+      canvasdrawer: '../../components/canvasdrawer/canvasdrawer',
+    },
+  };
+
   async componentDidShow() {
+    if (this.$router.params.scene) {
+      const sceneTmp = decodeURIComponent(this.$router.params.scene);
+      const scene: any = {};
+      sceneTmp.split('&').forEach(ele => {
+        const res = ele.split('=');
+        scene[res[0]] = res[1];
+      });
+      console.log(scene, 'thasdfter.scene');
+      this.$router.params.id = scene.id;
+    }
+
     Taro.showShareMenu({
       withShareTicket: true,
     });
@@ -129,24 +157,101 @@ class Goods extends Component<IProps, {}> {
     if (res.errno === 401) Taro.eventCenter.trigger('login', true);
   };
 
-  lookBig = img => {
+  lookBig = (img, no) => {
+    const bigImg = no ? img : img + '@!q90';
     Taro.previewImage({
-      current: img + '@!q90',
-      urls: [img + '@!q90'],
+      current: bigImg,
+      urls: [bigImg],
     });
   };
 
   nextTab(url) {
     Taro.switchTab({ url });
   }
+
+  shareBtn = async () => {
+    this.setState({
+      shareStart: true,
+    });
+    // Taro.showLoading({
+    //   title: '分享图生成中',
+    // });
+
+    const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.$router.params.id}&userId=${
+      this.props.userInfo.id
+    }&page=pages/goods/index&width=280px`;
+    this.setState({ goodsShare: goodsShare(this.props.userInfo, this.props.Detail.info, ewm) });
+  };
+
+  onOpenSetting() {
+    this.setState({ checkSave: true }, () => {
+      this.saveImage();
+    });
+  }
+
+  async saveImage() {
+    if (!this.state.shareImage) return;
+
+    try {
+      const res = await Taro.saveImageToPhotosAlbum({
+        filePath: this.state.shareImage || '',
+      });
+
+      if (res.errMsg === 'saveImageToPhotosAlbum:ok') {
+        tip('保存图片成功');
+        this.closeShare();
+        return;
+      }
+    } catch (res) {
+      if (res.errMsg === 'saveImageToPhotosAlbum:fail cancel') {
+        tip('未保存');
+        return;
+      }
+      if (res.errMsg === 'saveImageToPhotosAlbum:fail auth deny') {
+        tip('无权限');
+        this.setState({ checkSave: false });
+        return;
+      }
+    }
+  }
+
+  closeShare() {
+    this.setState({
+      shareStart: false,
+    });
+  }
+
+  eventGetImage(event) {
+    console.log(event);
+    const { tempFilePath, errMsg } = event.detail;
+    Taro.hideLoading();
+    if (errMsg === 'canvasdrawer:ok') {
+      this.setState({
+        shareImage: tempFilePath,
+      });
+    }
+  }
+
   state = {
     openSku: false,
     curGoods: {},
     countdown: {},
+    goodsShare: {},
+    shareImage: null,
+    shareStart: false,
+    checkSave: true,
   };
 
   render() {
-    const { openSku, curGoods, countdown }: any = this.state;
+    const {
+      openSku,
+      curGoods,
+      countdown,
+      goodsShare,
+      shareImage,
+      shareStart,
+      checkSave,
+    }: any = this.state;
     const { Detail, cartTotal, userInfo } = this.props;
     if (!Detail.info)
       return <AtActivityIndicator className="center" mode="center" color="#f1836f" />;
@@ -202,6 +307,66 @@ class Goods extends Component<IProps, {}> {
     return (
       <View className="goods-page">
         <Login show={false} onChange={this.loginSuccess} />
+
+        {shareStart && (
+          <View>
+            <View className="curtain" onClick={this.closeShare} />
+            {shareImage ? (
+              <Image
+                className="shareImage"
+                mode="widthFix"
+                src={shareImage}
+                onClick={this.lookBig.bind(this, shareImage)}
+              />
+            ) : (
+              <AtActivityIndicator
+                content="分享图生成中"
+                className="center"
+                size={80}
+                mode="center"
+                color="#f1836f"
+              />
+            )}
+            <View className="share-bottom">
+              <Button
+                className="share-item"
+                plain={true}
+                open-type="share"
+                onClick={this.closeShare}
+              >
+                <Text className="erduufont ed-weixin" />
+                分享群或好友
+              </Button>
+              {checkSave ? (
+                <Button className="share-item" plain={true} onClick={this.saveImage}>
+                  <Text className="erduufont ed-xiazai" />
+                  保存图片分享
+                </Button>
+              ) : (
+                <View className="share-item">
+                  <View className="mt30">
+                    <AtButton
+                      className="share-set"
+                      type="primary"
+                      circle
+                      size="small"
+                      open-type="openSetting"
+                      onOpenSetting={this.onOpenSetting}
+                    >
+                      打开保存图片授权
+                    </AtButton>
+                  </View>
+                </View>
+              )}
+            </View>
+          </View>
+        )}
+        <canvasdrawer painting={goodsShare} ongetImage={this.eventGetImage} />
+        <View className="share-btn" onClick={this.shareBtn}>
+          <Text className="erduufont ed-share" />
+          分享
+        </View>
+
         <View className="swiper-wrap">
           {info.goods_type > 1 ? (
             <View className="goods-type-wrap">
@@ -221,8 +386,7 @@ class Goods extends Component<IProps, {}> {
               <View className="trapezoid" />
               {newDate(info.start_time) > newDate(now) ? (
                 <View className="miaosha">
-                  即将开始
-                  <View>info.start_time</View>
+                  <View>{info.start_time}开始</View>
                 </View>
               ) : (
                 <View>
@@ -329,7 +493,7 @@ class Goods extends Component<IProps, {}> {
             <View className="scroll-view-wrap">
               {recommendList && recommendList.length
                 ? recommendList.map(ele => (
-                    <GoodsItem type="mini" goods={ele} onChange={this.addCartOk} />
+                    <GoodsItem key={ele.id} type="mini" goods={ele} onChange={this.addCartOk} />
                   ))
                 : null}
             </View>
@@ -377,7 +541,11 @@ class Goods extends Component<IProps, {}> {
             <Text className="erduufont ed-gouwuche" />
           </View>
           <View className="add-cart">
-            <AtButton type="primary" disabled={disabled} onClick={this.addCartOk.bind(this, info)}>
+            <AtButton
+              type="primary"
+              disabled={!!disabled}
+              onClick={this.addCartOk.bind(this, info)}
+            >
               {disabled || '加入购物车'}
             </AtButton>
           </View>

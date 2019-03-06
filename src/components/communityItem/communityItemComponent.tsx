@@ -49,7 +49,7 @@ class CommunityItem extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'common/UserInfo',
     });
-    if (res) Taro.navigateTo({ url: '/pages/coloneApply/index' });
+    if (res) Taro.navigateTo({ url: '/pages/colonelApply/index' });
   };
 
   state = {};

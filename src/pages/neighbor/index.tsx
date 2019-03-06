@@ -49,6 +49,7 @@ class Neighbor extends Component<IProps, {}> {
       let local;
       try {
         local = await Taro.getLocation({ type: 'wgs84' });
+        this.setState({ localSetting: true });
       } catch (error) {
         this.setState({ localSetting: false });
       }
@@ -153,7 +154,9 @@ class Neighbor extends Component<IProps, {}> {
                     <AtNoticebar icon="volume-plus">小区公告</AtNoticebar>
                   </View>
                 </View>
-                <View className="pad40 h2" style={{color: '#aaa', textAlign: 'center'}}>即将开放</View>
+                <View className="pad40 h2" style={{ color: '#aaa', textAlign: 'center' }}>
+                  即将开放
+                </View>
               </View>
             ) : (
               <View>

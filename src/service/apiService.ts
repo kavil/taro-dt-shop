@@ -11,7 +11,8 @@ export const cityOpen = data => Request({ url: '/index/cityOpen', method: 'GET',
 export const getCate = data => Request({ url: '/category', method: 'GET', data });
 export const getGoodsList = data => Request({ url: '/goods', method: 'GET', data });
 export const getGoodsDetail = data => Request({ url: '/goods/info', method: 'GET', data, noLoading: true });
-export const getSku = data => Request({ url: '/goods/sku', method: 'GET', data, noLoading: true });
+export const getSku = data => Request({ url: '/goods/sku', method: 'GET', data });
+export const getWXACodeUnlimit = data => Request({ url: '/goods/getWXACodeUnlimit', method: 'GET', data, noLoading: true });
 
 export const addCart = data => Request({ url: '/cart/add', method: 'POST', data, noLoading: true });
 export const getCart = data => Request({ url: '/cart', method: 'GET', data, noLoading: true });
@@ -37,6 +38,7 @@ export const vipOpenDays = data => Request({ url: '/user/vipOpenDays', method: '
 export const vipPrepay = data => Request({ url: '/user/vipPrepay', method: 'POST', data });
 
 export const colonelApply = data => Request({ url: '/colonel/apply', method: 'POST', data });
+export const getUser = data => Request({ url: '/colonel/getUser', method: 'GET', data });
 
 // 模板自动生成占位 勿删
 

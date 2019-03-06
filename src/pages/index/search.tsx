@@ -117,7 +117,7 @@ class IndexSearch extends Component<IProps, {}> {
         </View>
         <View className="pad40">
           {SearchList.map(ele => (
-            <GoodsItem goods={ele} onChange={this.addCartOk} />
+            <GoodsItem key={ele.id} goods={ele} onChange={this.addCartOk} />
           ))}
         </View>
       </View>

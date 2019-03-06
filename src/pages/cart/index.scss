@@ -180,7 +180,8 @@
         width: 100%;
         image {
             margin: 0 10px 0 0;
-            @include wh(40px, 40px);
+            @include wh(40px,
+            40px);
         }
     }
     .colonel-wrap {
@@ -274,6 +275,9 @@
             @include fj;
             padding: 10px 0;
             align-items: center;
+            &.mh {
+                min-height: 80px;
+            }
         }
         .span {
             font-size: 26px;

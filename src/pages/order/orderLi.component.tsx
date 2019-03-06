@@ -122,8 +122,8 @@ export class OrderLi extends Component<IProps, {}> {
               {order.getcode.getcode}
             </View>
           )}
-          {/* 不知道为啥这里 countdown 有问题 不显示 */}
-          {op.pay && countdown && (
+          {/* 不知道为啥这里 countdown 有问题 不显示 // 估计是setstate */}
+          {op && op.pay && countdown && (
             <View className="last-time">
               付款剩余{countdown[2]}
               <AtCountdown
@@ -135,25 +135,26 @@ export class OrderLi extends Component<IProps, {}> {
             </View>
           )}
         </View>
-        {order.orderGoods.map(item => {
-          return (
-            <View className="center" key={item.id}>
-              <View className="main">
-                <View className="ava">
-                  <AtAvatar size="large" image={item.pic_url + '@!300X300'} />
-                </View>
-                <View className="name">
-                  {item.goods_name}
-                  <View className="p">
-                    数量：{item.number}
-                    {item.specifition_names ? '，' + item.specifition_names : null}
+        {order.orderGoods &&
+          order.orderGoods.map(item => {
+            return (
+              <View className="center" key={item.id}>
+                <View className="main">
+                  <View className="ava">
+                    <AtAvatar size="large" image={item.pic_url + '@!300X300'} />
+                  </View>
+                  <View className="name">
+                    {item.goods_name}
+                    <View className="p">
+                      数量：{item.number}
+                      {item.specifition_names ? '，' + item.specifition_names : null}
+                    </View>
                   </View>
                 </View>
+                <View className="price">{item.actual_price}元</View>
               </View>
-              <View className="price">{item.actual_price}元</View>
-            </View>
-          );
-        })}
+            );
+          })}
         {order.coupon_price && <View className="coupon">优惠券抵扣：￥{order.coupon_price}</View>}
         {order.score_price && <View className="coupon">积分抵扣：￥{order.score_price}</View>}
         <View className="bottom">

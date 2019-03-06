@@ -37,6 +37,7 @@ class NeighborSearch extends Component<IProps, {}> {
     let local;
     try {
       local = await Taro.getLocation({ type: 'wgs84' });
+      this.setState({ localSetting: true });
     } catch (error) {
       this.setState({ localSetting: false });
     }
@@ -58,10 +59,24 @@ class NeighborSearch extends Component<IProps, {}> {
 
   openSetting = async () => {
     const { errMsg }: any = await Taro.openSetting();
+    console.log(errMsg);
+    
     if (errMsg === 'openSetting:ok') this.componentDidMount();
   };
 
+  onConfirm = async e => {
+    const value = e.detail.value;
+    if (this.timeCo) clearTimeout(this.timeCo);
+    await this.props.dispatch({
+      type: 'neighbor/Search',
+      payload: {
+        name: value,
+      },
+    });
+  };
+
   searchCommunity = async value => {
+
     this.setState({ searchValue: value });
     if (this.timeCo) clearTimeout(this.timeCo);
     this.timeCo = setTimeout(async () => {
@@ -102,7 +117,7 @@ class NeighborSearch extends Component<IProps, {}> {
             value={searchValue}
             placeholder="搜索小区"
             onChange={this.searchCommunity}
-            onConfirm={this.searchCommunity}
+            onConfirm={this.onConfirm}
           />
         </View>
         <View className="pad20 pt">

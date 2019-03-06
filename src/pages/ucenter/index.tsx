@@ -44,8 +44,11 @@ class Ucenter extends Component<IProps, {}> {
     this.setState({ vipSave });
   }
 
-  onPullDownRefresh() {
+  async onPullDownRefresh() {
     this.componentDidMount();
+    await this.props.dispatch({
+      type: 'common/UserInfo',
+    });
     Taro.stopPullDownRefresh();
   }
 
@@ -64,7 +67,7 @@ class Ucenter extends Component<IProps, {}> {
   };
   callme = () => {
     Taro.makePhoneCall({
-      phoneNumber: '18503050275',
+      phoneNumber: '13667909769',
     });
   };
   nextMini = () => {

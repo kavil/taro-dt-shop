@@ -10,6 +10,10 @@ export default {
       const res = yield call(Api.colonelApply, { ...payload, cityId });
       return res.errno === 0;
     },
+    *User({ payload }, { call }) {
+      const res = yield call(Api.getUser, { ...payload });
+      return res;
+    },
   },
 
   reducers: {

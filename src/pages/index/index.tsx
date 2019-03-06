@@ -138,6 +138,15 @@ class Index extends Component<IProps, {}> {
     Taro.switchTab({ url });
   }
   async handleClick(value) {
+    this.setState({
+      current: value,
+    });
+    setTimeout(() => {
+      Taro.pageScrollTo({
+        scrollTop: 0,
+        duration: 0,
+      });
+    }, 100);
     const { cateTopList }: any = this.state;
     const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
     console.log(cate);
@@ -151,15 +160,6 @@ class Index extends Component<IProps, {}> {
         goods_type: cate.name === '预售' ? 3 : null,
       },
     });
-    await this.setState({
-      current: value,
-    });
-    setTimeout(() => {
-      Taro.pageScrollTo({
-        scrollTop: 0,
-        duration: 0,
-      });
-    }, 100);
   }
 
   handNull = () => {};
@@ -179,7 +179,7 @@ class Index extends Component<IProps, {}> {
       if (res.errno === 0)
         setTimeout(() => {
           tip('已添加到购物车');
-        });
+        }, 100);
       if (res.errno === 401) {
         Taro.login(); // 经验 先获取到code 不容易失效
         Taro.eventCenter.trigger('login', true);
@@ -200,6 +200,7 @@ class Index extends Component<IProps, {}> {
       tip('已添加到购物车');
     }
   };
+
   state = {
     current: 0,
     openSku: false,

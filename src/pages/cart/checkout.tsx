@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { ComponentClass } from 'react';
-import { View, Text, Image, Button, ScrollView, Input } from '@tarojs/components';
+import { View, Text, Image, Button, ScrollView, Input, Switch } from '@tarojs/components';
 import communityImg from '../../static/images/community.png';
 import { connect } from '@tarojs/redux';
 import './index.scss';
@@ -106,13 +106,34 @@ class CheckOut extends Component<IProps, {}> {
       }
     );
   };
+  scoreClick = async () => {
+    const totalScore = this.state.totalScore;
+    if (totalScore < 100) {
+      tip('未满100积分，无法使用');
+    }
+  };
   makePhone = () => {
     Taro.makePhoneCall({
       phoneNumber: this.props.userInfo.colonelInfo.mobile,
     });
   };
+
+  openAddrSet = () => {
+    this.setState({ addrSet: false }, () => {
+      this.selectAddr();
+    });
+  };
+
   selectAddr = async () => {
-    const res = await Taro.chooseAddress();
+    let res;
+    try {
+      res = await Taro.chooseAddress();
+    } catch (err) {
+      if (err.errMsg === 'chooseAddress:fail auth deny') {
+        this.setState({ addrSet: true });
+      }
+      return;
+    }
     console.log(res);
     if (res.errMsg === 'chooseAddress:fail cancel') return;
     this.setState({
@@ -136,7 +157,7 @@ class CheckOut extends Component<IProps, {}> {
       tip('请选择地址');
       return;
     }
-    if (!house) {
+    if (!myAddress && !house) {
       tip('请填写详细楼栋、门牌号');
       return;
     }
@@ -210,6 +231,7 @@ class CheckOut extends Component<IProps, {}> {
     myAddress: null,
     openModal: false,
     house: '',
+    addrSet: false,
   };
 
   render() {
@@ -227,6 +249,7 @@ class CheckOut extends Component<IProps, {}> {
       totalScore,
       couponList,
       house,
+      addrSet,
     }: any = this.state;
 
     const cgl1 = checkedGoodsList.filter(ele => ele.goods_type !== 3);
@@ -256,15 +279,17 @@ class CheckOut extends Component<IProps, {}> {
               <View className="community-wrap">
                 <Image src={communityImg} />
                 {userInfo.name}
-                <View className="input-wrap">
-                  <AtInput
-                    placeholder="我的详细楼栋、门牌号"
-                    name="house"
-                    disabled={this.props.userInfo.house}
-                    value={house}
-                    onChange={this.inputHouse}
-                  />
-                </View>
+                {userInfo.colonelId && userInfo.communityId && (
+                  <View className="input-wrap">
+                    <AtInput
+                      placeholder="我的详细楼栋、门牌号"
+                      name="house"
+                      disabled={this.props.userInfo.house}
+                      value={house}
+                      onChange={this.inputHouse}
+                    />
+                  </View>
+                )}
               </View>
             ) : (
               <View className="select-addr">
@@ -302,9 +327,22 @@ class CheckOut extends Component<IProps, {}> {
                       {myAddress.cityName + myAddress.countyName + myAddress.detailInfo}
                     </View>
                   ) : (
-                    <AtButton size="small" type="secondary" onClick={this.selectAddr}>
-                      选择地址
-                    </AtButton>
+                    <View>
+                      {!addrSet ? (
+                        <AtButton size="small" type="secondary" onClick={this.selectAddr}>
+                          选择地址
+                        </AtButton>
+                      ) : (
+                        <AtButton
+                          size="small"
+                          type="secondary"
+                          openType="openSetting"
+                          onOpenSetting={this.openAddrSet}
+                        >
+                          选择地址
+                        </AtButton>
+                      )}
+                    </View>
                   )}
                 </View>
               </View>
@@ -363,7 +401,7 @@ class CheckOut extends Component<IProps, {}> {
         )}
         <View className="block-wrap">
           <View
-            className="item"
+            className="item mh"
             onClick={this.nextPage.bind(this, '/pages/ucenter/coupon?type=use')}
           >
             <View className="label">红包</View>
@@ -376,12 +414,18 @@ class CheckOut extends Component<IProps, {}> {
             <View className="label">
               积分
               <View className="span">
-                共<Text className="b">{totalScore}</Text>积分，
+                共<Text className="b">{totalScore}</Text>积分，100积分抵扣1元，
                 {totalScore < 100 ? '满100积分可用' : `可抵扣${(totalScore / 100).toFixed(1)}元`}
               </View>
             </View>
             <View className="value">
-              <AtSwitch color="#f39b8b" checked={score} onChange={this.setScore} />
+              <Switch
+                color="#f39b8b"
+                disabled={totalScore < 100}
+                checked={score}
+                onClick={this.scoreClick}
+                onChange={this.setScore}
+              />
             </View>
           </View>
         </View>

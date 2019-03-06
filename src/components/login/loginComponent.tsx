@@ -25,8 +25,9 @@ interface PageOwnProps {
 }
 
 type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
-@connect(({ common, loading }) => ({
+@connect(({ common, loading, cart }) => ({
   ...common,
+  ...cart,
   userInfoLoading: loading.effects['common/getUserInfo'],
   loginLoading: loading.effects['common/login'],
 }))
@@ -71,6 +72,9 @@ class Login extends Component<IProps, {}> {
           code,
           userInfo,
         },
+      });
+      await this.props.dispatch({
+        type: 'cart/Index',
       });
       this.setState({
         openLogin: false,
