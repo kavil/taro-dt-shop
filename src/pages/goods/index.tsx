@@ -321,10 +321,10 @@ class Goods extends Component<IProps, {}> {
             ) : (
               <AtActivityIndicator
                 content="分享图生成中"
-                className="center"
+                className="center loading"
                 size={80}
                 mode="center"
-                color="#f1836f"
+                color="#fff"
               />
             )}
             <View className="share-bottom">

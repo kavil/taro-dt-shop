@@ -70,4 +70,25 @@
     .value {
         margin: 20px 0 40px;
     }
+    .back-home {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, .5);
+        width: 70px;
+        height: 70px;
+        line-height: 70px;
+        padding: 10px;
+        text-align: center;
+        color: #fff;
+        line-height: 1.1;
+        font-size: 22px;
+        z-index: 1;
+        .ed-zhuye1 {
+            color: #fff;
+            font-size: 40px;
+            display: block;
+        }
+    }
 }

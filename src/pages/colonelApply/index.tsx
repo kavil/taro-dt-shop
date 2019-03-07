@@ -35,9 +35,9 @@ class Colonelapply extends Component<IProps, {}> {
   };
 
   async componentDidMount() {
-    const parentId = this.$router.params.id || 26;
+    const parentId = this.$router.params.id;
     console.log(parentId, 'parentId'); // 此处是userId
-    
+
     if (parentId && parentId !== this.props.userInfo.id) {
       const res = await this.props.dispatch({
         type: 'colonel/User',
@@ -83,7 +83,11 @@ class Colonelapply extends Component<IProps, {}> {
     console.log(fm);
     const res = await this.props.dispatch({
       type: 'colonel/Apply',
-      payload: { ...fm, images: fm.images.map(res => res.url).join(','), parent: this.state.parent['id'] },
+      payload: {
+        ...fm,
+        images: fm.images.map(res => res.url).join(','),
+        parent: this.state.parent['id'],
+      },
     });
     if (res) {
       const modal = await Taro.showModal({
@@ -170,6 +174,12 @@ class Colonelapply extends Component<IProps, {}> {
       path: `/pages/colonelApply/index?id=${this.props.userInfo.id}`,
     };
   }
+  onPullDownRefresh() {
+    Taro.stopPullDownRefresh();
+  }
+  nextTab = url => {
+    Taro.switchTab({ url });
+  };
   state = {
     formModel: {
       images: [],
@@ -185,6 +195,7 @@ class Colonelapply extends Component<IProps, {}> {
     return (
       <View className="apply-page">
         <Image className="apply-img" src={colonelapplyImg} />
+        <View />
         <View className="pad40 h2">
           小区长申请表
           <View className="p">
@@ -303,6 +314,12 @@ class Colonelapply extends Component<IProps, {}> {
                   <Image className="ava" src={parent.avatarUrl} />
                   {parent.nickName}·{parent.mobile}
                 </View>
+              </View>
+            )}
+            {parent.id && (
+              <View className="back-home" onClick={this.nextTab.bind(this, '/pages/index/index')}>
+                <View className="erduufont ed-zhuye1" />
+                首页
               </View>
             )}
 

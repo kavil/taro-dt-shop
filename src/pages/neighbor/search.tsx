@@ -60,12 +60,12 @@ class NeighborSearch extends Component<IProps, {}> {
   openSetting = async () => {
     const { errMsg }: any = await Taro.openSetting();
     console.log(errMsg);
-    
+
     if (errMsg === 'openSetting:ok') this.componentDidMount();
   };
 
   onConfirm = async e => {
-    const value = e.detail.value;
+    const value = e.detail.value.trim();
     if (this.timeCo) clearTimeout(this.timeCo);
     await this.props.dispatch({
       type: 'neighbor/Search',
@@ -75,8 +75,9 @@ class NeighborSearch extends Component<IProps, {}> {
     });
   };
 
-  searchCommunity = async value => {
-
+  searchCommunity = async val => {
+    const value = val.trim();
+    if (!value) return;
     this.setState({ searchValue: value });
     if (this.timeCo) clearTimeout(this.timeCo);
     this.timeCo = setTimeout(async () => {

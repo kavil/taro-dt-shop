@@ -14,21 +14,21 @@
     .shareImage {
         width: 70%;
         position: fixed;
-        top: 5%;
+        top: 40%;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translate(-50%, -50%);
         z-index: 3;
     }
     .share-btn {
         position: fixed;
-        top: 750px;
+        top: 780px;
         right: 20px;
         border-radius: 50%;
         background: rgba(0, 0, 0, .5);
-        width: 70px;
-        height: 70px;
-        line-height: 70px;
-        padding: 5px;
+        width: 80px;
+        height: 80px;
+        line-height: 80px;
+        padding: 8px;
         text-align: center;
         color: #fff;
         line-height: 1.1;
@@ -36,7 +36,7 @@
         z-index: 1;
         .ed-share {
             color: #fff;
-            font-size: 40px;
+            font-size: 44px;
             display: block;
         }
     }
@@ -315,7 +315,7 @@
 }
 
 .center {
-    position: absolute;
+    position: fixed;
     top: 40%;
     left: 50%;
     transform: translateX(-50%);
@@ -326,7 +326,14 @@
     .at-activity-indicator__content {
         color: #eee;
         font-size: 28px;
+        font-weight: 300;
     }
+}
+
+.loading {
+    background: rgba(0, 0, 0, .6);
+    padding: 30px;
+    border-radius: 10px;
 }
 
 .toast-body-content__info text {

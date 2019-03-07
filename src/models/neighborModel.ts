@@ -20,6 +20,12 @@ export default {
       }
     },
     *Search({ payload }, { call, put }) {
+      yield put({
+        type: 'save',
+        payload: {
+          SearchList: [],
+        },
+      });
       const res = yield call(Api.communitySearch, payload);
       if (res.errno === 0) {
         yield put({
