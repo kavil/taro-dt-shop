@@ -59,6 +59,11 @@ class Index extends Component<IProps, {}> {
   };
 
   async componentDidMount() {
+    setTimeout(() => {
+      this.setState({
+        addmyappTip: true,
+      });
+    }, 10 * 1000);
     Taro.showShareMenu({
       withShareTicket: true,
     });
@@ -209,6 +214,7 @@ class Index extends Component<IProps, {}> {
     curtainOpened: false,
     curtainPng: null,
     curtainRes: {},
+    addmyappTip: false,
   };
 
   render() {
@@ -221,6 +227,7 @@ class Index extends Component<IProps, {}> {
       cateImgList,
       curtainOpened,
       curtainPng,
+      addmyappTip,
     }: any = this.state;
     const tabList = cateTopList.map(ele => {
       return { title: ele.name };
@@ -238,6 +245,12 @@ class Index extends Component<IProps, {}> {
         <AtCurtain isOpened={curtainOpened} onClose={this.onCloseCurtain.bind(this)}>
           {curtainPng && <Image className="curtain-img" src={curtainPng + '@!640X800'} />}
         </AtCurtain>
+        {!addmyappTip && (
+          <View className="addmyapp">
+            <View className="arr" />
+            好邻居添加到「我的小程序」
+          </View>
+        )}
         <View className="index-top">
           <View
             className="community-wrap"

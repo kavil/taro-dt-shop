@@ -3,6 +3,29 @@
     .curtain-img {
         @include wh(640px, 800px)
     }
+    .addmyapp {
+        position: fixed;
+        top: 8px;
+        right: 10px;
+        padding: 5px;
+        font-size: 24px;
+        background: $color-dan;
+        z-index: 10;
+        border-radius: 50px;
+        color: #555;
+        .arr {
+            position: absolute;
+            right: 140px;
+            top: -5px;
+            width: 12px;
+            height: 12px;
+            background: $color-dan;
+            transform: rotate(45deg);
+            border: 1px solid $color-dan;
+            border-bottom: 0;
+            border-right: 0;
+        }
+    }
     padding-top: 198px;
     .community-wrap {
         font-size: 36px;

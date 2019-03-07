@@ -50,7 +50,7 @@ class App extends Component {
       navigationBarTitleText: '新邻居',
       navigationBarTextStyle: 'black',
       enablePullDownRefresh: true,
-      onReachBottomDistance: 20,
+      onReachBottomDistance: 100,
       backgroundColor: '#f1f1f1',
     },
     tabBar: {
