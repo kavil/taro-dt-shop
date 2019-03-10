@@ -186,6 +186,7 @@ class Ucenter extends Component<IProps, {}> {
             />
           </AtList>
         </View>
+
         <View className="divsion" />
         <View className="ul">
           <AtList>
@@ -196,6 +197,11 @@ class Ucenter extends Component<IProps, {}> {
             />
             <AtListItem arrow="right" title="供应商联系" onClick={this.callme} />
           </AtList>
+        </View>
+        <View className="contact-wrap">
+          <AtButton circle size="small" type="secondary" className="contact" open-type="contact">
+            联系新邻居客服
+          </AtButton>
         </View>
       </View>
     );

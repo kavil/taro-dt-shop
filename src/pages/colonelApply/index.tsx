@@ -111,7 +111,7 @@ class Colonelapply extends Component<IProps, {}> {
         const aliyunFileKey =
           'dtshop' +
           filePath
-            .replace(/wxfile:\/\/[^\.]*.[^\.]*\./, '')
+            .replace(/wxfile:\/\/tmp_/, '')
             .replace(/http:\/\/[^\.]*.[^\.]*\./, '');
         const res = await Taro.uploadFile({
           url: uploadHeaders.host,

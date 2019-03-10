@@ -7,7 +7,7 @@
         position: fixed;
         top: 8px;
         right: 10px;
-        padding: 5px;
+        padding: 5px 0 5px 10px;
         font-size: 24px;
         background: $color-dan;
         z-index: 10;
@@ -15,7 +15,7 @@
         color: #555;
         .arr {
             position: absolute;
-            right: 140px;
+            right: 128px;
             top: -5px;
             width: 12px;
             height: 12px;
@@ -24,6 +24,26 @@
             border: 1px solid $color-dan;
             border-bottom: 0;
             border-right: 0;
+        }
+    }
+    .help {
+        padding: 0 8px 0 0;
+        font-size: 24px;
+        background: $color-dan;
+        z-index: 10;
+        border-radius: 50px;
+        color: #555;
+        @include fj();
+        align-items: center;
+        .ava-wrap {
+            @include wh(40px, 40px);
+            .image {
+                @include wh(40px, 40px);
+                border-radius: 50%;
+            }
+        }
+        .text-wrap {
+            flex: 1;
         }
     }
     padding-top: 198px;
@@ -55,6 +75,7 @@
         @include fixTop();
         padding: 0 20px;
         z-index: 2;
+        @include fj();
     }
     .search-wrap {
         @include fixTop();

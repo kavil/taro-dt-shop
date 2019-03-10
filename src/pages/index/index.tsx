@@ -63,7 +63,7 @@ class Index extends Component<IProps, {}> {
       this.setState({
         addmyappTip: true,
       });
-    }, 10 * 1000);
+    }, 6 * 1000);
     Taro.showShareMenu({
       withShareTicket: true,
     });
@@ -251,6 +251,7 @@ class Index extends Component<IProps, {}> {
             好邻居添加到「我的小程序」
           </View>
         )}
+
         <View className="index-top">
           <View
             className="community-wrap"
@@ -260,6 +261,14 @@ class Index extends Component<IProps, {}> {
             {userInfo && userInfo.uid ? userInfo.name : '绑定小区享低价'}
             <Text className="erduufont ed-back go" />
           </View>
+          {userInfo.colonelId && addmyappTip && (
+            <View className="help">
+              <View className="ava-wrap">
+                <Image className="image" mode="scaleToFill" src={userInfo.colonelInfo.avatarUrl} />
+              </View>
+              <View className="text-wrap">小区长</View>
+            </View>
+          )}
         </View>
         <View className="search-wrap">
           <AtSearchBar value="" onChange={this.handNull} />
