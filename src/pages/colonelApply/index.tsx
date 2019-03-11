@@ -76,6 +76,10 @@ class Colonelapply extends Component<IProps, {}> {
       tip('请上传身份证！');
       return;
     }
+    if (!fm.ewm.length) {
+      tip('请上传微信个人二维码！');
+      return;
+    }
     if (!fm.realName) {
       tip('请填写姓名！');
       return;
@@ -86,6 +90,7 @@ class Colonelapply extends Component<IProps, {}> {
       payload: {
         ...fm,
         images: fm.images.map(res => res.url).join(','),
+        ewm: fm.ewm.map(res => res.url).join(','),
         parent: this.state.parent['id'],
       },
     });
@@ -108,24 +113,9 @@ class Colonelapply extends Component<IProps, {}> {
       for (let i = 0; i < value.length; i++) {
         const filePath = value[i].url;
         if (filePath.includes('img.kavil.com.cn')) continue;
-        const aliyunFileKey =
-          'dtshop' +
-          filePath
-            .replace(/wxfile:\/\/tmp_/, '')
-            .replace(/http:\/\/[^\.]*.[^\.]*\./, '');
-        const res = await Taro.uploadFile({
-          url: uploadHeaders.host,
-          filePath,
-          name: 'file', //必须填file
-          formData: {
-            key: aliyunFileKey,
-            policy: uploadHeaders.policy,
-            OSSAccessKeyId: uploadHeaders.OSSAccessKeyId,
-            signature: uploadHeaders.signature,
-            success_action_status: '200',
-          },
-        });
-        if (res.statusCode != 200) {
+
+        const { uped, aliyunFileKey } = await this.upImg(filePath, uploadHeaders);
+        if (uped.statusCode != 200) {
           tip('上传失败，请重试');
           return;
         }
@@ -133,11 +123,42 @@ class Colonelapply extends Component<IProps, {}> {
         console.log('上传图片成功', value);
       }
     }
+    if (label === 'ewm') {
+      for (let i = 0; i < value.length; i++) {
+        const filePath = value[i].url;
+        if (filePath.includes('img.kavil.com.cn')) continue;
+
+        const { uped, aliyunFileKey } = await this.upImg(filePath, uploadHeaders);
+        if (uped.statusCode != 200) {
+          tip('上传失败，请重试');
+          return;
+        }
+        value[i].url = uploadHeaders.host + '/' + aliyunFileKey;
+        console.log('上传ewm成功', value);
+      }
+    }
     formModel[label] = value;
     this.setState({
       formModel: { ...formModel },
     });
   };
+  async upImg(filePath, uploadHeaders) {
+    const aliyunFileKey =
+      'dtshop' + filePath.replace(/wxfile:\/\/tmp_/, '').replace(/http:\/\/[^\.]*.[^\.]*\./, '');
+    const uped = await Taro.uploadFile({
+      url: uploadHeaders.host,
+      filePath,
+      name: 'file', //必须填file
+      formData: {
+        key: aliyunFileKey,
+        policy: uploadHeaders.policy,
+        OSSAccessKeyId: uploadHeaders.OSSAccessKeyId,
+        signature: uploadHeaders.signature,
+        success_action_status: '200',
+      },
+    });
+    return { uped, aliyunFileKey };
+  }
   nextPage = url => {
     Taro.navigateTo({ url });
   };
@@ -183,6 +204,7 @@ class Colonelapply extends Component<IProps, {}> {
   state = {
     formModel: {
       images: [],
+      ewm: []
     },
     uploadHeaders: null,
     getPhoneLoading: false,
@@ -287,6 +309,21 @@ class Colonelapply extends Component<IProps, {}> {
                   onImageClick={this.lookBig.bind(this)}
                 />
                 <View className="p">仅用于审核，不会公开</View>
+              </View>
+            </View>
+
+            <View className="form-item">
+              <View className="label">我的微信二维码</View>
+              <View className="value mxw400">
+                <AtImagePicker
+                  multiple
+                  length={1}
+                  showAddBtn={formModel.ewm.length < 1}
+                  files={formModel.ewm}
+                  onChange={this.handleInput.bind(this, 'ewm')}
+                  onImageClick={this.lookBig.bind(this)}
+                />
+                <View className="p">微信个人信息中可以找到我的二维码</View>
               </View>
             </View>
             <AtInput
