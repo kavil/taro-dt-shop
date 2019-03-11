@@ -503,6 +503,13 @@ class Goods extends Component<IProps, {}> {
           <View className="h3">商品详情</View>
           <RichText nodes={detailNodes} onClick={this.clickDetail.bind(this)} />
 
+          <View className="h3">发货须知</View>
+          <View className="p">
+            <View>当天下午20:30前下单，次日上午送达；</View>
+            <View>当天下午20:30后下单，次日发货；后天送达；</View>
+            <View>如标明预售则按预售日期发货配送。</View>
+          </View>
+
           <View className="h3">价格说明</View>
           <View className="p">
             <Text className="b">划线价格：</Text>
