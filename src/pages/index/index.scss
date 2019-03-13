@@ -1,5 +1,25 @@
 @import "../../static/css/mixin";
 .index {
+    .scroll-view-wrap {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+    .ms-wrap {
+        border: 5px solid $color-brand-light;
+        margin-top: 10px;
+        border-radius: 10px;
+    }
+    .type-tag {
+        position: absolute;
+        top: 11px;
+        left: 0;
+        font-size: 22px;
+        line-height: 2.2;
+        border-radius: 15px 15px 15px 0;
+        padding: 0 10px;
+        background: $bg-color-panel;
+        color: #fff;
+    }
     .curtain-img {
         @include wh(640px, 800px)
     }
@@ -36,9 +56,10 @@
         @include fj();
         align-items: center;
         .ava-wrap {
-            @include wh(40px, 40px);
+            @include wh(50px, 50px);
+            margin-right: 5px;
             .image {
-                @include wh(40px, 40px);
+                @include wh(50px, 50px);
                 border-radius: 50%;
             }
         }

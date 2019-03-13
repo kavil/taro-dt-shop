@@ -4,6 +4,20 @@
     @include fj();
     padding: 30px 0;
     border-bottom: 1PX solid $border;
+    .ms-cd {
+        position: absolute;
+        bottom: -2px;
+        background: #f39b8b;
+        color: #fff;
+        border-radius: 15px 15px 15px 0;
+        padding: 0 5px;
+        font-size: 24px;
+        @include fj(start);
+        align-items: center;
+    }
+    .ms-cd-item{
+        // padding-bottom: 4px;
+    }
     .img-wrap {
         @include wh(240px, 240px);
         position: relative;
@@ -22,6 +36,12 @@
         }
         .ed-ys {
             background: $color-ex;
+            color: #fff;
+        }
+        .ed-crd {
+            font-size: 80rpx;
+            line-height: 0.5;
+            background: $color-brand-light;
             color: #fff;
         }
         .img {

@@ -70,6 +70,11 @@ class Ucenter extends Component<IProps, {}> {
       phoneNumber: '13667909769',
     });
   };
+  callkf = () => {
+    Taro.makePhoneCall({
+      phoneNumber: '18979084445',
+    });
+  };
   nextMini = () => {
     Taro.navigateToMiniProgram({
       appId: 'wx022960c7a872290f',
@@ -202,6 +207,9 @@ class Ucenter extends Component<IProps, {}> {
           <AtButton circle size="small" type="secondary" className="contact" open-type="contact">
             联系新邻居客服
           </AtButton>
+          <View className="callkf" onClick={this.callkf}>
+            18979084445
+          </View>
         </View>
       </View>
     );

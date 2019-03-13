@@ -1,10 +1,11 @@
 import { ComponentClass } from 'react';
 import Taro, { Component } from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
-import { AtInputNumber, AtButton } from 'taro-ui';
+import { AtInputNumber, AtButton, AtCountdown } from 'taro-ui';
 import { connect } from '@tarojs/redux';
 import './goodsComponent.scss';
 import cartImg from '../../static/images/cart-in.png';
+import { tip, Countdown } from '../../utils/tool';
 
 interface PageState {}
 interface PageDva {
@@ -39,10 +40,42 @@ class GoodsItem extends Component<IProps, {}> {
   changeCartNumber = value => {
     console.log(value);
   };
-
+  newDate = date => {
+    if (!date) return 0;
+    return new Date(date.replace(/-/g, '/'));
+  };
+  componentDidMount() {
+    if (this.props.goods.over_time)
+      this.setState({
+        countdown: Countdown(this.props.goods.over_time),
+      });
+  }
   addCart = value => {
     console.log(value);
     // this.setState({ numberStatus: true });
+    let goodsNumber = 0;
+    if (!value.sku) value.sku = [];
+    value.sku.forEach(ele => {
+      goodsNumber += ele.goods_number;
+    });
+
+    let disabled;
+
+    if (goodsNumber === 0) {
+      disabled = '已售罄';
+    }
+    if (
+      value.goods_type !== 1 &&
+      this.newDate(value.over_time) <
+        this.newDate(new Date().toLocaleString('zh', { hour12: false }))
+    ) {
+      disabled = '秒杀已结束';
+    }
+    if (disabled) {
+      tip(disabled);
+      return;
+    }
+
     this.props.onChange(value);
     return this.props.dispatch({
       type: 'cart/add',
@@ -52,17 +85,20 @@ class GoodsItem extends Component<IProps, {}> {
       },
     });
   };
+
+  onTimeUp() {}
   nextPage() {
     Taro.navigateTo({ url: `/pages/goods/index?id=${this.props.goods.id}` });
   }
 
   state = {
     numberStatus: false,
+    countdown: {},
   };
 
   render() {
     const { goods, type } = this.props;
-    const { numberStatus } = this.state;
+    const { numberStatus, countdown }: any = this.state;
     let goodsNumber = 0;
     if (!goods.sku) return null;
     goods.sku.forEach(ele => {
@@ -74,7 +110,22 @@ class GoodsItem extends Component<IProps, {}> {
     return (
       <View className={className}>
         <View className="img-wrap" onClick={this.nextPage}>
-          {goods.goods_type === 2 && <Text className="type-tag erduufont ed-ms" />}
+          {goods.goods_type === 1 && <Text className="type-tag erduufont ed-crd" />}
+          {/* {goods.goods_type === 2 && <Text className="type-tag erduufont ed-ms" />} */}
+          {goods.goods_type === 2 && countdown.time && (
+            <View className="ms-cd">
+              <View className="ms-cd-item">仅剩</View>
+              <AtCountdown
+                format={{ day: '天', hours: ':', minutes: ':', seconds: '' }}
+                isShowDay={countdown.isShowDay}
+                day={countdown.day}
+                hours={countdown.time[0]}
+                minutes={countdown.time[1]}
+                seconds={countdown.time[2]}
+                onTimeUp={this.onTimeUp.bind(this)}
+              />
+            </View>
+          )}
           {goods.goods_type === 3 && <Text className="type-tag erduufont ed-ys" />}
           <Image lazyLoad className="img" src={goods.primary_pic_url + '@!480X480'} />
         </View>

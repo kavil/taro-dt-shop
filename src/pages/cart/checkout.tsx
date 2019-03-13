@@ -353,7 +353,7 @@ class CheckOut extends Component<IProps, {}> {
 
         {cgl1 && cgl1.length && (
           <View className="gsi-wrap">
-            <View className="title">快速达</View>
+            <View className="title">次日达</View>
             <ScrollView scrollX={true}>
               <View className="goods-simple-item">
                 {cgl1.map(ele => (

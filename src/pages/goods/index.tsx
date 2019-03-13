@@ -16,7 +16,7 @@ import { AtActivityIndicator, AtSteps, AtCountdown, AtButton } from 'taro-ui';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
 import Login from '../../components/login/loginComponent';
-import { tip } from '../../utils/tool';
+import { tip, Countdown } from '../../utils/tool';
 const qulity1 = 'https://img.kavil.com.cn/3991547959471_.pic.jpg';
 const qulity2 = 'https://img.kavil.com.cn/4011547959487_.pic.jpg';
 import { goodsShare } from '../../config/goodsShare';
@@ -71,7 +71,12 @@ class Goods extends Component<IProps, {}> {
         id: this.$router.params.id,
       },
     });
-    if (this.props.Detail.info.over_time) this.countdown(this.props.Detail.info.over_time);
+    if (this.props.Detail.info.over_time) {
+      const countdown = Countdown(this.props.Detail.info.over_time);
+      this.setState({
+        countdown,
+      });
+    }
     await this.props.dispatch({
       type: 'cart/Index',
     });
@@ -94,7 +99,12 @@ class Goods extends Component<IProps, {}> {
         id: this.$router.params.id,
       },
     });
-    if (this.props.Detail.info.over_time) this.countdown(this.props.Detail.info.over_time);
+    if (this.props.Detail.info.over_time) {
+      const countdown = Countdown(this.props.Detail.info.over_time);
+      this.setState({
+        countdown,
+      });
+    }
     Taro.stopPullDownRefresh();
   }
   nextPage = url => {
@@ -105,21 +115,7 @@ class Goods extends Component<IProps, {}> {
       type: 'cart/Index',
     });
   };
-  countdown = over_time => {
-    const cha = (new Date(over_time.replace(/-/g, '/')).getTime() - new Date().getTime()) / 1000;
-    const isShowDay = cha > 86400;
-    const day = Math.floor(cha / 86400);
-    const time: any = [];
-    const lasthour = cha - 86400 * day;
-    time.push(Math.floor(lasthour / 3600));
-    const lastMin = lasthour - 3600 * time[0];
-    time.push(Math.floor(lastMin / 60));
-    const lastSec = lastMin - 60 * time[1];
-    time.push(Math.floor(lastSec));
-    this.setState({
-      countdown: { isShowDay, day, time },
-    });
-  };
+
   onChangeStep = () => {};
   onTimeUp = () => {
     this.onPullDownRefresh();
@@ -139,7 +135,10 @@ class Goods extends Component<IProps, {}> {
           goodsId: goods.id,
         },
       });
-      if (res.errno === 0) tip('已添加到购物车');
+      if (res.errno === 0)
+        setTimeout(() => {
+          tip('已添加到购物车');
+        }, 90);
       if (res.errno === 401) Taro.eventCenter.trigger('login', true);
     }
   };
@@ -153,7 +152,10 @@ class Goods extends Component<IProps, {}> {
       type: 'cart/Add',
       payload,
     });
-    if (res.errno === 0) tip('已添加到购物车');
+    if (res.errno === 0)
+      setTimeout(() => {
+        tip('已添加到购物车');
+      }, 90);
     if (res.errno === 401) Taro.eventCenter.trigger('login', true);
   };
 

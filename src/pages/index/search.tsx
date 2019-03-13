@@ -68,7 +68,10 @@ class IndexSearch extends Component<IProps, {}> {
           goodsId: goods.id,
         },
       });
-      if (res.errno === 0) this.setState({ addCartTip: true });
+      if (res.errno === 0)
+        setTimeout(() => {
+          tip('已添加到购物车');
+        }, 90);
       if (res.errno === 401) {
         Taro.login(); // 经验 先获取到code 不容易失效
         Taro.eventCenter.trigger('login', true);
@@ -86,6 +89,8 @@ class IndexSearch extends Component<IProps, {}> {
       type: 'cart/Add',
       payload,
     });
+    console.log(res, 'sdsssssssssssssss');
+
     if (res) {
       tip('已添加到购物车');
     }

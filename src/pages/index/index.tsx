@@ -1,7 +1,7 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Image, Text } from '@tarojs/components';
+import { View, Image, Text, ScrollView } from '@tarojs/components';
 import { AtSearchBar, AtTabs, AtTabsPane, AtDivider, AtCurtain } from 'taro-ui';
 import communityImg from '../../static/images/community.png';
 import Login from '../../components/login/loginComponent';
@@ -24,6 +24,7 @@ interface PageDva {
   dispatch: Function;
   cateList: any[];
   List: any;
+  MsList: any;
   userInfo: any;
 }
 
@@ -93,6 +94,12 @@ class Index extends Component<IProps, {}> {
         listName: 'cate0',
         parent_id: cate.id,
         promot_cate_id: cate.type === 2 ? cate.id : null,
+      },
+    });
+    await this.props.dispatch({
+      type: 'goods/MsList',
+      payload: {
+        goods_type: 2,
       },
     });
   }
@@ -184,7 +191,7 @@ class Index extends Component<IProps, {}> {
       if (res.errno === 0)
         setTimeout(() => {
           tip('已添加到购物车');
-        }, 100);
+        }, 90);
       if (res.errno === 401) {
         Taro.login(); // 经验 先获取到code 不容易失效
         Taro.eventCenter.trigger('login', true);
@@ -202,7 +209,9 @@ class Index extends Component<IProps, {}> {
       payload,
     });
     if (res) {
-      tip('已添加到购物车');
+      setTimeout(() => {
+        tip('已添加到购物车');
+      }, 90);
     }
   };
 
@@ -218,7 +227,7 @@ class Index extends Component<IProps, {}> {
   };
 
   render() {
-    const { List, userInfo } = this.props;
+    const { List, userInfo, MsList } = this.props;
     const {
       current,
       openSku,
@@ -229,6 +238,7 @@ class Index extends Component<IProps, {}> {
       curtainPng,
       addmyappTip,
     }: any = this.state;
+
     const tabList = cateTopList.map(ele => {
       return { title: ele.name };
     });
@@ -285,6 +295,18 @@ class Index extends Component<IProps, {}> {
         >
           {tabList.map((_, i) => (
             <AtTabsPane key={i} current={current} index={i}>
+              {current === 0 && MsList && MsList.length && (
+                <View className="ms-wrap">
+                  <Text className="type-tag erduufont ed-ms" />
+                  <ScrollView scrollX={true}>
+                    <View className="scroll-view-wrap">
+                      {MsList.map(ele => (
+                        <GoodsItem key={ele.id} type="mini" goods={ele} onChange={this.addCartOk} />
+                      ))}
+                    </View>
+                  </ScrollView>
+                </View>
+              )}
               <View>
                 {List[`cate${i}`]
                   ? List[`cate${i}`].list.map((ele, j) => (

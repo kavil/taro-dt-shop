@@ -107,6 +107,18 @@ export default {
       });
       return res.data;
     },
+    *MsList({ payload }, { call, put, select }) {
+      const { cityId } = yield select(state => state.common);
+      const res = yield call(Api.getGoodsList, { ...payload, cityId });
+      if (res.errno !== 0) return null;
+      yield put({
+        type: 'save',
+        payload: {
+          MsList: res.data.data,
+        },
+      });
+      return res.data;
+    },
     *Sku({ payload }, { call }) {
       const res = yield call(Api.getSku, { ...payload });
       if (res.errno !== 0) return null;
