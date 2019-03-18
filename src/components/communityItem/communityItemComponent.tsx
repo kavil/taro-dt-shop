@@ -4,6 +4,7 @@ import { View, Text } from '@tarojs/components';
 import './communityItemComponent.scss';
 import { AtButton, AtAvatar } from 'taro-ui';
 import { connect } from '@tarojs/redux';
+import { tip } from '../../utils/tool';
 
 interface PageState {}
 interface PageDva {
@@ -28,6 +29,11 @@ type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
 }))
 class CommunityItem extends Component<IProps, {}> {
   bind = async () => {
+    const item = this.props.item;
+    if (!(item.colonel && item.colonel.id)) {
+      tip('暂无小区长，无法绑定');
+      return;
+    }
     const res = await this.props.dispatch({
       type: 'neighbor/Bind',
       payload: {
@@ -89,7 +95,13 @@ class CommunityItem extends Component<IProps, {}> {
           </View>
         </View>
         <View className="op">
-          <AtButton type="primary" circle size="small" onClick={this.bind}>
+          <AtButton
+            type="primary"
+            // disabled={!(item.colonel && item.colonel.id)}
+            circle
+            size="small"
+            onClick={this.bind}
+          >
             <Text className="white">绑定</Text>
           </AtButton>
         </View>

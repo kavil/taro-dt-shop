@@ -42,7 +42,19 @@ class IndexSearch extends Component<IProps, {}> {
     Taro.stopPullDownRefresh();
   }
 
-  search = async value => {
+  onConfirm = async e => {
+    const value = e.detail.value.trim();
+    if (this.timeCo) clearTimeout(this.timeCo);
+    await this.props.dispatch({
+      type: 'goods/SearchList',
+      payload: {
+        name: value,
+      },
+    });
+  };
+
+  search = async val => {
+    const value = val.trim();
     this.setState({ searchValue: value });
     if (this.timeCo) clearTimeout(this.timeCo);
     this.timeCo = setTimeout(async () => {
@@ -117,7 +129,7 @@ class IndexSearch extends Component<IProps, {}> {
             value={searchValue}
             placeholder="搜索商品"
             onChange={this.search}
-            onConfirm={this.search}
+            onConfirm={this.onConfirm}
           />
         </View>
         <View className="pad40">

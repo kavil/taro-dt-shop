@@ -1,9 +1,16 @@
 import Taro, { Component } from '@tarojs/taro';
 import { ComponentClass } from 'react';
-import { View, Text, Image } from '@tarojs/components';
+import { View, Text, Image, Button } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
-import { AtButton, AtInputNumber } from 'taro-ui';
+import {
+  AtButton,
+  AtInputNumber,
+  AtModal,
+  AtModalHeader,
+  AtModalContent,
+  AtModalAction,
+} from 'taro-ui';
 import CheckItem from '../../components/checkItem/checkItemComponent';
 import Login from '../../components/login/loginComponent';
 
@@ -84,9 +91,20 @@ class Cart extends Component<IProps, {}> {
   nextTab = url => {
     Taro.switchTab({ url });
   };
-  nextPage(url) {
+
+  nextPage(url, ex) {
+    if (ex === 'noCheckout') {
+      if (this.props.userInfo && !this.props.userInfo.colonelId) {
+        this.setState({ noCommunityOpen: true });
+        return;
+      }
+    }
+    if (ex === 'noOpen') this.onCloseOpen();
     Taro.navigateTo({ url });
   }
+  onCloseOpen = () => {
+    this.setState({ noCommunityOpen: false });
+  };
   changeCartNumber = async (goods, value) => {
     if (isNaN(value)) return;
     await this.props.dispatch({
@@ -110,16 +128,31 @@ class Cart extends Component<IProps, {}> {
   state = {
     checkAll: false,
     nologin: false,
+    noCommunityOpen: false,
   };
 
   render() {
     const { cartList, cartTotal, userInfo } = this.props;
-    const { checkAll, nologin } = this.state;
+    const { checkAll, nologin, noCommunityOpen } = this.state;
     console.log(userInfo, nologin);
 
     return (
       <View className="cart-page">
         <Login show={false} onChange={this.loginSuccess} />
+
+        <AtModal isOpened={noCommunityOpen}>
+          <AtModalHeader>提示</AtModalHeader>
+          <AtModalContent>本小区暂无小区长，请选择绑定附近小区作为代收点。</AtModalContent>
+          <AtModalAction>
+            <Button
+              type="primary"
+              onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}
+            >
+              去更换小区
+            </Button>
+          </AtModalAction>
+        </AtModal>
+
         {userInfo.id && (
           <View className="vip-bar" onClick={this.nextPage.bind(this, '/pages/vip/index')}>
             <View className="left">
@@ -266,7 +299,7 @@ class Cart extends Component<IProps, {}> {
                     ? cartTotal.checkedGoodsAmount === 0
                     : cartTotal.checkedGoodsVipAmount === 0
                 }
-                onClick={this.nextPage.bind(this, '/pages/cart/checkout')}
+                onClick={this.nextPage.bind(this, '/pages/cart/checkout', 'noCheckout')}
               >
                 去结算
               </AtButton>

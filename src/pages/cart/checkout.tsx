@@ -96,10 +96,12 @@ class CheckOut extends Component<IProps, {}> {
   changePostscript = postscript => {
     this.setState({ postscript });
   };
-  setScore = async score => {
+  setScore = async e => {
+    console.log(e);
+
     this.setState(
       {
-        score,
+        score: e.target.value,
       },
       () => {
         this.componentDidShow();

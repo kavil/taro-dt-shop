@@ -29,7 +29,7 @@ export default {
           listName: payload.listName,
           list: [],
           page: 1,
-          size: 10,
+          size: 20,
           parent_id: null,
           goods_name: null,
           goods_type: null,

@@ -508,7 +508,7 @@ class Goods extends Component<IProps, {}> {
           <View className="h3">发货须知</View>
           <View className="p">
             <View>当天下午20:30前下单，次日上午送达；</View>
-            <View>当天下午20:30后下单，次日发货；后天送达；</View>
+            <View>当天下午20:30后下单，后天上午送达；</View>
             <View>如标明预售则按预售日期发货配送。</View>
           </View>
 

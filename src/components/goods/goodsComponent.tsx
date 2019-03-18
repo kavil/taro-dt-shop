@@ -1,7 +1,7 @@
 import { ComponentClass } from 'react';
 import Taro, { Component } from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
-import { AtInputNumber, AtButton, AtCountdown } from 'taro-ui';
+import { AtInputNumber, AtButton } from 'taro-ui';
 import { connect } from '@tarojs/redux';
 import './goodsComponent.scss';
 import cartImg from '../../static/images/cart-in.png';
@@ -77,13 +77,6 @@ class GoodsItem extends Component<IProps, {}> {
     }
 
     this.props.onChange(value);
-    return this.props.dispatch({
-      type: 'cart/add',
-      payload: {
-        goodsId: this.props.goods.goods_id,
-        addNumber: value,
-      },
-    });
   };
 
   onTimeUp() {}
@@ -94,11 +87,12 @@ class GoodsItem extends Component<IProps, {}> {
   state = {
     numberStatus: false,
     countdown: {},
+    noCommunityOpen: false,
   };
 
   render() {
     const { goods, type } = this.props;
-    const { numberStatus, countdown }: any = this.state;
+    const { numberStatus, noCommunityOpen }: any = this.state;
     let goodsNumber = 0;
     if (!goods.sku) return null;
     goods.sku.forEach(ele => {
@@ -112,22 +106,8 @@ class GoodsItem extends Component<IProps, {}> {
         <View className="img-wrap" onClick={this.nextPage}>
           {goods.goods_type === 1 && <Text className="type-tag erduufont ed-crd" />}
           {/* {goods.goods_type === 2 && <Text className="type-tag erduufont ed-ms" />} */}
-          {goods.goods_type === 2 && countdown.time && (
-            <View className="ms-cd">
-              <View className="ms-cd-item">仅剩</View>
-              <AtCountdown
-                format={{ day: '天', hours: ':', minutes: ':', seconds: '' }}
-                isShowDay={countdown.isShowDay}
-                day={countdown.day}
-                hours={countdown.time[0]}
-                minutes={countdown.time[1]}
-                seconds={countdown.time[2]}
-                onTimeUp={this.onTimeUp.bind(this)}
-              />
-            </View>
-          )}
           {goods.goods_type === 3 && <Text className="type-tag erduufont ed-ys" />}
-          <Image lazyLoad className="img" src={goods.primary_pic_url + '@!480X480'} />
+          <Image lazyLoad className="img" src={goods.primary_pic_url + '@!200X200'} />
         </View>
         <View className="right-wrap">
           <View className="title" onClick={this.nextPage}>

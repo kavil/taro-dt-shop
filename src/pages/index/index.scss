@@ -8,17 +8,40 @@
         border: 5px solid $color-brand-light;
         margin-top: 10px;
         border-radius: 10px;
+        position: relative;
     }
-    .type-tag {
+    .ms-top {
         position: absolute;
-        top: 11px;
-        left: 0;
-        font-size: 22px;
-        line-height: 2.2;
+        top: -5px;
+        left: -2px;
         border-radius: 15px 15px 15px 0;
         padding: 0 10px;
         background: $bg-color-panel;
         color: #fff;
+        @include fj(start);
+        align-items: center;
+        z-index: 1;
+    }
+    .type-tag {
+        font-size: 22px;
+        line-height: 2.2;
+        margin-right: 10px;
+    }
+    .ms-text {
+        font-size: 26px;
+        display: inline-block;
+    }
+    .ms-cd-item {
+        font-size: 26px;
+        display: inline-block;
+        vertical-align: 4px;
+    }
+    .index-ad {
+        padding-top: 10px;
+        .img {
+            width: 100%;
+            border-radius: 10px;
+        }
     }
     .curtain-img {
         @include wh(640px, 800px)
@@ -114,6 +137,43 @@
         .img {
             border-radius: 5px;
             @include wh(100%, auto);
+        }
+    }
+    .colonel-ewm .img {
+        width: 100%;
+    }
+    .colonel-wrap {
+        @include fj();
+        align-items: center;
+        padding-top: 10px;
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-bottom: 10px;
+        display: inline-block;
+        text-align: center;
+        .badge {
+            position: absolute;
+            line-height: 1.1;
+            top: 0;
+            left: 24px;
+            padding: 3px 8px;
+            font-size: 20px;
+            width: 60px;
+            color: #fff;
+            background: $color-deep;
+            border-radius: 14px 14px 14px 0;
+            box-shadow: 0 4px 8px 0 rgba(233, 59, 61, 0.20);
+        }
+        .colonel {
+            text-align: center;
+            position: relative;
+            display: inline-block;
+        }
+        .name {
+            font-size: 24px;
+            color: $font-default;
+            @include ddd;
         }
     }
 }

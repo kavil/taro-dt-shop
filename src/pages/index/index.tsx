@@ -1,14 +1,27 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Image, Text, ScrollView } from '@tarojs/components';
-import { AtSearchBar, AtTabs, AtTabsPane, AtDivider, AtCurtain } from 'taro-ui';
+import { View, Image, Text, ScrollView, Button } from '@tarojs/components';
+import {
+  AtSearchBar,
+  AtTabs,
+  AtTabsPane,
+  AtDivider,
+  AtCurtain,
+  AtCountdown,
+  AtButton,
+  AtModal,
+  AtModalHeader,
+  AtModalContent,
+  AtModalAction,
+  AtAvatar,
+} from 'taro-ui';
 import communityImg from '../../static/images/community.png';
 import Login from '../../components/login/loginComponent';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
 import './index.scss';
-import { tip } from '../../utils/tool';
+import { tip, Countdown } from '../../utils/tool';
 // #region 书写注意
 //
 // 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
@@ -69,11 +82,15 @@ class Index extends Component<IProps, {}> {
       withShareTicket: true,
     });
     console.log(this.$router.params, 'this.$router.params- -- componentDidMount');
-    const curtainRes = await this.props.dispatch({
+    const adRes = await this.props.dispatch({
       // A D
       type: 'common/spread',
     });
-    if (Taro.getStorageSync('index-curtain') !== curtainRes.id) {
+    this.setState({
+      indexAd: adRes.find(ele => ele.ad_position_id === 1),
+    });
+    const curtainRes = adRes.find(ele => ele.ad_position_id === 3);
+    if (Taro.getStorageSync('index-curtain') !== curtainRes.image_url) {
       this.setState({ curtainRes, curtainOpened: true, curtainPng: curtainRes.image_url });
     }
     await this.props.dispatch({
@@ -86,7 +103,21 @@ class Index extends Component<IProps, {}> {
       cateImgList[ele.id] = ele.banner_url;
     });
     this.setState({ cateTopList, cateImgList });
-
+    const msList = await this.props.dispatch({
+      type: 'goods/MsList',
+      payload: {
+        goods_type: 2,
+      },
+    });
+    if (msList.data.length) {
+      const msTime = new Date(
+        new Date().toLocaleString('zh', { hour12: false }).split(' ')[0] + ' 20:30'
+      ).toLocaleString('zh', { hour12: false });
+      this.setState({
+        countdown: Countdown(msTime),
+        msTime,
+      });
+    }
     const cate = this.props.cateList[0];
     await this.props.dispatch({
       type: 'goods/List',
@@ -96,29 +127,27 @@ class Index extends Component<IProps, {}> {
         promot_cate_id: cate.type === 2 ? cate.id : null,
       },
     });
-    await this.props.dispatch({
-      type: 'goods/MsList',
-      payload: {
-        goods_type: 2,
-      },
-    });
   }
-
+  onTimeUp = () => {};
   async onPullDownRefresh() {
-    const value = this.state.current;
-    const { cateTopList }: any = this.state;
+    if (!(this.props.cateList && this.props.cateList.length)) {
+      this.componentDidMount();
+    } else {
+      const value = this.state.current;
+      const { cateTopList }: any = this.state;
 
-    const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
-    await this.props.dispatch({
-      type: 'goods/List',
-      payload: {
-        listName: `cate${value}`,
-        parent_id: cate.id,
-        promot_cate_id: cate.type === 2 ? cate.id : null,
-        refresh: true,
-        loadOver: false,
-      },
-    });
+      const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
+      await this.props.dispatch({
+        type: 'goods/List',
+        payload: {
+          listName: `cate${value}`,
+          parent_id: cate.id,
+          promot_cate_id: cate.type === 2 ? cate.id : null,
+          refresh: true,
+          loadOver: false,
+        },
+      });
+    }
     Taro.stopPullDownRefresh();
   }
 
@@ -137,13 +166,14 @@ class Index extends Component<IProps, {}> {
     });
   }
 
-  nextPage(url) {
+  nextPage(url, noOpen) {
+    if (noOpen) this.onCloseOpen();
     Taro.navigateTo({ url });
   }
 
   onCloseCurtain = () => {
     this.setState({ curtainOpened: false });
-    Taro.setStorageSync('index-curtain', this.state.curtainRes['id']);
+    Taro.setStorageSync('index-curtain', this.state.curtainRes['image_url']);
   };
   loginSuccess() {}
   nextTab(url) {
@@ -177,6 +207,12 @@ class Index extends Component<IProps, {}> {
   handNull = () => {};
 
   addCartOk = async goods => {
+    console.log(this.props.userInfo);
+    if (this.props.userInfo && !this.props.userInfo.colonelId) {
+      this.setState({ noCommunityOpen: true });
+      return;
+    }
+
     if (goods.sku.length > 1) {
       // 调出 选择规格组件
       this.setState({ curGoods: goods, openSku: true });
@@ -215,6 +251,30 @@ class Index extends Component<IProps, {}> {
     }
   };
 
+  newDate = date => {
+    if (!date) return 0;
+    return new Date(date.replace(/-/g, '/'));
+  };
+
+  onCloseOpen = () => {
+    this.setState({ noCommunityOpen: false, colonelOpen: false });
+  };
+
+  makeCall = phoneNumber => {
+    Taro.makePhoneCall({ phoneNumber });
+  };
+
+  openColonel = () => {
+    this.setState({ colonelOpen: true });
+  };
+  lookBig = img => {
+    console.log(img);
+    Taro.previewImage({
+      current: img + '@!q90',
+      urls: [img + '@!q90'],
+    });
+  };
+
   state = {
     current: 0,
     openSku: false,
@@ -224,6 +284,11 @@ class Index extends Component<IProps, {}> {
     curtainPng: null,
     curtainRes: {},
     addmyappTip: false,
+    countdown: {},
+    msTime: null,
+    indexAd: null,
+    noCommunityOpen: false,
+    colonelOpen: false,
   };
 
   render() {
@@ -237,6 +302,11 @@ class Index extends Component<IProps, {}> {
       curtainOpened,
       curtainPng,
       addmyappTip,
+      countdown,
+      msTime,
+      indexAd,
+      noCommunityOpen,
+      colonelOpen,
     }: any = this.state;
 
     const tabList = cateTopList.map(ele => {
@@ -251,6 +321,54 @@ class Index extends Component<IProps, {}> {
 
     return (
       <View className="index wrap">
+        <AtModal isOpened={noCommunityOpen}>
+          <AtModalHeader>提示</AtModalHeader>
+          <AtModalContent>本小区暂无小区长，请选择绑定附近小区作为代收点。</AtModalContent>
+          <AtModalAction>
+            <Button
+              type="primary"
+              onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}
+            >
+              去更换小区
+            </Button>
+          </AtModalAction>
+        </AtModal>
+        <AtModal isOpened={colonelOpen}>
+          <AtModalHeader>{userInfo.name}</AtModalHeader>
+          <AtModalContent>
+            <View className="colonel-wrap">
+              <View className="colonel">
+                <View className="badge">小区长</View>
+                <AtAvatar circle size="small" image={userInfo.colonelInfo.avatarUrl} />
+              </View>
+              <View className="name">{userInfo.colonelInfo.nickName}</View>
+            </View>
+            <View className="p">
+              您购买的物品将统一配送至小区长代收点，由小区长负责您的售后。联系小区长进小区群，享受更多服务。
+            </View>
+            {userInfo.colonelInfo.house && (
+              <View className="p">收货点：{userInfo.colonelInfo.house}</View>
+            )}
+            {indexAd.image_url && (
+              <View className="colonel-ewm">
+                <Image
+                  lazyLoad
+                  mode="widthFix"
+                  className="img"
+                  onClick={this.lookBig.bind(this, indexAd.image_url)}
+                  src={indexAd.image_url + '@!300X300'}
+                />
+                <View className="p">小区长微信二维码，点击大图保存加好友</View>
+              </View>
+            )}
+          </AtModalContent>
+          <AtModalAction>
+            <Button onClick={this.onCloseOpen}>关闭</Button>
+            <Button type="primary" onClick={this.makeCall.bind(this, userInfo.colonelInfo.mobile)}>
+              呼叫小区长
+            </Button>
+          </AtModalAction>
+        </AtModal>
         <Login show={false} onChange={this.loginSuccess} />
         <AtCurtain isOpened={curtainOpened} onClose={this.onCloseCurtain.bind(this)}>
           {curtainPng && <Image className="curtain-img" src={curtainPng + '@!640X800'} />}
@@ -272,7 +390,7 @@ class Index extends Component<IProps, {}> {
             <Text className="erduufont ed-back go" />
           </View>
           {userInfo.colonelId && addmyappTip && (
-            <View className="help">
+            <View className="help" onClick={this.openColonel}>
               <View className="ava-wrap">
                 <Image className="image" mode="scaleToFill" src={userInfo.colonelInfo.avatarUrl} />
               </View>
@@ -285,6 +403,12 @@ class Index extends Component<IProps, {}> {
           <View className="search-mask" onClick={this.nextPage.bind(this, '/pages/index/search')} />
         </View>
 
+        {!tabList.length && (
+          <AtButton className="center" type="primary" onClick={this.componentDidMount}>
+            重新加载
+          </AtButton>
+        )}
+
         <AtTabs
           className="tabs"
           current={current}
@@ -295,9 +419,40 @@ class Index extends Component<IProps, {}> {
         >
           {tabList.map((_, i) => (
             <AtTabsPane key={i} current={current} index={i}>
+              {current === 0 && indexAd && (
+                <View className="index-ad">
+                  <Image
+                    lazyLoad
+                    mode="widthFix"
+                    className="img"
+                    src={indexAd.image_url + '@!900X383'}
+                  />
+                </View>
+              )}
               {current === 0 && MsList && MsList.length && (
                 <View className="ms-wrap">
-                  <Text className="type-tag erduufont ed-ms" />
+                  <View className="ms-top">
+                    <Text className="type-tag erduufont ed-ms" />
+                    <View className="ms-cd">
+                      {this.newDate(msTime) >
+                      this.newDate(new Date().toLocaleString('zh', { hour12: false })) ? (
+                        <View className="ms-text">
+                          <View className="ms-cd-item">仅剩</View>
+                          <AtCountdown
+                            format={{ day: '天', hours: ':', minutes: ':', seconds: '' }}
+                            isShowDay={countdown.isShowDay}
+                            day={countdown.day}
+                            hours={countdown.time[0]}
+                            minutes={countdown.time[1]}
+                            seconds={countdown.time[2]}
+                            onTimeUp={this.onTimeUp.bind(this)}
+                          />
+                        </View>
+                      ) : (
+                        <View className="ms-cd-item">已结束</View>
+                      )}
+                    </View>
+                  </View>
                   <ScrollView scrollX={true}>
                     <View className="scroll-view-wrap">
                       {MsList.map(ele => (
