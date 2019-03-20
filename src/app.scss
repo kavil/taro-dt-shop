@@ -32,6 +32,17 @@
     color: $font-primary;
 }
 
+button.plain {
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+    margin: inherit;
+    text-align: initial;
+    line-height: initial;
+    border: 0;
+    box-sizing: initial;
+}
+
 .p {
     color: $font-info;
     margin-top: 10px;

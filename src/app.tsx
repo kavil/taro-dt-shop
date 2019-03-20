@@ -106,7 +106,11 @@ class App extends Component {
 
   componentDidShow() {}
 
-  componentDidHide() {}
+  componentDidHide() {
+    store.dispatch({
+      type: 'common/formId',
+    });
+  }
 
   componentCatchError() {}
 

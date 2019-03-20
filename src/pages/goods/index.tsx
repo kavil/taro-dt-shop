@@ -9,6 +9,7 @@ import {
   RichText,
   ScrollView,
   Button,
+  Form,
 } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
@@ -35,6 +36,7 @@ interface PageStateProps {
   Detail: any;
   cartTotal: any;
   userInfo: any;
+  formIdArr: any[];
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
@@ -233,6 +235,18 @@ class Goods extends Component<IProps, {}> {
       });
     }
   }
+  getFormId = e => {
+    const formId = e.detail.formId;
+    const formIdArr = [...this.props.formIdArr];
+    formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
+    console.log(formIdArr, '<---------------------formIdArr');
+    this.props.dispatch({
+      type: 'common/save',
+      payload: {
+        formIdArr,
+      },
+    });
+  };
 
   state = {
     openSku: false,
@@ -279,7 +293,7 @@ class Goods extends Component<IProps, {}> {
     const now = new Date().toLocaleString('zh', { hour12: false });
     // 秒杀
 
-    console.log(countdown);
+    // console.log(countdown);
     const newDate = date => {
       if (!date) return 0;
       return new Date(date.replace(/-/g, '/'));
@@ -329,45 +343,56 @@ class Goods extends Component<IProps, {}> {
                 color="#fff"
               />
             )}
-            <View className="share-bottom">
-              <Button
-                className="share-item"
-                plain={true}
-                open-type="share"
-                onClick={this.closeShare}
-              >
-                <Text className="erduufont ed-weixin" />
-                分享群或好友
-              </Button>
-              {checkSave ? (
-                <Button className="share-item" plain={true} onClick={this.saveImage}>
-                  <Text className="erduufont ed-xiazai" />
-                  保存图片分享
+            <Form reportSubmit onSubmit={this.getFormId}>
+              <View className="share-bottom">
+                <Button
+                  className="share-item"
+                  plain={true}
+                  open-type="share"
+                  formType="submit"
+                  onClick={this.closeShare}
+                >
+                  <Text className="erduufont ed-weixin" />
+                  分享群或好友
                 </Button>
-              ) : (
-                <View className="share-item">
-                  <View className="mt30">
-                    <AtButton
-                      className="share-set"
-                      type="primary"
-                      circle
-                      size="small"
-                      open-type="openSetting"
-                      onOpenSetting={this.onOpenSetting}
-                    >
-                      打开保存图片授权
-                    </AtButton>
+                {checkSave ? (
+                  <Button
+                    className="share-item"
+                    plain={true}
+                    formType="submit"
+                    onClick={this.saveImage}
+                  >
+                    <Text className="erduufont ed-xiazai" />
+                    保存图片分享
+                  </Button>
+                ) : (
+                  <View className="share-item">
+                    <View className="mt30">
+                      <AtButton
+                        className="share-set"
+                        type="primary"
+                        circle
+                        size="small"
+                        formType="submit"
+                        open-type="openSetting"
+                        onOpenSetting={this.onOpenSetting}
+                      >
+                        打开保存图片授权
+                      </AtButton>
+                    </View>
                   </View>
-                </View>
-              )}
-            </View>
+                )}
+              </View>
+            </Form>
           </View>
         )}
         <canvasdrawer painting={goodsShare} ongetImage={this.eventGetImage} />
-        <View className="share-btn" onClick={this.shareBtn}>
-          <Text className="erduufont ed-share" />
-          分享
-        </View>
+        <Form reportSubmit onSubmit={this.getFormId}>
+          <Button className="share-btn plain" plain formType="submit" onClick={this.shareBtn}>
+            <Text className="erduufont ed-share" />
+            分享
+          </Button>
+        </Form>
 
         <View className="swiper-wrap">
           {info.goods_type > 1 ? (
@@ -459,27 +484,33 @@ class Goods extends Component<IProps, {}> {
             仅剩{goodsNumber}
             {info.goods_unit}
           </View>
-          <View className="vip-bar" onClick={this.nextPage.bind(this, '/pages/vip/index')}>
-            <View className="left">
-              {userInfo && userInfo.level !== 0 ? (
-                <View className="tag">您已开通会员</View>
-              ) : (
-                <View className="tag">开通会员</View>
-              )}
-              <Text className="text">
-                会员立省
-                <Text style={{ color: '#f5735b' }}>
-                  {(info.sku[0].retail_price - info.sku[0].vip_price).toFixed(1)}
+          <Form reportSubmit onSubmit={this.getFormId}>
+            <Button
+              plain
+              formType="submit"
+              className="vip-bar plain"
+              onClick={this.nextPage.bind(this, '/pages/vip/index')}
+            >
+              <View className="left">
+                {userInfo && userInfo.level !== 0 ? (
+                  <View className="tag">您已开通会员</View>
+                ) : (
+                  <View className="tag">开通会员</View>
+                )}
+                <Text className="text">
+                  会员立省
+                  <Text style={{ color: '#f5735b' }}>
+                    {(info.sku[0].retail_price - info.sku[0].vip_price).toFixed(1)}
+                  </Text>
+                  元
                 </Text>
-                元
+              </View>
+              <Text className="right">
+                {userInfo && userInfo.level !== 0 ? '续费' : '立即开通'}
+                <Text className="erduufont ed-back go" />
               </Text>
-            </View>
-            <Text className="right">
-              {userInfo && userInfo.level !== 0 ? '续费' : '立即开通'}
-              <Text className="erduufont ed-back go" />
-            </Text>
-          </View>
-
+            </Button>
+          </Form>
           {info.goods_type === 3 ? (
             <AtSteps
               className="steps"
@@ -541,24 +572,37 @@ class Goods extends Component<IProps, {}> {
             />
           </View>
         </View>
-        <View className="bottom">
-          <View className="zhuye-wrap" onClick={this.nextTab.bind(this, '/pages/index/index')}>
-            <Text className="erduufont ed-zhuye1" />
-          </View>
-          <View className="cart-wrap" onClick={this.nextTab.bind(this, '/pages/cart/index')}>
-            <View className="badge">{cartTotal.checkedGoodsCount || 0}</View>
-            <Text className="erduufont ed-gouwuche" />
-          </View>
-          <View className="add-cart">
-            <AtButton
-              type="primary"
-              disabled={!!disabled}
-              onClick={this.addCartOk.bind(this, info)}
+        <Form reportSubmit onSubmit={this.getFormId}>
+          <View className="bottom">
+            <Button
+              formType="submit"
+              className="zhuye-wrap plain"
+              plain
+              onClick={this.nextTab.bind(this, '/pages/index/index')}
             >
-              {disabled || '加入购物车'}
-            </AtButton>
+              <Text className="erduufont ed-zhuye1" />
+            </Button>
+            <Button
+              formType="submit"
+              className="cart-wrap plain"
+              plain
+              onClick={this.nextTab.bind(this, '/pages/cart/index')}
+            >
+              <View className="badge">{cartTotal.checkedGoodsCount || 0}</View>
+              <Text className="erduufont ed-gouwuche" />
+            </Button>
+            <View className="add-cart">
+              <AtButton
+                type="primary"
+                formType="submit"
+                disabled={!!disabled}
+                onClick={this.addCartOk.bind(this, info)}
+              >
+                {disabled || '加入购物车'}
+              </AtButton>
+            </View>
           </View>
-        </View>
+        </Form>
         {openSku ? (
           <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />
         ) : null}

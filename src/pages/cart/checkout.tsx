@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { ComponentClass } from 'react';
-import { View, Text, Image, Button, ScrollView, Input, Switch } from '@tarojs/components';
+import { View, Text, Image, Button, ScrollView, Input, Switch, Form } from '@tarojs/components';
 import communityImg from '../../static/images/community.png';
 import { connect } from '@tarojs/redux';
 import './index.scss';
@@ -11,7 +11,6 @@ import {
   AtModalHeader,
   AtModalContent,
   AtModalAction,
-  AtSwitch,
   AtInput,
 } from 'taro-ui';
 import { tip } from '../../utils/tool';
@@ -30,6 +29,7 @@ interface PageOwnProps {
 }
 interface PageStateProps {
   // 自己要用的
+  formIdArr: any[];
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
@@ -213,6 +213,19 @@ class CheckOut extends Component<IProps, {}> {
             url: `/pages/order/purchased?orderId=${orderRes.id}&type=ok`,
           });
         }
+      },
+    });
+  };
+
+  getFormId = e => {
+    const formId = e.detail.formId;
+    const formIdArr = [...this.props.formIdArr];
+    formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
+    console.log(formIdArr, '<---------------------formIdArr');
+    this.props.dispatch({
+      type: 'common/save',
+      payload: {
+        formIdArr,
       },
     });
   };
@@ -456,9 +469,11 @@ class CheckOut extends Component<IProps, {}> {
           </View>
 
           <View className="add-cart">
-            <AtButton type="primary" onClick={this.submitOrder}>
-              提交订单
-            </AtButton>
+            <Form reportSubmit onSubmit={this.getFormId}>
+              <AtButton type="primary" formType="submit" onClick={this.submitOrder}>
+                提交订单
+              </AtButton>
+            </Form>
           </View>
         </View>
 

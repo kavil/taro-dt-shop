@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { ComponentClass } from 'react';
-import { View, Image, Text } from '@tarojs/components';
+import { View, Image, Text, Form, Button } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import { AtList, AtListItem, AtTag, AtButton } from 'taro-ui';
 import Login from '../../components/login/loginComponent';
@@ -18,6 +18,7 @@ interface PageOwnProps {
 interface PageStateProps {
   // 自己要用的
   userInfo: any;
+  formIdArr: any[];
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
@@ -38,6 +39,9 @@ class Ucenter extends Component<IProps, {}> {
   }
 
   async componentDidMount() {
+    if (this.$router.params.to) {
+      await this.nextPage('/pages/' + this.$router.params.to + '/index');
+    }
     const vipSave = await this.props.dispatch({
       type: 'ucenter/VipSave',
     });
@@ -85,7 +89,18 @@ class Ucenter extends Component<IProps, {}> {
       },
     });
   };
-
+  getFormId = e => {
+    const formId = e.detail.formId;
+    const formIdArr = [...this.props.formIdArr];
+    formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
+    console.log(formIdArr, '<---------------------formIdArr');
+    this.props.dispatch({
+      type: 'common/save',
+      payload: {
+        formIdArr,
+      },
+    });
+  };
   state = {
     vipSave: 0,
   };
@@ -121,96 +136,138 @@ class Ucenter extends Component<IProps, {}> {
             </View>
           </View>
         )}
-        {userInfo.id && (
-          <View className="vip-bar" onClick={this.nextPage.bind(this, '/pages/vip/index')}>
-            <View className="left">
-              {userInfo.level === 0 ? (
-                <View className="tag">开通会员</View>
-              ) : (
-                <View className="tag">您已开通会员</View>
-              )}
-              {vipSave && (
-                <Text className="text">
-                  已为您省了
-                  <Text style={{ color: '#f5735b' }}>{vipSave.toFixed(1)}</Text>元
+        <Form reportSubmit onSubmit={this.getFormId}>
+          {userInfo.id && (
+            <Button
+              plain
+              formType="submit"
+              className="plain"
+              onClick={this.nextPage.bind(this, '/pages/vip/index')}
+            >
+              <View className="vip-bar">
+                <View className="left">
+                  {userInfo.level === 0 ? (
+                    <View className="tag">开通会员</View>
+                  ) : (
+                    <View className="tag">您已开通会员</View>
+                  )}
+                  {vipSave && (
+                    <Text className="text">
+                      已为您省了
+                      <Text style={{ color: '#f5735b' }}>{vipSave.toFixed(1)}</Text>元
+                    </Text>
+                  )}
+                </View>
+                <Text className="right">
+                  {userInfo.level === 0 ? '立即开通' : '续费'}
+                  <Text className="erduufont ed-back go" />
                 </Text>
-              )}
-            </View>
-            <Text className="right">
-              {userInfo.level === 0 ? '立即开通' : '续费'}
-              <Text className="erduufont ed-back go" />
-            </Text>
-          </View>
-        )}
-        <View className="divsion" />
-        <View className="operate-wrap">
-          <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index')}>
-            <Text className="erduufont ed-peihuodan red" />
-            全部订单
-          </View>
-          <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index?tab=1')}>
-            <Text className="erduufont ed-tixian" />
-            待付款
-          </View>
-          <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index?tab=2')}>
-            <Text className="erduufont ed-quhuo" />
-            待收货
-          </View>
-          <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index?tab=3')}>
-            <Text className="erduufont ed-comment" />
-            待评价
-          </View>
-          {/* <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index?tab=400')}>
+              </View>
+            </Button>
+          )}
+          <View className="divsion" />
+          <View className="operate-wrap">
+            <Button
+              className="li plain"
+              formType="submit"
+              plain
+              onClick={this.nextPage.bind(this, '/pages/order/index')}
+            >
+              <Text className="erduufont ed-peihuodan red" />
+              全部订单
+            </Button>
+            <Button
+              className="li plain"
+              formType="submit"
+              plain
+              onClick={this.nextPage.bind(this, '/pages/order/index?tab=1')}
+            >
+              <Text className="erduufont ed-tixian" />
+              待付款
+            </Button>
+            <Button
+              className="li plain"
+              formType="submit"
+              plain
+              onClick={this.nextPage.bind(this, '/pages/order/index?tab=2')}
+            >
+              <Text className="erduufont ed-quhuo" />
+              待收货
+            </Button>
+            <Button
+              className="li plain"
+              formType="submit"
+              plain
+              onClick={this.nextPage.bind(this, '/pages/order/index?tab=3')}
+            >
+              <Text className="erduufont ed-comment" />
+              待评价
+            </Button>
+            {/* <View className="li" onClick={this.nextPage.bind(this, '/pages/order/index?tab=400')}>
             <Text className="erduufont ed-dingdan" />
             退换/售后
           </View> */}
-        </View>
+          </View>
 
-        {userInfo.isColonel && (
-          <View>
-            <View className="divsion" />
-            <View className="ul">
-              <AtList>
-                <AtListItem arrow="right" title="管理我的小区" onClick={this.nextMini} />
-              </AtList>
+          {userInfo.isColonel && (
+            <View>
+              <View className="divsion" />
+              <View className="ul">
+                <AtList>
+                  <Button className="li plain" formType="submit" plain onClick={this.nextMini}>
+                    <AtListItem arrow="right" title="管理我的小区" />
+                  </Button>
+                </AtList>
+              </View>
+            </View>
+          )}
+          <View className="divsion" />
+          <View className="ul">
+            <AtList>
+              <Button
+                className="li plain"
+                formType="submit"
+                plain
+                onClick={this.nextPage.bind(this, '/pages/ucenter/coupon')}
+              >
+                <AtListItem arrow="right" title="我的红包" />
+              </Button>
+              <Button
+                className="li plain"
+                formType="submit"
+                plain
+                onClick={this.nextPage.bind(this, '/pages/ucenter/score')}
+              >
+                <AtListItem arrow="right" title="我的积分" />
+              </Button>
+            </AtList>
+          </View>
+
+          <View className="divsion" />
+          <View className="ul">
+            <AtList>
+              <Button
+                className="li plain"
+                formType="submit"
+                plain
+                onClick={this.nextPage.bind(this, '/pages/colonelApply/index')}
+              >
+                <AtListItem arrow="right" title="小区长申请" />
+              </Button>
+              <Button className="li plain" formType="submit" plain onClick={this.callme}>
+                <AtListItem arrow="right" title="供应商联系" />
+              </Button>
+            </AtList>
+          </View>
+          <View className="contact-wrap">
+            <AtButton circle size="small" type="secondary" className="contact" open-type="contact">
+              联系新邻居客服
+            </AtButton>
+            <View className="callkf" onClick={this.callkf}>
+              18979084445
             </View>
           </View>
-        )}
-        <View className="divsion" />
-        <View className="ul">
-          <AtList>
-            <AtListItem
-              arrow="right"
-              title="我的红包"
-              onClick={this.nextPage.bind(this, '/pages/ucenter/coupon')}
-            />
-            <AtListItem
-              arrow="right"
-              title="我的积分"
-              onClick={this.nextPage.bind(this, '/pages/ucenter/score')}
-            />
-          </AtList>
-        </View>
-
-        <View className="divsion" />
-        <View className="ul">
-          <AtList>
-            <AtListItem
-              arrow="right"
-              title="小区长申请"
-              onClick={this.nextPage.bind(this, '/pages/colonelApply/index')}
-            />
-            <AtListItem arrow="right" title="供应商联系" onClick={this.callme} />
-          </AtList>
-        </View>
-        <View className="contact-wrap">
-          <AtButton circle size="small" type="secondary" className="contact" open-type="contact">
-            联系新邻居客服
-          </AtButton>
-          <View className="callkf" onClick={this.callkf}>
-            18979084445
-          </View>
-        </View>
+        </Form>
       </View>
     );
   }

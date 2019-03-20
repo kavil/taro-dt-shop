@@ -110,8 +110,14 @@ class Index extends Component<IProps, {}> {
       },
     });
     if (msList.data.length) {
+      const now = new Date();
       const msTime = new Date(
-        new Date().toLocaleString('zh', { hour12: false }).split(' ')[0] + ' 20:30'
+        now.getFullYear().toString() +
+          '/' +
+          (now.getMonth() + 1).toString() +
+          '/' +
+          now.getDate().toString() +
+          ' 20:30'
       ).toLocaleString('zh', { hour12: false });
       this.setState({
         countdown: Countdown(msTime),
@@ -207,8 +213,8 @@ class Index extends Component<IProps, {}> {
   handNull = () => {};
 
   addCartOk = async goods => {
-    console.log(this.props.userInfo);
-    if (this.props.userInfo && !this.props.userInfo.colonelId) {
+    // console.log(this.props.userInfo);
+    if (this.props.userInfo.id && !this.props.userInfo.colonelId) {
       this.setState({ noCommunityOpen: true });
       return;
     }
@@ -349,14 +355,14 @@ class Index extends Component<IProps, {}> {
             {userInfo.colonelInfo.house && (
               <View className="p">收货点：{userInfo.colonelInfo.house}</View>
             )}
-            {indexAd.image_url && (
+            {userInfo.colonelInfo.ewm && (
               <View className="colonel-ewm">
                 <Image
                   lazyLoad
                   mode="widthFix"
                   className="img"
-                  onClick={this.lookBig.bind(this, indexAd.image_url)}
-                  src={indexAd.image_url + '@!300X300'}
+                  onClick={this.lookBig.bind(this, userInfo.colonelInfo.ewm)}
+                  src={userInfo.colonelInfo.ewm + '@!300X300'}
                 />
                 <View className="p">小区长微信二维码，点击大图保存加好友</View>
               </View>

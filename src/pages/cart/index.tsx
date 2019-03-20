@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { ComponentClass } from 'react';
-import { View, Text, Image, Button } from '@tarojs/components';
+import { View, Text, Image, Button, Form } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
 import {
@@ -27,6 +27,7 @@ interface PageOwnProps {
 }
 interface PageStateProps {
   // 自己要用的
+  formIdArr: any[];
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
@@ -67,7 +68,18 @@ class Cart extends Component<IProps, {}> {
   loginSuccess = () => {
     this.onPullDownRefresh();
   };
-
+  getFormId = e => {
+    const formId = e.detail.formId;
+    const formIdArr = [...this.props.formIdArr];
+    formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
+    console.log(formIdArr, '<---------------------formIdArr');
+    this.props.dispatch({
+      type: 'common/save',
+      payload: {
+        formIdArr,
+      },
+    });
+  };
   handleCheckAll = async value => {
     this.setState({ checkAll: value });
     await this.props.dispatch({
@@ -153,50 +165,57 @@ class Cart extends Component<IProps, {}> {
           </AtModalAction>
         </AtModal>
 
-        {userInfo.id && (
-          <View className="vip-bar" onClick={this.nextPage.bind(this, '/pages/vip/index')}>
-            <View className="left">
-              {userInfo.level === 0 ? (
-                <View className="tag">开通会员</View>
-              ) : (
-                <View className="tag">您已开通会员</View>
-              )}
-              {cartTotal && cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount > 0 && (
-                <Text className="text">
-                  会员立省
-                  <Text style={{ color: '#f5735b' }}>
-                    {(cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount).toFixed(1)}
-                  </Text>
-                  元
+        <Form reportSubmit onSubmit={this.getFormId}>
+          {userInfo.id && (
+            <Button plain formType="submit" className="plain" onClick={this.nextPage.bind(this, '/pages/vip/index')}>
+              <View className="vip-bar">
+                <View className="left">
+                  {userInfo.level === 0 ? (
+                    <View className="tag">开通会员</View>
+                  ) : (
+                    <View className="tag">您已开通会员</View>
+                  )}
+                  {cartTotal && cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount > 0 && (
+                    <Text className="text">
+                      会员立省
+                      <Text style={{ color: '#f5735b' }}>
+                        {(cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount).toFixed(
+                          1
+                        )}
+                      </Text>
+                      元
+                    </Text>
+                  )}
+                </View>
+                <Text className="right">
+                  {userInfo.level === 0 ? '立即开通' : '续费'}
+                  <Text className="erduufont ed-back go" />
                 </Text>
+              </View>
+            </Button>
+          )}
+
+          {cartList && cartList.length ? null : (
+            <View className="nodata">
+              <Text className="erduufont ed-zanwushangpin" />
+              <View className="label">购物车是空的</View>
+              {nologin ? (
+                <AtButton size="small" type="secondary" onClick={this.loginBtn}>
+                  登录
+                </AtButton>
+              ) : (
+                <AtButton
+                  formType="submit"
+                  size="small"
+                  type="secondary"
+                  onClick={this.nextTab.bind(this, '/pages/index/index')}
+                >
+                  去逛逛
+                </AtButton>
               )}
             </View>
-            <Text className="right">
-              {userInfo.level === 0 ? '立即开通' : '续费'}
-              <Text className="erduufont ed-back go" />
-            </Text>
-          </View>
-        )}
-
-        {cartList && cartList.length ? null : (
-          <View className="nodata">
-            <Text className="erduufont ed-zanwushangpin" />
-            <View className="label">购物车是空的</View>
-            {nologin ? (
-              <AtButton size="small" type="secondary" onClick={this.loginBtn}>
-                登录
-              </AtButton>
-            ) : (
-              <AtButton
-                size="small"
-                type="secondary"
-                onClick={this.nextTab.bind(this, '/pages/index/index')}
-              >
-                去逛逛
-              </AtButton>
-            )}
-          </View>
-        )}
+          )}
+        </Form>
 
         <View className="ul">
           {cartList.map(ele => (
@@ -292,17 +311,20 @@ class Cart extends Component<IProps, {}> {
               </View>
             )}
             <View className="add-cart">
-              <AtButton
-                type="primary"
-                disabled={
-                  userInfo.level === 0
-                    ? cartTotal.checkedGoodsAmount === 0
-                    : cartTotal.checkedGoodsVipAmount === 0
-                }
-                onClick={this.nextPage.bind(this, '/pages/cart/checkout', 'noCheckout')}
-              >
-                去结算
-              </AtButton>
+              <Form reportSubmit onSubmit={this.getFormId}>
+                <AtButton
+                  type="primary"
+                  formType="submit"
+                  disabled={
+                    userInfo.level === 0
+                      ? cartTotal.checkedGoodsAmount === 0
+                      : cartTotal.checkedGoodsVipAmount === 0
+                  }
+                  onClick={this.nextPage.bind(this, '/pages/cart/checkout', 'noCheckout')}
+                >
+                  去结算
+                </AtButton>
+              </Form>
             </View>
           </View>
         ) : null}

@@ -1,6 +1,6 @@
 import Taro, { Component } from '@tarojs/taro';
 import { ComponentClass } from 'react';
-import { View, Text, Image } from '@tarojs/components';
+import { View, Text, Image, Form } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
 import { AtTag, AtButton } from 'taro-ui';
@@ -18,6 +18,7 @@ interface PageOwnProps {
 }
 interface PageStateProps {
   // 自己要用的
+  formIdArr: any[];
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
@@ -93,6 +94,18 @@ class Vip extends Component<IProps, {}> {
             icon: 'none',
           });
         }
+      },
+    });
+  };
+  getFormId = e => {
+    const formId = e.detail.formId;
+    const formIdArr = [...this.props.formIdArr];
+    formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
+    console.log(formIdArr, '<---------------------formIdArr');
+    this.props.dispatch({
+      type: 'common/save',
+      payload: {
+        formIdArr,
       },
     });
   };
@@ -218,9 +231,11 @@ class Vip extends Component<IProps, {}> {
             </View>
           </View>
           <View className="btn-wrap">
-            <AtButton circle type="primary" onClick={this.payVip}>
-              立即{userInfo.level ? '续费' : '开通'}
-            </AtButton>
+            <Form reportSubmit onSubmit={this.getFormId}>
+              <AtButton formType="submit" circle type="primary" onClick={this.payVip}>
+                立即{userInfo.level ? '续费' : '开通'}
+              </AtButton>
+            </Form>
           </View>
         </View>
       </View>

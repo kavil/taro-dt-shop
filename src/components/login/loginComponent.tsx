@@ -1,7 +1,7 @@
 import { ComponentClass } from 'react';
 import Taro, { Component } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Text, Image, Button } from '@tarojs/components';
+import { View, Text, Image, Button, Form } from '@tarojs/components';
 import { AtModal, AtModalHeader, AtModalContent, AtModalAction } from 'taro-ui';
 import './loginComponent.scss';
 import wxImg from '../../static/images/wx.png';
@@ -16,6 +16,7 @@ interface PageStateProps {
   // 自己要用的
   userInfoLoading: boolean;
   loginLoading: boolean;
+  formIdArr: any[];
 }
 
 interface PageOwnProps {
@@ -82,7 +83,18 @@ class Login extends Component<IProps, {}> {
       if (this.props.onChange) this.props.onChange(userInfo);
     }
   };
-
+  getFormId = e => {
+    const formId = e.detail.formId;
+    const formIdArr = [...this.props.formIdArr];
+    formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
+    console.log(formIdArr, '<---------------------formIdArr');
+    this.props.dispatch({
+      type: 'common/save',
+      payload: {
+        formIdArr,
+      },
+    });
+  };
   state = {
     openLogin: false,
   };
@@ -92,34 +104,37 @@ class Login extends Component<IProps, {}> {
     const { openLogin } = this.state;
 
     return (
-      <AtModal isOpened={openLogin}>
-        <AtModalHeader>微信授权登录</AtModalHeader>
-        <AtModalContent>
-          <View className="logo-wrap">
-            <View className="logo">
-              <Image className="image" src={wxImg} />
+      <Form reportSubmit onSubmit={this.getFormId}>
+        <AtModal isOpened={openLogin}>
+          <AtModalHeader>微信授权登录</AtModalHeader>
+          <AtModalContent>
+            <View className="logo-wrap">
+              <View className="logo">
+                <Image className="image" src={wxImg} />
+              </View>
+              <View>
+                <Text className="erduufont ed-back go" />
+                <Text className="erduufont ed-back go" />
+                <Text className="erduufont ed-back go" />
+              </View>
+              <View className="logo">
+                <Image className="image" src={nbImg} />
+              </View>
             </View>
-            <View>
-              <Text className="erduufont ed-back go" />
-              <Text className="erduufont ed-back go" />
-              <Text className="erduufont ed-back go" />
-            </View>
-            <View className="logo">
-              <Image className="image" src={nbImg} />
-            </View>
-          </View>
-        </AtModalContent>
-        <AtModalAction>
-          <Button
-            loading={userInfoLoading || loginLoading}
-            openType="getUserInfo"
-            onGetUserInfo={this.loginFun}
-            type="primary"
-          >
-            确认
-          </Button>
-        </AtModalAction>
-      </AtModal>
+          </AtModalContent>
+          <AtModalAction>
+            <Button
+              loading={userInfoLoading || loginLoading}
+              openType="getUserInfo"
+              onGetUserInfo={this.loginFun}
+              type="primary"
+              formType="submit"
+            >
+              确认
+            </Button>
+          </AtModalAction>
+        </AtModal>
+      </Form>
     );
   }
 }

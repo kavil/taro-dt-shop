@@ -40,5 +40,8 @@ export const vipPrepay = data => Request({ url: '/user/vipPrepay', method: 'POST
 export const colonelApply = data => Request({ url: '/colonel/apply', method: 'POST', data });
 export const getUser = data => Request({ url: '/colonel/getUser', method: 'GET', data });
 
+// common
+export const formId = data => Request({ url: '/user/formId', method: 'POST', data });
+
 // 模板自动生成占位 勿删
 

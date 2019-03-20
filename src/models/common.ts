@@ -10,6 +10,7 @@ export default {
     wxLoginCode: null,
     cityId: 1720, // 渝水区
     uploadSign: {},
+    formIdArr: [],
   },
 
   effects: {
@@ -18,9 +19,27 @@ export default {
       if (res && res.errno === 0) {
         return res.data;
       }
-      return {};
+      return [];
     },
-    *wxCode(_, { put, select }) {
+    *formId(_, { call, select, put }) {
+      const { formIdArr } = yield select(state => state.common);
+      if (!formIdArr.length) return null;
+      formIdArr.forEach(ele => {
+        ele.exTime = 7 * 24 * 3600 - (Math.floor(new Date().getTime() / 1000) - ele.createdTime);
+      });
+      const res = yield call(Api.formId, { formIdArr });
+      if (res && res.errno === 0) {
+        yield put({
+          type: 'save',
+          payload: {
+            formIdArr: [],
+          },
+        });
+        return res.data;
+      }
+      return null;
+    },
+    *wxCode(_, {}) {
       // let { wxLoginCode } = yield select(state => state.common);
       // if (!wxLoginCode) {
       const res = yield Taro.login();
