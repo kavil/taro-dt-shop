@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 1,
+			"current": 4,
 			"list": [
 				{
 					"id": 0,
@@ -44,6 +44,27 @@
 					"name": "通知进vip",
 					"pathName": "pages/ucenter/index",
 					"query": "to=vip",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "neighbor",
+					"pathName": "pages/neighbor/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 3,
+					"name": "purchased",
+					"pathName": "pages/order/purchased",
+					"query": "orderId=2810&type=ok",
+					"scene": null
+				},
+				{
+					"id": 4,
+					"name": "goods",
+					"pathName": "pages/goods/index",
+					"query": "id=139&userId=1332",
 					"scene": null
 				}
 			]

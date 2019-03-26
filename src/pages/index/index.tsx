@@ -172,7 +172,7 @@ class Index extends Component<IProps, {}> {
     });
   }
 
-  nextPage(url, noOpen) {
+  nextPage(url, noOpen?) {
     if (noOpen) this.onCloseOpen();
     Taro.navigateTo({ url });
   }
@@ -279,6 +279,10 @@ class Index extends Component<IProps, {}> {
       current: img + '@!q90',
       urls: [img + '@!q90'],
     });
+  };
+  viewGoods = () => {
+    const { indexAd }: any = this.state;
+    if (indexAd.linkto) this.nextPage('/pages/goods/index?id=' + indexAd.linkto);
   };
 
   state = {
@@ -409,11 +413,11 @@ class Index extends Component<IProps, {}> {
           <View className="search-mask" onClick={this.nextPage.bind(this, '/pages/index/search')} />
         </View>
 
-        {!tabList.length && (
+        {!tabList.length && !List[`cate0`] ? (
           <AtButton className="center" type="primary" onClick={this.componentDidMount}>
             重新加载
           </AtButton>
-        )}
+        ) : null}
 
         <AtTabs
           className="tabs"
@@ -426,7 +430,7 @@ class Index extends Component<IProps, {}> {
           {tabList.map((_, i) => (
             <AtTabsPane key={i} current={current} index={i}>
               {current === 0 && indexAd && (
-                <View className="index-ad">
+                <View className="index-ad" onClick={this.viewGoods}>
                   <Image
                     lazyLoad
                     mode="widthFix"

@@ -488,27 +488,29 @@ class Goods extends Component<IProps, {}> {
             <Button
               plain
               formType="submit"
-              className="vip-bar plain"
+              className="plain"
               onClick={this.nextPage.bind(this, '/pages/vip/index')}
             >
-              <View className="left">
-                {userInfo && userInfo.level !== 0 ? (
-                  <View className="tag">您已开通会员</View>
-                ) : (
-                  <View className="tag">开通会员</View>
-                )}
-                <Text className="text">
-                  会员立省
-                  <Text style={{ color: '#f5735b' }}>
-                    {(info.sku[0].retail_price - info.sku[0].vip_price).toFixed(1)}
+              <View className="vip-bar">
+                <View className="left">
+                  {userInfo && userInfo.level !== 0 ? (
+                    <View className="tag">您已开通会员</View>
+                  ) : (
+                    <View className="tag">开通会员</View>
+                  )}
+                  <Text className="text">
+                    会员立省
+                    <Text style={{ color: '#f5735b' }}>
+                      {(info.sku[0].retail_price - info.sku[0].vip_price).toFixed(1)}
+                    </Text>
+                    元
                   </Text>
-                  元
+                </View>
+                <Text className="right">
+                  {userInfo && userInfo.level !== 0 ? '续费' : '立即开通'}
+                  <Text className="erduufont ed-back go" />
                 </Text>
               </View>
-              <Text className="right">
-                {userInfo && userInfo.level !== 0 ? '续费' : '立即开通'}
-                <Text className="erduufont ed-back go" />
-              </Text>
             </Button>
           </Form>
           {info.goods_type === 3 ? (

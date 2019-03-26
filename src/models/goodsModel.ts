@@ -95,6 +95,11 @@ export default {
       });
       return res.data;
     },
+    *selledUsers({ payload }, { call, put, select }) {
+      const res = yield call(Api.selledUsers, { ...payload });
+      if (res.errno !== 0) return null;
+      return res.data;
+    },
     *SearchList({ payload }, { call, put, select }) {
       const { cityId } = yield select(state => state.common);
       const res = yield call(Api.getGoodsList, { ...payload, cityId });

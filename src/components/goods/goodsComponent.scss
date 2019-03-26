@@ -9,6 +9,8 @@ button.plain {
     line-height: initial;
     border: 0;
     box-sizing: initial;
+    border-radius: 0;
+    overflow: inherit;
 }
 
 .goods-li {

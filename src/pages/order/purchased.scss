@@ -1,26 +1,76 @@
 @import "../../static/css/mixin";
-
 .purchased-page {
-    padding: 50px 0;
-    .result{
+    padding: 10px 0;
+    .result {
         text-align: center;
     }
-    .erduufont{
+    .erduufont {
         font-size: 100px;
     }
-    .ed-cuo{
+    .ed-cuo {
         color: red;
     }
-    .p{
+    .p {
         text-align: left;
-        text-indent: 300px;
     }
-    .op{
+    .text {
+        color: #aaa;
+        margin-top: 10rpx;
+        font-size: 24rpx
+    }
+    .op {
         @include fj(space-around);
         padding-top: 40px;
     }
-    .h4{
-        padding: 30px 0;
+    .h4 {
+        padding: 0;
+    }
+    .long {
+        padding: 20px 30px;
+        background: #fafafa;
+        margin-top: 20px;
+        min-height:400px;
+    }
+    .more{
+        font-size: 24px;
+        color: #aaa;
+    }
+    .long-li {
+        padding: 10px;
+        @include fj();
+        font-size: 28px;
+        color: #999;
+        .img {
+            width: 46px;
+            height: 46px;
+            border: 5px solid #fff;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        .img-wrap {
+            flex: 1;
+            @include fj(start);
+            align-items: center;
+        }
+        .info {
+            width: 300px;
+            text-align: right;
+        }
+        .b {
+            font-weight: 500;
+            font-size: 108%;
+            color: $color-brand-dark;
+        }
+    }
+    .sell-me {
+        padding: 10px 30px;
+        background: $color-dan;
+    }
+    .bew {
+        @include fj(center);
+        align-items: center;
+        .p  {
+            padding: 0 10px;
+        }
     }
 }
-

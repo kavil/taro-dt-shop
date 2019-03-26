@@ -1,5 +1,5 @@
 import Taro, { Component } from '@tarojs/taro';
-import { View, Text } from '@tarojs/components';
+import { View, Text, Image } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './purchased.scss';
 import { AtButton } from 'taro-ui';
@@ -9,7 +9,10 @@ interface DispatchOption {
   payload?: Object;
 }
 
-type PageStateProps = {};
+type PageStateProps = {
+  userInfo: any;
+  colonelInfo: any;
+};
 
 type PageDispatchProps = {
   dispatch: (option: DispatchOption) => any;
@@ -30,15 +33,24 @@ export default class purchased extends Component<IProps, {}> {
     navigationBarTitleText: '支付结果',
   };
 
-  state = { Detail: null };
   async componentDidMount() {
+    const orderId = this.$router.params.orderId;
     const Detail = await this.props.dispatch({
       type: 'order/Detail',
       payload: {
-        id: this.$router.params.orderId,
+        id: orderId,
       },
     });
-    this.setState({ Detail });
+    const selled = await this.props.dispatch({
+      type: 'goods/selledUsers',
+      payload: {
+        goods_id: Detail.orderGoods ? Detail.orderGoods[0].goods_id : 0,
+      },
+    });
+    this.setState({ Detail, selled, orderId });
+    Taro.showShareMenu({
+      withShareTicket: true,
+    });
   }
   componentWillUnmount() {}
 
@@ -84,29 +96,109 @@ export default class purchased extends Component<IProps, {}> {
       },
     });
   };
+  lookMore = async () => {
+    let { Detail, page, selled }: any = this.state;
+    const _page = page + 1;
+    const _selled = await this.props.dispatch({
+      type: 'goods/selledUsers',
+      payload: {
+        goods_id: Detail.orderGoods ? Detail.orderGoods[0].goods_id : 0,
+        page: _page,
+      },
+    });
+    // selled.data.concat(_selled)
+    const data = selled.data.concat(_selled.data);
 
+    this.setState({ selled: { ...selled, data } });
+    if (_selled.data.length) {
+      this.setState({ page: _page });
+    } else {
+      this.setState({ nomore: true });
+    }
+  };
+
+  onShareAppMessage() {
+    let { Detail }: any = this.state;
+    console.log(
+      `/pages/goods/index?id=${Detail.orderGoods[0].goods_id}&userId=${this.props.userInfo.id}`
+    );
+
+    return {
+      title: `@${this.props.userInfo.colonelInfo.nickName}，我是「${
+        this.props.userInfo.nickName
+      }」，刚刚下单请小区长确认下订单哦`,
+      path: `/pages/goods/index?id=${Detail.orderGoods[0].goods_id}&userId=${
+        this.props.userInfo.id
+      }`,
+    };
+  }
+
+  state = {
+    Detail: null,
+    selled: {},
+    orderId: null,
+    page: 1,
+    nomore: false,
+  };
   render() {
     const {} = this.props;
-    const { Detail }: any = this.state;
+    const { Detail, selled, nomore }: any = this.state;
     const result = this.$router.params.type;
+    let selledMore: any = [];
+    if (selled.data) {
+      selledMore = selled.data;
+    }
+
     return (
       <View className="purchased-page">
         {result === 'ok' ? (
           <View className="result">
             <Text className="erduufont ed-dui green" />
-            <View className="h4">支付成功</View>
-            <View className="p">订单金额：{Detail.actual_price}元</View>
-            <View className="p">获得积分：{Detail.score ? Detail.score.score || 0 : '无'}</View>
+            <View className="h4">支付成功，请小区长及时处理订单</View>
+            <View className="bew">
+              <View className="p">订单金额：{Detail.actual_price}元</View>
+              {Detail.score && Detail.score.score ? (
+                <View className="p">积分：{Detail.score ? Detail.score.score || 0 : '无'}</View>
+              ) : null}
+            </View>
+            <View className="long">
+              <View className="info">刚刚购买用户</View>
+              {selledMore.map((ele, i) => (
+                <View key={i} className="long-li">
+                  {selled.count - i}、
+                  <View className="img-wrap">
+                    <Image className="img" src={ele.userInfo.avatarUrl} />
+                    <View className="name">{ele.userInfo.nickName}</View>
+                  </View>
+                  <View className="info">
+                    <Text className="goods">
+                      {ele.goods_name.length > 6
+                        ? ele.goods_name.substr(0, 6) + '...'
+                        : ele.goods_name}
+                    </Text>
+                    <Text className="b"> + {ele.number}</Text>
+                  </View>
+                </View>
+              ))}
+              {selled.count > 5 && (
+                <View className="more" onClick={this.lookMore}>
+                  {nomore ? '没有更多了' : '点击查看更多 v'}
+                </View>
+              )}
+            </View>
+
+            <View className="pad40">
+              <AtButton type="primary" open-type="share">
+                点击提醒
+              </AtButton>
+
+              <View className="text">点击转发到小区群，通知小区长及时查看处理订单</View>
+            </View>
             <View className="op">
-              <AtButton
-                type="secondary"
-                onClick={this.nextTab.bind(this, '/pages/ucenter/index', 'gotoOrder')}
-              >
+              <AtButton onClick={this.nextTab.bind(this, '/pages/ucenter/index', 'gotoOrder')}>
                 查看订单
               </AtButton>
-              <AtButton type="secondary" onClick={this.nextTab.bind(this, '/pages/index/index')}>
-                返回首页
-              </AtButton>
+              <AtButton onClick={this.nextTab.bind(this, '/pages/index/index')}>返回首页</AtButton>
             </View>
           </View>
         ) : (

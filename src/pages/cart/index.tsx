@@ -146,7 +146,6 @@ class Cart extends Component<IProps, {}> {
   render() {
     const { cartList, cartTotal, userInfo } = this.props;
     const { checkAll, nologin, noCommunityOpen } = this.state;
-    console.log(userInfo, nologin);
 
     return (
       <View className="cart-page">

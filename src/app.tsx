@@ -40,6 +40,7 @@ class App extends Component {
       'pages/order/purchased',
       'pages/neighbor/index',
       'pages/neighbor/search',
+      'pages/neighbor/active',
       'pages/goods/index',
       'pages/cart/index',
       'pages/cart/checkout',

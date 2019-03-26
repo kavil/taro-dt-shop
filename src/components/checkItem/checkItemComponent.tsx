@@ -30,7 +30,6 @@ class CheckItem extends Component<IProps, {}> {
     }
   }
   componentWillReceiveProps(props) {
-    console.log(props);
     if (!props.checked) {
       this.setState({ checkedAt: [] });
     } else {

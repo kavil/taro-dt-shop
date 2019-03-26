@@ -1,12 +1,13 @@
 import Taro, { Component } from '@tarojs/taro';
 import { ComponentClass } from 'react';
-import { View, Text, Image } from '@tarojs/components';
+import { View, Text, Image, Button } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
-import { AtButton, AtSearchBar, AtIcon, AtNoticebar } from 'taro-ui';
+import { AtButton, AtSearchBar, AtIcon, AtNoticebar, AtTag } from 'taro-ui';
 import CommunityItem from '../../components/communityItem/communityItemComponent';
 import Login from '../../components/login/loginComponent';
 import communityImg from '../../static/images/community.png';
+import { tip } from '../../utils/tool';
 
 type PageState = {};
 interface PageDvaProps {
@@ -34,36 +35,38 @@ class Neighbor extends Component<IProps, {}> {
   };
 
   async componentDidShow() {
-    this.setState({ userInfo: this.props.userInfo });
-    if (!this.props.token) {
-      this.setState({ init: true });
-      return;
-    }
-    if (this.props.userInfo.uid) {
-      // 获取正常数据
-      // await this.props.dispatch({
-      //   type: 'neighbor/Status',
-      // });
-    } else {
-      // 获取地理位置
-      let local;
-      try {
-        local = await Taro.getLocation({ type: 'wgs84' });
-        this.setState({ localSetting: true });
-      } catch (error) {
-        this.setState({ localSetting: false });
+    setTimeout(async () => {
+      this.setState({ userInfo: this.props.userInfo });
+      if (!this.props.token) {
+        this.setState({ init: true });
+        return;
       }
-      // 推荐小区
-      if (local)
-        await this.props.dispatch({
-          type: 'neighbor/NearbyList',
-          payload: {
-            latitude: local.latitude,
-            longitude: local.longitude,
-          },
-        });
-    }
-    this.setState({ init: true });
+      if (this.props.userInfo.uid) {
+        // 获取正常数据
+        // await this.props.dispatch({
+        //   type: 'neighbor/Status',
+        // });
+      } else {
+        // 获取地理位置
+        let local;
+        try {
+          local = await Taro.getLocation({ type: 'wgs84' });
+          this.setState({ localSetting: true });
+        } catch (error) {
+          this.setState({ localSetting: false });
+        }
+        // 推荐小区
+        if (local)
+          await this.props.dispatch({
+            type: 'neighbor/NearbyList',
+            payload: {
+              latitude: local.latitude,
+              longitude: local.longitude,
+            },
+          });
+      }
+      this.setState({ init: true });
+    }, 100);
   }
 
   async onPullDownRefresh() {
@@ -97,6 +100,14 @@ class Neighbor extends Component<IProps, {}> {
     Taro.navigateTo({ url: '/pages/neighbor/search' });
   };
 
+  noAction = () => {
+    tip('暂未开放');
+  };
+
+  nextPage = url => {
+    Taro.navigateTo({ url });
+  };
+
   timeCo;
   state = {
     myCommunity: false,
@@ -108,7 +119,6 @@ class Neighbor extends Component<IProps, {}> {
   render() {
     const { NearbyList, token } = this.props;
     const { init, localSetting, userInfo }: any = this.state;
-    console.log(userInfo.uid);
 
     return (
       <View className="neighbor-page">
@@ -129,34 +139,59 @@ class Neighbor extends Component<IProps, {}> {
                     </View>
                   </View>
                   <View className="features">
-                    <View className="li">
+                    <View className="li" onClick={this.noAction}>
                       <Text className="erduufont ed-write blue-bg" />
                       写评测
                     </View>
-                    <View className="li">
+                    <View className="li" onClick={this.noAction}>
                       <Text className="erduufont ed-paizhao purple-bg" />
                       小区美拍
                     </View>
-                    <View className="li">
+                    <View className="li" onClick={this.noAction}>
                       <Text className="erduufont ed-car yellow-bg" />
                       小区拼车
                     </View>
-                    <View className="li">
+                    <View className="li" onClick={this.noAction}>
                       <Text className="erduufont ed-wuye red-bg" />
                       小区物业
                     </View>
-                    <View className="li">
+                    <View className="li" onClick={this.noAction}>
                       <Text className="erduufont ed-weixiu gray-bg" />
                       维修装修
                     </View>
                   </View>
                   <View className="announcement">
-                    <AtNoticebar icon="volume-plus">小区公告</AtNoticebar>
+                    <AtNoticebar icon="volume-plus">小区公告：无</AtNoticebar>
                   </View>
                 </View>
-                <View className="pad40 h2" style={{ color: '#aaa', textAlign: 'center' }}>
-                  即将开放
-                </View>
+                {/* <View className="h3">小区活动</View>
+                <View className="active-wrap">
+                  <Button
+                    plain
+                    className="active plain"
+                    onClick={this.nextPage.bind(this, '/pages/neighbor/active')}
+                  >
+                    <View className="img-wrap">
+                      <Image
+                        lazyLoad
+                        mode="widthFix"
+                        className="img"
+                        src={
+                          'https://img.kavil.com.cn/images/nba/2019318214042TjBnxRbx.png@!900X383'
+                        }
+                      />
+                    </View>
+                    <View className="abottom">
+                      <View className="h5">寻找最美煎鸡蛋 🍳</View>
+                      <View className="p">
+                        <AtTag active={true} size="small">
+                          进行中
+                        </AtTag>
+                        <Text className="date">2019-03-21 ~ 25日</Text>
+                      </View>
+                    </View>
+                  </Button>
+                </View> */}
               </View>
             ) : (
               <View>
