@@ -30,6 +30,7 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
+      'pages/login/index',
       'pages/colonelApply/index',
       'pages/vip/index',
       'pages/index/search',
@@ -48,7 +49,7 @@ class App extends Component {
     window: {
       backgroundTextStyle: 'dark',
       navigationBarBackgroundColor: '#fff',
-      navigationBarTitleText: '新邻居',
+      navigationBarTitleText: '寻味知途',
       navigationBarTextStyle: 'black',
       enablePullDownRefresh: true,
       onReachBottomDistance: 100,
@@ -66,12 +67,12 @@ class App extends Component {
           selectedIconPath: 'static/images/home-a.png',
           text: '首页',
         },
-        {
-          pagePath: 'pages/neighbor/index',
-          iconPath: 'static/images/circle.png',
-          selectedIconPath: 'static/images/circle-a.png',
-          text: '邻居圈',
-        },
+        // {
+        //   pagePath: 'pages/neighbor/index',
+        //   iconPath: 'static/images/circle.png',
+        //   selectedIconPath: 'static/images/circle-a.png',
+        //   text: '邻居圈',
+        // },
         {
           pagePath: 'pages/cart/index',
           iconPath: 'static/images/cart.png',

@@ -17,7 +17,7 @@ import { AtActivityIndicator, AtSteps, AtCountdown, AtButton } from 'taro-ui';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
 import Login from '../../components/login/loginComponent';
-import { tip, Countdown } from '../../utils/tool';
+import { tip, Countdown, getTime } from '../../utils/tool';
 const qulity1 = 'https://img.kavil.com.cn/3991547959471_.pic.jpg';
 const qulity2 = 'https://img.kavil.com.cn/4011547959487_.pic.jpg';
 import { goodsShare } from '../../config/goodsShare';
@@ -73,15 +73,59 @@ class Goods extends Component<IProps, {}> {
         id: this.$router.params.id,
       },
     });
-    if (this.props.Detail.info.over_time) {
-      const countdown = Countdown(this.props.Detail.info.over_time);
-      this.setState({
-        countdown,
-      });
-    }
+    this.timeSe();
     await this.props.dispatch({
       type: 'cart/Index',
     });
+  }
+  timeSe() {
+    const Info = this.props.Detail.info;
+
+    let goodsNumber = 0;
+    if (!Info.sku) Info.sku = [];
+    Info.sku.forEach(ele => {
+      goodsNumber += ele.goods_number;
+    });
+    let disabled;
+    if (!Info.is_on_sale || Info.is_delete) {
+      disabled = '已下架';
+    }
+    if (goodsNumber === 0) {
+      disabled = '已售罄';
+    }
+    if (Info.goods_type !== 1) {
+      if (getTime(Info.start_time) > getTime()) {
+        disabled = '马上开始 ' + Info.start_time.split(' ')[1];
+      } else if (getTime(Info.over_time) < getTime()) {
+        disabled = '已结束';
+      } else {
+        disabled = null;
+      }
+    }
+    this.setState({
+      disabled,
+      goodsNumber,
+    });
+
+    if (getTime() < getTime(Info.start_time)) {
+      console.log(1, getTime(), getTime(Info.start_time), getTime() < getTime(Info.start_time));
+
+      const countdown = Countdown(Info.start_time);
+      this.setState({
+        countdown,
+      });
+      return;
+    }
+    if (getTime() < getTime(Info.over_time)) {
+      console.log(2, getTime(), getTime(Info.over_time), getTime() < getTime(Info.over_time));
+
+      const countdown = Countdown(Info.over_time);
+      this.setState({
+        countdown,
+      });
+      return;
+    }
+    console.log(3);
   }
   onShareAppMessage() {
     return {
@@ -101,12 +145,7 @@ class Goods extends Component<IProps, {}> {
         id: this.$router.params.id,
       },
     });
-    if (this.props.Detail.info.over_time) {
-      const countdown = Countdown(this.props.Detail.info.over_time);
-      this.setState({
-        countdown,
-      });
-    }
+    this.timeSe();
     Taro.stopPullDownRefresh();
   }
   nextPage = url => {
@@ -119,8 +158,15 @@ class Goods extends Component<IProps, {}> {
   };
 
   onChangeStep = () => {};
-  onTimeUp = () => {
-    this.onPullDownRefresh();
+
+  avoid = false;
+  onTimeUp = async () => {
+    if (this.avoid) return;
+    this.avoid = true;
+    setTimeout(async () => {
+      await this.onPullDownRefresh();
+      this.avoid = false;
+    }, 1000);
   };
   clickDetail = a => {
     console.log(a);
@@ -267,6 +313,8 @@ class Goods extends Component<IProps, {}> {
       shareImage,
       shareStart,
       checkSave,
+      goodsNumber,
+      disabled,
     }: any = this.state;
     const { Detail, cartTotal, userInfo } = this.props;
     if (!Detail.info)
@@ -276,32 +324,13 @@ class Goods extends Component<IProps, {}> {
     if (!info) return null;
     let imgList = [];
     if (info) imgList = info.list_pic_url.split(',');
-    let goodsNumber = 0;
-    if (!info.sku) info.sku = [];
-    info.sku.forEach(ele => {
-      goodsNumber += ele.goods_number;
-    });
 
-    let disabled;
-    if (!info.is_on_sale || info.is_delete) {
-      disabled = '已下架';
-    }
-    if (goodsNumber === 0) {
-      disabled = '已售罄';
-    }
-
-    const now = new Date().toLocaleString('zh', { hour12: false });
     // 秒杀
 
-    // console.log(countdown);
-    const newDate = date => {
-      if (!date) return 0;
-      return new Date(date.replace(/-/g, '/'));
-    };
     // 预售
     let current = 0;
-    if (newDate(info.over_time) > newDate(now)) current = 1;
-    if (newDate(info.over_time) < newDate(now)) current = 2;
+    if (getTime(info.over_time) > getTime()) current = 1;
+    if (getTime(info.over_time) < getTime()) current = 2;
     const formate = date => {
       if (!date) return '';
       return date.substr(5, 5);
@@ -316,9 +345,6 @@ class Goods extends Component<IProps, {}> {
       current,
     };
 
-    if (info.goods_type !== 1 && newDate(info.over_time) < newDate(now)) {
-      disabled = '已结束';
-    }
     const detailNodes = '<div class="detail-wrap">' + info.goods_desc + '</div>';
     return (
       <View className="goods-page">
@@ -411,13 +437,22 @@ class Goods extends Component<IProps, {}> {
           {info.goods_type >= 2 ? (
             <View className="miaosha-wrap">
               <View className="trapezoid" />
-              {newDate(info.start_time) > newDate(now) ? (
+              {getTime(info.start_time) > getTime() ? (
                 <View className="miaosha">
-                  <View>{info.start_time}开始</View>
+                  马上开始
+                  <AtCountdown
+                    format={{ day: '天', hours: ':', minutes: ':', seconds: '' }}
+                    isShowDay={countdown.isShowDay}
+                    day={countdown.day}
+                    hours={countdown.time[0]}
+                    minutes={countdown.time[1]}
+                    seconds={countdown.time[2]}
+                    onTimeUp={this.onTimeUp.bind(this)}
+                  />
                 </View>
               ) : (
                 <View>
-                  {newDate(info.over_time) > newDate(now) ? (
+                  {getTime(info.over_time) > getTime() ? (
                     <View>
                       {countdown.time ? (
                         <View className="miaosha">
@@ -498,13 +533,15 @@ class Goods extends Component<IProps, {}> {
                   ) : (
                     <View className="tag">开通会员</View>
                   )}
-                  <Text className="text">
-                    会员立省
-                    <Text style={{ color: '#f5735b' }}>
-                      {(info.sku[0].retail_price - info.sku[0].vip_price).toFixed(1)}
+                  {info.sku[0].retail_price !== info.sku[0].vip_price && (
+                    <Text className="text">
+                      会员立省
+                      <Text style={{ color: '#f5735b' }}>
+                        {(info.sku[0].retail_price - info.sku[0].vip_price).toFixed(1)}
+                      </Text>
+                      元
                     </Text>
-                    元
-                  </Text>
+                  )}
                 </View>
                 <Text className="right">
                   {userInfo && userInfo.level !== 0 ? '续费' : '立即开通'}
@@ -540,8 +577,7 @@ class Goods extends Component<IProps, {}> {
 
           <View className="h3">发货须知</View>
           <View className="p">
-            <View>当天下午20:30前下单，次日上午送达；</View>
-            <View>当天下午20:30后下单，后天上午送达；</View>
+            <View>当天团购结束后，次日下午送达小区长代收点；</View>
             <View>如标明预售则按预售日期发货配送。</View>
           </View>
 
@@ -558,7 +594,7 @@ class Goods extends Component<IProps, {}> {
           </View>
           <View className="p">
             <Text className="b">会员价格：</Text>
-            指在商品的实时标价上进行打折, 不因表述的差异改变性质。仅针对新邻居平台会员。
+            指在商品的实时标价上进行打折, 不因表述的差异改变性质。仅针对平台会员。
           </View>
           <View className="h3">工商资质</View>
           <View className="qulity-wrap">

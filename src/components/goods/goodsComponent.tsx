@@ -5,7 +5,7 @@ import { AtInputNumber, AtButton } from 'taro-ui';
 import { connect } from '@tarojs/redux';
 import './goodsComponent.scss';
 import cartImg from '../../static/images/cart-in.png';
-import { tip, Countdown } from '../../utils/tool';
+import { tip, Countdown, getTime } from '../../utils/tool';
 
 interface PageState {}
 interface PageDva {
@@ -42,10 +42,7 @@ class GoodsItem extends Component<IProps, {}> {
   changeCartNumber = value => {
     console.log(value);
   };
-  newDate = date => {
-    if (!date) return 0;
-    return new Date(date.replace(/-/g, '/'));
-  };
+
   componentDidMount() {
     if (this.props.goods.over_time)
       this.setState({
@@ -53,7 +50,7 @@ class GoodsItem extends Component<IProps, {}> {
       });
   }
   addCart = value => {
-    console.log(value);
+    console.log(value, 'addCart');
     // this.setState({ numberStatus: true });
     let goodsNumber = 0;
     if (!value.sku) value.sku = [];
@@ -66,12 +63,15 @@ class GoodsItem extends Component<IProps, {}> {
     if (goodsNumber === 0) {
       disabled = '已售罄';
     }
-    if (
-      value.goods_type !== 1 &&
-      this.newDate(value.over_time) <
-        this.newDate(new Date().toLocaleString('zh', { hour12: false }))
-    ) {
-      disabled = '秒杀已结束';
+
+    if (value.goods_type !== 1) {
+      if (getTime(value.start_time) > getTime()) {
+        disabled = '还未开始 ' + value.start_time.split(' ')[1];
+      } else if (getTime(value.over_time) < getTime()) {
+        disabled = '已结束';
+      } else {
+        disabled = null;
+      }
     }
     if (disabled) {
       tip(disabled);
@@ -173,18 +173,15 @@ class GoodsItem extends Component<IProps, {}> {
               ) : type === 'mini' ? (
                 <Image className="cartImg" src={cartImg} onClick={this.addCart.bind(this, goods)} />
               ) : (
-                <Form reportSubmit onSubmit={this.getFormId}>
-                  <AtButton
-                    type="primary"
-                    circle
-                    size="small"
-                    className="btn-shopping"
-                    formType="submit"
-                    onClick={this.addCart.bind(this, goods)}
-                  >
-                    马上抢
-                  </AtButton>
-                </Form>
+                <AtButton
+                  type="primary"
+                  circle
+                  size="small"
+                  className="btn-shopping"
+                  onClick={this.addCart.bind(this, goods)}
+                >
+                  马上抢
+                </AtButton>
               )}
             </View>
           </View>

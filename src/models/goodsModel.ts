@@ -7,6 +7,14 @@ export default {
     List: {},
     Detail: {},
     SearchList: [],
+    startTime: '',
+    endTime: '',
+    title: '',
+    mspTime: [
+      { start: '10:00', end: '11:00' },
+      { start: '16:00', end: '17:00' },
+      { start: '20:00', end: '21:00' },
+    ],
   },
 
   effects: {
@@ -17,7 +25,10 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          cateList: res.data,
+          cateList: res.data.list,
+          startTime: res.data.startTime,
+          endTime: res.data.endTime,
+          title: res.data.title,
         },
       });
     },
@@ -43,9 +54,17 @@ export default {
       }
       const { cityId } = yield select(state => state.common);
 
-      let { list, loadOver, refresh, page, size, parent_id, promot_cate_id, goods_name, goods_type } = List[
-        payload.listName
-      ];
+      let {
+        list,
+        loadOver,
+        refresh,
+        page,
+        size,
+        parent_id,
+        promot_cate_id,
+        goods_name,
+        goods_type,
+      } = List[payload.listName];
       if (loadOver) return;
       if (refresh) page = 1;
       const res = yield call(Api.getGoodsList, {

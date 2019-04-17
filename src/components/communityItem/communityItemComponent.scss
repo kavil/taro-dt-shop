@@ -1,9 +1,9 @@
 @import "../../static/css/mixin";
 .community-item {
     @include fj();
-    border: 1PX solid $btn-disabled-else;
+    border-bottom: 1PX solid $border;
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 20px;
     align-items: center;
     margin-top: 20px;
     .p {

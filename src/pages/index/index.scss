@@ -1,61 +1,104 @@
 @import "../../static/css/mixin";
+
 .index {
+    padding-top: 188px;
+
     .scroll-view-wrap {
         display: flex;
         flex-wrap: nowrap;
     }
+
     .ms-wrap {
         border: 5px solid $color-brand-light;
         margin-top: 10px;
         border-radius: 10px;
         position: relative;
+        padding-top: 90px;
     }
+
     .ms-top {
         position: absolute;
         top: -5px;
         left: -2px;
-        border-radius: 15px 15px 15px 0;
+        border-radius: 15px 15px 0 0;
         padding: 0 10px;
-        background: $bg-color-panel;
+        background: $color-brand-light;
         color: #fff;
         @include fj(start);
         align-items: center;
         z-index: 1;
+        width: calc(100% + 4px);
     }
+    .b{
+        font-weight: 500;
+    }
+    .time-area {
+        flex: 1;
+        @include fj(space-around);
+
+        .time-item {
+            flex: 1;
+            text-align: center;
+            padding: 16px 0;
+            border-top: 1PX solid $color-brand-light;
+
+            &.active {
+                color: $color-brand-light;
+                background: #fff;
+
+                .p {
+                    color: $color-brand-light;
+                }
+            }
+
+            .p {
+                margin-top: -10px;
+                color: #eee;
+            }
+        }
+    }
+
     .type-tag {
         font-size: 22px;
         line-height: 2.2;
         margin-right: 10px;
     }
+
     .ms-text {
         font-size: 26px;
         display: inline-block;
     }
+
     .ms-cd-item {
         font-size: 26px;
         display: inline-block;
         vertical-align: 4px;
     }
+
     .index-ad {
         padding-top: 10px;
+
         .img {
             width: 100%;
             border-radius: 10px;
         }
     }
+
     .curtain-img {
         @include wh(640px, 800px)
     }
+
     .addmyapp {
         position: fixed;
         top: 8px;
         right: 10px;
-        padding: 5px 0 5px 10px;
+        padding: 5px 5px 5px 10px;
         font-size: 24px;
         background: $color-dan;
         z-index: 10;
         border-radius: 50px;
         color: #555;
+
         .arr {
             position: absolute;
             right: 128px;
@@ -69,6 +112,7 @@
             border-right: 0;
         }
     }
+
     .help {
         padding: 0 8px 0 0;
         font-size: 24px;
@@ -78,34 +122,41 @@
         color: #555;
         @include fj();
         align-items: center;
+
         .ava-wrap {
             @include wh(50px, 50px);
             margin-right: 5px;
+
             .image {
                 @include wh(50px, 50px);
                 border-radius: 50%;
             }
         }
+
         .text-wrap {
             flex: 1;
         }
     }
-    padding-top: 198px;
+
+
     .community-wrap {
         font-size: 36px;
         font-weight: 400px;
         @include fj('start');
         display: inline-flex;
         align-items: center;
+
         image {
             margin: 0 10px 0 0;
             @include wh(40px, 40px);
         }
+
         .ed-back {
             font-size: 90%;
             margin: 0 10px;
         }
     }
+
     @mixin fixTop {
         position: fixed;
         top: 0;
@@ -115,48 +166,122 @@
         z-index: 1;
         background: #fff;
     }
+
     .index-top {
         @include fixTop();
-        padding: 0 20px;
+        padding: 0 20px 20px 20px;
         z-index: 2;
         @include fj();
     }
+
     .search-wrap {
-        @include fixTop();
-        padding-left: 10px;
-        padding-bottom: 70px;
-        padding-top: 50px;
+        width: 48%;
+        margin-right: -10px;
+        position: relative;
+
+        .at-search-bar {
+            padding: 0;
+        }
+
+        .search-mask {
+            height: 60px;
+        }
     }
+
+    .timedown {
+        font-size: 24px;
+    }
+
+    .td-wrap {
+        margin-top: 10px;
+        display: inline-block;
+        vertical-align: -4px;
+    }
+
+    .flex-item {
+        padding-right: 20px;
+    }
+
+    .opreat-wrap {
+        @include fj();
+        align-items: center;
+        padding-top: 8px;
+
+        .opreat-item {
+            flex: 1;
+            font-size: 22px;
+            color: $font-info;
+            text-align: center;
+
+
+        }
+
+        .erduufont {
+            vertical-align: -10px;
+        }
+    }
+
     .at-tabs .at-tabs__header {
         @include fixTop();
-        top: 134px;
+        top: 128px;
+        z-index: 3;
     }
+
     .cate-img {
         margin: 30px 0 20px;
         @include wh(100%, auto);
+
         .img {
             border-radius: 5px;
             @include wh(100%, auto);
         }
     }
+
     .colonel-ewm .img {
         width: 100%;
     }
+
+    .ed-location {
+        font-size: 24px;
+        margin-left: -1px;
+    }
+
+    .colonel-div {
+        @include fj(start);
+        max-width: 60%;
+
+        .colonel-info {
+
+            flex: 1;
+
+            .name {
+                font-size: 30px;
+                margin-top: 10px;
+            }
+
+            .p {
+                margin: 0;
+                line-height: 1.2;
+            }
+
+            .ddd {
+                @include ddd();
+                max-width: 300px;
+            }
+        }
+    }
+
     .colonel-wrap {
-        @include fj();
-        align-items: center;
         padding-top: 10px;
         position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-        margin-bottom: 10px;
         display: inline-block;
-        text-align: center;
+        width: 120px;
+
         .badge {
             position: absolute;
             line-height: 1.1;
             top: 0;
-            left: 24px;
+            left: 35px;
             padding: 3px 8px;
             font-size: 20px;
             width: 60px;
@@ -164,12 +289,15 @@
             background: $color-deep;
             border-radius: 14px 14px 14px 0;
             box-shadow: 0 4px 8px 0 rgba(233, 59, 61, 0.20);
+            z-index: 1;
         }
+
         .colonel {
             text-align: center;
             position: relative;
             display: inline-block;
         }
+
         .name {
             font-size: 24px;
             color: $font-default;

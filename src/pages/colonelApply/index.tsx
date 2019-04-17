@@ -221,7 +221,7 @@ class Colonelapply extends Component<IProps, {}> {
         <View className="pad40 h2">
           小区长申请表
           <View className="p">
-            小区长是联系小区用户和新邻居平台的纽带，是有编制无约束的新合作模式。
+            小区长是联系小区用户和平台的纽带，是有编制无约束的新合作模式。
           </View>
         </View>
         <View className="pad40">
@@ -371,7 +371,7 @@ class Colonelapply extends Component<IProps, {}> {
             请仔细填写完整，审核通过后需要缴纳<Text className="b">1500元</Text>保证金，其中
             <Text className="b">1000元</Text>
             可以在解约小区长时随时退，<Text className="b">500元</Text>
-            将会返还充值在新邻居平台，可用于平台各种消费。
+            将会返还充值在平台，可用于平台各种消费。
           </View> */}
         </View>
       </View>

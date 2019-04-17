@@ -114,10 +114,10 @@ export default {
           let text = payload.cartTotal.checkedGoodsCount;
           if (text > 99) text = '99+';
           if (text === 0) {
-            Taro.removeTabBarBadge({ index: 2 });
+            Taro.removeTabBarBadge({ index: 1 });
           } else {
             Taro.setTabBarBadge({
-              index: 2,
+              index: 1,
               text: payload.cartTotal.checkedGoodsCount.toString(),
             });
           }

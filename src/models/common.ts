@@ -94,20 +94,6 @@ export default {
       }
       return res && res.errno === 0;
     },
-    // *CityOpenName({ payload }, { call, select }) {
-    //   let cityOpen = Taro.getStorageSync('cityOpen');
-    //   const { cityId } = yield select(state => state.common);
-    //   if (cityOpen && cityOpen[cityId]) {
-    //     return cityOpen[cityId];
-    //   } else {
-    //     const res = yield call(Api.cityOpen, payload);
-    //     if (res && res.errno === 0) {
-    //       cityOpen = res.data;
-    //       Taro.setStorageSync('cityOpen', cityOpen);
-    //       return cityOpen[cityId];
-    //     }
-    //   }
-    // },
     *BindPhone({ payload }, { call, put, select }) {
       // const { wxLoginCode } = yield select(state => state.common);
       const res = yield call(Api.bindPhone, { ...payload, code: (yield Taro.login()).code });

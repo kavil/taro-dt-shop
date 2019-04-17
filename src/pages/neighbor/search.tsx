@@ -5,6 +5,7 @@ import { connect } from '@tarojs/redux';
 import './index.scss';
 import { AtButton, AtSearchBar } from 'taro-ui';
 import CommunityItem from '../../components/communityItem/communityItemComponent';
+import { tip } from '../../utils/tool';
 
 type PageState = {};
 interface PageDvaProps {
@@ -28,11 +29,11 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 }))
 class NeighborSearch extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '邻居圈',
+    navigationBarTitleText: '选择附近小区点',
   };
 
   async componentDidMount() {
-    if (this.$router.params.noApply) this.setState({ noApply: true });
+    if (this.$router.params.noApply) this.setState({ noApply: false });
     // 获取地理位置
     let local;
     try {
@@ -42,7 +43,8 @@ class NeighborSearch extends Component<IProps, {}> {
       this.setState({ localSetting: false });
     }
     // 默认附近小区
-    if (local)
+    if (local) {
+      this.setState({ loaded: false });
       await this.props.dispatch({
         type: 'neighbor/Search',
         payload: {
@@ -50,6 +52,8 @@ class NeighborSearch extends Component<IProps, {}> {
           longitude: local.longitude,
         },
       });
+      this.setState({ local, loaded: true });
+    }
   }
 
   async onPullDownRefresh() {
@@ -67,12 +71,18 @@ class NeighborSearch extends Component<IProps, {}> {
   onConfirm = async e => {
     const value = e.detail.value.trim();
     if (this.timeCo) clearTimeout(this.timeCo);
+    const { local }: any = this.state;
+    if (!local.latitude) tip('请先打开位置授权');
+    this.setState({ loaded: false });
     await this.props.dispatch({
       type: 'neighbor/Search',
       payload: {
         name: value,
+        latitude: local.latitude,
+        longitude: local.longitude,
       },
     });
+    this.setState({ loaded: true });
   };
 
   searchCommunity = async val => {
@@ -80,13 +90,19 @@ class NeighborSearch extends Component<IProps, {}> {
     if (!value) return;
     this.setState({ searchValue: value });
     if (this.timeCo) clearTimeout(this.timeCo);
+    const { local }: any = this.state;
+    if (!local.latitude) tip('请先打开位置授权');
     this.timeCo = setTimeout(async () => {
+      this.setState({ loaded: false });
       await this.props.dispatch({
         type: 'neighbor/Search',
         payload: {
           name: value,
+          latitude: local.latitude,
+          longitude: local.longitude,
         },
       });
+      this.setState({ loaded: true });
     }, 1500);
   };
 
@@ -96,19 +112,25 @@ class NeighborSearch extends Component<IProps, {}> {
       content: `已成功绑定 ${value.name}`,
       showCancel: false,
     });
-    Taro.navigateBack();
+    if (this.$router.params.mode === 'redirect') {
+      Taro.switchTab({ url: '/pages/index/index' });
+    } else {
+      Taro.navigateBack();
+    }
   };
 
   timeCo;
   state = {
     localSetting: true,
     searchValue: '',
-    noApply: false,
+    noApply: true,
+    local: {},
+    loaded: false,
   };
 
   render() {
     const { SearchList } = this.props;
-    const { localSetting, searchValue, noApply } = this.state;
+    const { localSetting, searchValue, noApply, loaded } = this.state;
     return (
       <View className="neighbor-page">
         <View className="search-wrap">
@@ -130,6 +152,7 @@ class NeighborSearch extends Component<IProps, {}> {
               onChange={this.bindOk.bind(this, ele)}
             />
           ))}
+          {!SearchList.length && loaded && <View className="nodata">该地区暂无小区长</View>}
         </View>
         {!localSetting && (
           <View className="pad20 pt">

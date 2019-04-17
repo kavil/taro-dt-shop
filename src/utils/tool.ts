@@ -9,7 +9,9 @@ export function tip(title: string) {
 }
 
 export function Countdown(over_time) {
-  const cha = (new Date(over_time.replace(/-/g, '/')).getTime() - new Date().getTime()) / 1000;
+  const cha = parseInt(((new Date(over_time.replace(/-/g, '/')).getTime() - new Date().getTime()) /
+    1000) as any);
+
   const isShowDay = cha > 86400;
   const day = Math.floor(cha / 86400);
   const time: any = [];
@@ -20,5 +22,11 @@ export function Countdown(over_time) {
   const lastSec = lastMin - 60 * time[1];
   time.push(Math.floor(lastSec));
 
-  return { isShowDay, day, time }
+  return { isShowDay, day, time };
+}
+
+export function getTime(time?) {
+  let date = new Date();
+  if (time) date = new Date(time.replace(/-/g, '/'));
+  return date.toLocaleString('zh', { hour12: false });
 }

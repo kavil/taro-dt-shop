@@ -71,7 +71,7 @@ class Ucenter extends Component<IProps, {}> {
   };
   callme = () => {
     Taro.makePhoneCall({
-      phoneNumber: '13667909769',
+      phoneNumber: '18979084445',
     });
   };
   callkf = () => {
@@ -261,7 +261,7 @@ class Ucenter extends Component<IProps, {}> {
           </View>
           <View className="contact-wrap">
             <AtButton circle size="small" type="secondary" className="contact" open-type="contact">
-              联系新邻居客服
+              联系客服
             </AtButton>
             <View className="callkf" onClick={this.callkf}>
               18979084445

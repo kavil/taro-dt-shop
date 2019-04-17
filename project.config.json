@@ -12,7 +12,7 @@
 		"autoAudits": false
 	},
 	"compileType": "miniprogram",
-	"libVersion": "2.5.0",
+	"libVersion": "2.2.5",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -64,7 +64,7 @@
 					"id": 4,
 					"name": "goods",
 					"pathName": "pages/goods/index",
-					"query": "id=139&userId=1332",
+					"query": "id=173&userId=1332",
 					"scene": null
 				}
 			]

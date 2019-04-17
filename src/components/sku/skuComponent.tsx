@@ -37,6 +37,11 @@ class Sku extends Component<IProps, {}> {
         goods_id: this.props.goods.id,
       },
     });
+    if (!res) {
+      this.props.onChange(null);
+      this.onClose();
+      return;
+    }
     res.config.forEach(ele => {
       ele.speList = [];
       res.skuList.forEach(sku => {
@@ -54,7 +59,7 @@ class Sku extends Component<IProps, {}> {
         });
       });
     });
-    console.log(res.config);
+    console.log(res.config, 'res.config');
 
     this.setState({
       skuList: res.skuList,
@@ -157,9 +162,11 @@ class Sku extends Component<IProps, {}> {
                 <View className="vip">
                   ￥{getSkuResult.retail_price}
                   <View className="counter">￥{getSkuResult.counter_price}</View>
-                  <View className="label">
-                    会员{((getSkuResult.vip_price / getSkuResult.retail_price) * 10).toFixed(1)}折
-                  </View>
+                  {getSkuResult.vip_price !== getSkuResult.retail_price && (
+                    <View className="label">
+                      会员{((getSkuResult.vip_price / getSkuResult.retail_price) * 10).toFixed(1)}折
+                    </View>
+                  )}
                 </View>
               </View>
             </View>

@@ -29,7 +29,7 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 }))
 class IndexSearch extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '新邻居·社区团',
+    navigationBarTitleText: '寻味知途',
   };
 
   async componentDidMount() {

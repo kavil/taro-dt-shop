@@ -85,7 +85,7 @@ export default class orderDetail extends Component<IProps, {}> {
     const {} = this.state;
     return (
       <View className="order-detail-page">
-        <View className="top">感谢您在新邻居购物，欢迎再次选购。</View>
+        <View className="top">感谢您在寻味知途购物，欢迎再次选购。</View>
         <View className="block-wrap">
           <View className="title">快速达</View>
           <View className="gsw">

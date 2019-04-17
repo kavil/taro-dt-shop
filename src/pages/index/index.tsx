@@ -1,7 +1,7 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Image, Text, ScrollView, Button } from '@tarojs/components';
+import { View, Image, Text, ScrollView, Button, Swiper, SwiperItem } from '@tarojs/components';
 import {
   AtSearchBar,
   AtTabs,
@@ -16,12 +16,11 @@ import {
   AtModalAction,
   AtAvatar,
 } from 'taro-ui';
-import communityImg from '../../static/images/community.png';
 import Login from '../../components/login/loginComponent';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
 import './index.scss';
-import { tip, Countdown } from '../../utils/tool';
+import { tip, Countdown, getTime } from '../../utils/tool';
 // #region 书写注意
 //
 // 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
@@ -39,6 +38,7 @@ interface PageDva {
   List: any;
   MsList: any;
   userInfo: any;
+  mspTime: any;
 }
 
 interface PageOwnProps {
@@ -49,6 +49,8 @@ interface PageStateProps {
   // 自己要用的
   userInfoLoading: boolean;
   loginLoading: boolean;
+  endTime: any;
+  title: any;
 }
 
 type IProps = PageStateProps & PageDva & PageOwnProps & PageState;
@@ -66,65 +68,71 @@ class Index extends Component<IProps, {}> {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '新邻居·社区团',
+    navigationBarTitleText: '寻味知途·社区团购',
     // navigationBarBackgroundColor: '#fff',
     // navigationBarTextStyle: 'white',
     // backgroundTextStyle: 'dark',
   };
 
   async componentDidMount() {
+    if (!Taro.getStorageSync('token')) {
+      Taro.redirectTo({ url: '/pages/login/index' });
+      return;
+    }
+    if (!this.props.userInfo.colonelId) {
+      Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
+      return;
+    }
     setTimeout(() => {
       this.setState({
         addmyappTip: true,
       });
-    }, 6 * 1000);
-    Taro.showShareMenu({
-      withShareTicket: true,
-    });
+    }, 5 * 1000);
+    // Taro.showShareMenu({
+    //   withShareTicket: true,
+    // });
     console.log(this.$router.params, 'this.$router.params- -- componentDidMount');
-    const adRes = await this.props.dispatch({
-      // A D
-      type: 'common/spread',
-    });
-    this.setState({
-      indexAd: adRes.find(ele => ele.ad_position_id === 1),
-    });
-    const curtainRes = adRes.find(ele => ele.ad_position_id === 3);
-    if (Taro.getStorageSync('index-curtain') !== curtainRes.image_url) {
-      this.setState({ curtainRes, curtainOpened: true, curtainPng: curtainRes.image_url });
-    }
+    this.props
+      .dispatch({
+        // A D
+        type: 'common/spread',
+      })
+      .then(adRes => {
+        this.setState({
+          indexAd: adRes.filter(ele => ele.ad_position_id === 1),
+        });
+        const curtainRes = adRes.find(ele => ele.ad_position_id === 3);
+        if (Taro.getStorageSync('index-curtain') !== curtainRes.image_url) {
+          this.setState({ curtainRes, curtainOpened: true, curtainPng: curtainRes.image_url });
+        }
+      });
+
     await this.props.dispatch({
       type: 'goods/getCate',
     });
     const cateTopList: any = [];
     const cateImgList: any = [];
+    if (!this.props.cateList) {
+      this.setState({ inited: true, cateTopList, indexAd: [] });
+      return;
+    }
     this.props.cateList.forEach((ele: any) => {
       if (ele.parent_id === 0) cateTopList.push(ele);
       cateImgList[ele.id] = ele.banner_url;
     });
-    this.setState({ cateTopList, cateImgList });
-    const msList = await this.props.dispatch({
-      type: 'goods/MsList',
-      payload: {
-        goods_type: 2,
-      },
-    });
-    if (msList.data.length) {
-      const now = new Date();
-      const msTime = new Date(
-        now.getFullYear().toString() +
-          '/' +
-          (now.getMonth() + 1).toString() +
-          '/' +
-          now.getDate().toString() +
-          ' 20:30'
-      ).toLocaleString('zh', { hour12: false });
+
+    if (this.props.endTime)
       this.setState({
-        countdown: Countdown(msTime),
-        msTime,
+        countdownPlan: Countdown(this.props.endTime),
       });
-    }
+
+    this.setState({ cateTopList, cateImgList });
+    await this.msFunction();
     const cate = this.props.cateList[0];
+    if (!cate) {
+      this.setState({ inited: false });
+      return;
+    }
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
@@ -133,15 +141,92 @@ class Index extends Component<IProps, {}> {
         promot_cate_id: cate.type === 2 ? cate.id : null,
       },
     });
+    this.setState({ inited: true });
   }
-  onTimeUp = () => {};
-  async onPullDownRefresh() {
-    if (!(this.props.cateList && this.props.cateList.length)) {
-      this.componentDidMount();
-    } else {
-      const value = this.state.current;
-      const { cateTopList }: any = this.state;
 
+  async msFunction() {
+    const msList = await this.props.dispatch({
+      type: 'goods/MsList',
+      payload: {
+        goods_type: 2,
+      },
+    });
+    if (msList.data.length) {
+      const mstItem: any = this.whatTime(this.props.mspTime);
+      if (!mstItem) {
+        this.setState({
+          mstItem,
+        });
+        return;
+      }
+      const ele: any = this.props.mspTime[mstItem.i];
+      const nowPre = this.nowPre() + ele.start;
+      let msTime = '';
+
+      let msText = '距开始';
+      if (
+        getTime() < getTime(this.nowPre() + this.props.mspTime[this.props.mspTime.length - 1].end)
+      ) {
+        if (mstItem.before) {
+          msTime = getTime(nowPre);
+        } else {
+          msText = '距结束';
+          msTime = getTime(this.nowPre() + ele.end);
+        }
+        this.setState({
+          countdown: Countdown(msTime),
+          msTime,
+          msText,
+          mstItem,
+        });
+      }
+    }
+  }
+
+  nowPre = () => {
+    const now = new Date();
+    return (
+      now.getFullYear().toString() +
+      '/' +
+      (now.getMonth() + 1).toString() +
+      '/' +
+      now.getDate().toString() +
+      ' '
+    );
+  };
+
+  whatTime = msTime => {
+    const now = getTime();
+    for (let i = 0; i < msTime.length; i++) {
+      const mst = msTime[i];
+      if (now < getTime(this.nowPre() + mst.start)) return { i, before: true };
+      if (now < getTime(this.nowPre() + mst.end)) return { i, before: false };
+    }
+    return null;
+  };
+
+  avoid = false;
+  onTimeUp = async () => {
+    if (this.avoid) return;
+    this.avoid = true;
+    await this.msFunction();
+    this.avoid = false;
+  };
+  onTimeUpPlan = async () => {
+    // if (this.avoid) return;
+    // this.avoid = true;
+    // setTimeout(async () => {
+    //   console.log(1111);
+    //   await Taro.reLaunch({ url: '/pages/index/index' });
+    //   this.avoid = false;
+    // }, 1000);
+  };
+  async onPullDownRefresh() {
+    await this.componentDidMount();
+    const value = this.state.current;
+    const { cateTopList }: any = this.state;
+
+    if (this.props.cateList) {
       const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
       await this.props.dispatch({
         type: 'goods/List',
@@ -197,7 +282,6 @@ class Index extends Component<IProps, {}> {
     }, 100);
     const { cateTopList }: any = this.state;
     const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
-    console.log(cate);
 
     await this.props.dispatch({
       type: 'goods/List',
@@ -213,7 +297,6 @@ class Index extends Component<IProps, {}> {
   handNull = () => {};
 
   addCartOk = async goods => {
-    // console.log(this.props.userInfo);
     if (this.props.userInfo.id && !this.props.userInfo.colonelId) {
       this.setState({ noCommunityOpen: true });
       return;
@@ -244,7 +327,13 @@ class Index extends Component<IProps, {}> {
     this.setState({ openSku: false });
   };
   handleChangeSku = async payload => {
-    console.log('handleSkuOk', payload);
+    if (!payload) {
+      setTimeout(() => {
+        Taro.login(); // 经验 先获取到code 不容易失效
+        Taro.eventCenter.trigger('login', true);
+      }, 100);
+      return;
+    }
     // 加入购物车
     const res = await this.props.dispatch({
       type: 'cart/Add',
@@ -274,15 +363,13 @@ class Index extends Component<IProps, {}> {
     this.setState({ colonelOpen: true });
   };
   lookBig = img => {
-    console.log(img);
     Taro.previewImage({
       current: img + '@!q90',
       urls: [img + '@!q90'],
     });
   };
-  viewGoods = () => {
-    const { indexAd }: any = this.state;
-    if (indexAd.linkto) this.nextPage('/pages/goods/index?id=' + indexAd.linkto);
+  viewGoods = ele => {
+    if (ele.linkto) this.nextPage('/pages/goods/index?id=' + ele.linkto);
   };
 
   state = {
@@ -296,13 +383,14 @@ class Index extends Component<IProps, {}> {
     addmyappTip: false,
     countdown: {},
     msTime: null,
-    indexAd: null,
+    indexAd: [],
     noCommunityOpen: false,
     colonelOpen: false,
+    inited: undefined,
   };
 
   render() {
-    const { List, userInfo, MsList } = this.props;
+    const { List, userInfo, MsList, title, mspTime } = this.props;
     const {
       current,
       openSku,
@@ -314,9 +402,13 @@ class Index extends Component<IProps, {}> {
       addmyappTip,
       countdown,
       msTime,
+      msText,
+      mstItem,
       indexAd,
       noCommunityOpen,
       colonelOpen,
+      inited,
+      countdownPlan,
     }: any = this.state;
 
     const tabList = cateTopList.map(ele => {
@@ -374,8 +466,8 @@ class Index extends Component<IProps, {}> {
           </AtModalContent>
           <AtModalAction>
             <Button onClick={this.onCloseOpen}>关闭</Button>
-            <Button type="primary" onClick={this.makeCall.bind(this, userInfo.colonelInfo.mobile)}>
-              呼叫小区长
+            <Button onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}>
+              切换附近小区
             </Button>
           </AtModalAction>
         </AtModal>
@@ -386,37 +478,65 @@ class Index extends Component<IProps, {}> {
         {!addmyappTip && (
           <View className="addmyapp">
             <View className="arr" />
-            好邻居添加到「我的小程序」
+            添加到我的小程序，抢购更方便
           </View>
         )}
 
         <View className="index-top">
-          <View
-            className="community-wrap"
-            onClick={this.nextTab.bind(this, '/pages/neighbor/index')}
-          >
-            <Image src={communityImg} />
-            {userInfo && userInfo.uid ? userInfo.name : '绑定小区享低价'}
-            <Text className="erduufont ed-back go" />
-          </View>
-          {userInfo.colonelId && addmyappTip && (
-            <View className="help" onClick={this.openColonel}>
-              <View className="ava-wrap">
-                <Image className="image" mode="scaleToFill" src={userInfo.colonelInfo.avatarUrl} />
+          {userInfo.colonelId ? (
+            <View className="colonel-div" onClick={this.openColonel}>
+              <View className="colonel-wrap">
+                <View className="badge">小区长</View>
+                <View className="colonel">
+                  <AtAvatar circle size="normal" image={userInfo.colonelInfo.avatarUrl} />
+                </View>
               </View>
-              <View className="text-wrap">小区长</View>
+              <View className="colonel-info">
+                <View className="name ddd">{userInfo.colonelInfo.nickName}</View>
+                <View className="p ddd">{userInfo.name}</View>
+                {userInfo.colonelInfo.house && (
+                  <View className="p ddd">提货位置:{userInfo.colonelInfo.house}</View>
+                )}
+              </View>
             </View>
+          ) : (
+            <View className="colonel-div" />
           )}
-        </View>
-        <View className="search-wrap">
-          <AtSearchBar value="" onChange={this.handNull} />
-          <View className="search-mask" onClick={this.nextPage.bind(this, '/pages/index/search')} />
+          <View className="search-wrap">
+            <AtSearchBar value="" onChange={this.handNull} />
+            <View
+              className="search-mask"
+              onClick={this.nextPage.bind(this, '/pages/index/search')}
+            />
+            {title ? (
+              <View className="timedown">
+                <Text className="b">{title}</Text>·距结束
+                <View className="td-wrap">
+                  <AtCountdown
+                    format={{ day: '天', hours: ':', minutes: ':', seconds: '' }}
+                    isShowDay={countdownPlan.isShowDay}
+                    day={countdownPlan.day}
+                    hours={countdownPlan.time[0]}
+                    minutes={countdownPlan.time[1]}
+                    seconds={countdownPlan.time[2]}
+                    onTimeUp={this.onTimeUpPlan.bind(this)}
+                  />
+                </View>
+              </View>
+            ) : null}
+          </View>
         </View>
 
-        {!tabList.length && !List[`cate0`] ? (
-          <AtButton className="center" type="primary" onClick={this.componentDidMount}>
-            重新加载
-          </AtButton>
+        {inited !== undefined && !tabList.length && !List[`cate0`] ? (
+          <View>
+            <View className="center" style={{ top: '30%' }}>
+              本期团购已结束
+              <View className="p">开团时间00:00 ~ 23:00</View>
+            </View>
+            <AtButton className="center" type="primary" onClick={this.componentDidMount}>
+              重新加载
+            </AtButton>
+          </View>
         ) : null}
 
         <AtTabs
@@ -429,38 +549,58 @@ class Index extends Component<IProps, {}> {
         >
           {tabList.map((_, i) => (
             <AtTabsPane key={i} current={current} index={i}>
-              {current === 0 && indexAd && (
-                <View className="index-ad" onClick={this.viewGoods}>
-                  <Image
-                    lazyLoad
-                    mode="widthFix"
-                    className="img"
-                    src={indexAd.image_url + '@!900X383'}
-                  />
+              {current === 0 && indexAd.length && (
+                <View className="index-ad">
+                  <Swiper className="swiper" indicatorDots indicatorActiveColor="#f1836f" autoplay>
+                    {indexAd.map((ele, i) => (
+                      <SwiperItem key={i} onClick={this.viewGoods.bind(this, ele)}>
+                        <Image mode="widthFix" className="img" src={ele.image_url + '@!900X383'} />
+                      </SwiperItem>
+                    ))}
+                  </Swiper>
                 </View>
               )}
               {current === 0 && MsList && MsList.length && (
                 <View className="ms-wrap">
                   <View className="ms-top">
-                    <Text className="type-tag erduufont ed-ms" />
-                    <View className="ms-cd">
-                      {this.newDate(msTime) >
-                      this.newDate(new Date().toLocaleString('zh', { hour12: false })) ? (
-                        <View className="ms-text">
-                          <View className="ms-cd-item">仅剩</View>
-                          <AtCountdown
-                            format={{ day: '天', hours: ':', minutes: ':', seconds: '' }}
-                            isShowDay={countdown.isShowDay}
-                            day={countdown.day}
-                            hours={countdown.time[0]}
-                            minutes={countdown.time[1]}
-                            seconds={countdown.time[2]}
-                            onTimeUp={this.onTimeUp.bind(this)}
-                          />
+                    <View className="flex-item">
+                      <Text className="type-tag erduufont ed-ms" />
+                      <View className="ms-cd">
+                        {msTime ? (
+                          <View className="ms-text">
+                            <View className="ms-cd-item">{msText}</View>
+                            <AtCountdown
+                              format={{ day: '天', hours: ':', minutes: ':', seconds: '' }}
+                              isShowDay={countdown.isShowDay}
+                              day={countdown.day}
+                              hours={countdown.time[0]}
+                              minutes={countdown.time[1]}
+                              seconds={countdown.time[2]}
+                              onTimeUp={this.onTimeUp.bind(this, msTime)}
+                            />
+                          </View>
+                        ) : (
+                          <View className="ms-cd-item">已结束</View>
+                        )}
+                      </View>
+                    </View>
+                    <View className="time-area">
+                      {mspTime.map((ele, i) => (
+                        <View className={mstItem.i == i ? 'time-item active' : 'time-item'}>
+                          {ele.start}
+                          {!mstItem ? (
+                            <View className="p">已结束</View>
+                          ) : (
+                            <View className="p">
+                              {mstItem.i > i
+                                ? '已结束'
+                                : mstItem.i == i && !mstItem.before
+                                ? '抢购中'
+                                : '即将开始'}
+                            </View>
+                          )}
                         </View>
-                      ) : (
-                        <View className="ms-cd-item">已结束</View>
-                      )}
+                      ))}
                     </View>
                   </View>
                   <ScrollView scrollX={true}>
