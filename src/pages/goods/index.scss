@@ -52,7 +52,7 @@
         bottom: 0;
         height: 160px;
         border-radius: 20px 20px 0 0;
-        background: #fff;
+        background: #fefefe;
         width: 100%;
         font-size: 24px;
         font-weight: 300;
@@ -60,6 +60,7 @@
         z-index: 3;
         text-align: center;
         padding-top: 20px;
+        box-shadow:0 0 30px 10px #ddd;
         @include fj();
         .share-item {
             flex: 1;

@@ -207,7 +207,7 @@ class Goods extends Component<IProps, {}> {
     if (res.errno === 401) Taro.eventCenter.trigger('login', true);
   };
 
-  lookBig = (img, no) => {
+  lookBig = (img, no?) => {
     const bigImg = no ? img : img + '@!q90';
     Taro.previewImage({
       current: bigImg,
@@ -223,14 +223,6 @@ class Goods extends Component<IProps, {}> {
     this.setState({
       shareStart: true,
     });
-    // Taro.showLoading({
-    //   title: '分享图生成中',
-    // });
-
-    const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.$router.params.id}&userId=${
-      this.props.userInfo.id
-    }&page=pages/goods/index&width=280px`;
-    this.setState({ goodsShare: goodsShare(this.props.userInfo, this.props.Detail.info, ewm) });
   };
 
   onOpenSetting() {
@@ -240,8 +232,17 @@ class Goods extends Component<IProps, {}> {
   }
 
   async saveImage() {
-    if (!this.state.shareImage) return;
-
+    this.setState({
+      shareImgStart: true,
+    });
+    if (!this.state.shareImage) {
+      const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.$router.params.id}&userId=${
+        this.props.userInfo.id
+      }&page=pages/goods/index&width=280px`;
+      this.setState({ goodsShare: goodsShare(this.props.userInfo, this.props.Detail.info, ewm) });
+      return;
+    }
+    // if (!this.state.shareImage) return;
     try {
       const res = await Taro.saveImageToPhotosAlbum({
         filePath: this.state.shareImage || '',
@@ -265,14 +266,22 @@ class Goods extends Component<IProps, {}> {
     }
   }
 
+  async shareFriend(bigImg) {
+    await Taro.previewImage({
+      current: bigImg,
+      urls: [bigImg],
+    });
+  }
+
   closeShare() {
     this.setState({
       shareStart: false,
+      shareImgStart: false,
     });
   }
 
   eventGetImage(event) {
-    console.log(event);
+    console.log(event, 'eventGetImage(event) {eventGetImage(event) {');
     const { tempFilePath, errMsg } = event.detail;
     Taro.hideLoading();
     if (errMsg === 'canvasdrawer:ok') {
@@ -301,6 +310,7 @@ class Goods extends Component<IProps, {}> {
     goodsShare: {},
     shareImage: null,
     shareStart: false,
+    shareImgStart: false,
     checkSave: true,
   };
 
@@ -312,6 +322,7 @@ class Goods extends Component<IProps, {}> {
       goodsShare,
       shareImage,
       shareStart,
+      shareImgStart,
       checkSave,
       goodsNumber,
       disabled,
@@ -350,7 +361,7 @@ class Goods extends Component<IProps, {}> {
       <View className="goods-page">
         <Login show={false} onChange={this.loginSuccess} />
 
-        {shareStart && (
+        {shareImgStart && (
           <View>
             <View className="curtain" onClick={this.closeShare} />
             {shareImage ? (
@@ -369,18 +380,35 @@ class Goods extends Component<IProps, {}> {
                 color="#fff"
               />
             )}
+          </View>
+        )}
+
+        {shareStart && (
+          <View>
             <Form reportSubmit onSubmit={this.getFormId}>
               <View className="share-bottom">
-                <Button
-                  className="share-item"
-                  plain={true}
-                  open-type="share"
-                  formType="submit"
-                  onClick={this.closeShare}
-                >
-                  <Text className="erduufont ed-weixin" />
-                  分享群或好友
-                </Button>
+                {!shareImgStart ? (
+                  <Button
+                    className="share-item"
+                    plain={true}
+                    open-type="share"
+                    formType="submit"
+                    onClick={this.closeShare}
+                  >
+                    <Text className="erduufont ed-weixin" />
+                    分享群或好友
+                  </Button>
+                ) : (
+                  <Button
+                    className="share-item"
+                    plain={true}
+                    formType="submit"
+                    onClick={this.lookBig.bind(this, shareImage)}
+                  >
+                    <Text className="erduufont ed-weixin" />
+                    点击出现大图，长按分享群或好友
+                  </Button>
+                )}
                 {checkSave ? (
                   <Button
                     className="share-item"
@@ -389,7 +417,7 @@ class Goods extends Component<IProps, {}> {
                     onClick={this.saveImage}
                   >
                     <Text className="erduufont ed-xiazai" />
-                    保存图片分享
+                    {shareImage ? '保存图片' : '生成图片分享'}
                   </Button>
                 ) : (
                   <View className="share-item">
@@ -413,12 +441,10 @@ class Goods extends Component<IProps, {}> {
           </View>
         )}
         <canvasdrawer painting={goodsShare} ongetImage={this.eventGetImage} />
-        <Form reportSubmit onSubmit={this.getFormId}>
-          <Button className="share-btn plain" plain formType="submit" onClick={this.shareBtn}>
-            <Text className="erduufont ed-share" />
-            分享
-          </Button>
-        </Form>
+        <Button className="share-btn plain" plain onClick={this.shareBtn}>
+          <Text className="erduufont ed-share" />
+          分享
+        </Button>
 
         <View className="swiper-wrap">
           {info.goods_type > 1 ? (

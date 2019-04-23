@@ -88,9 +88,7 @@ class Index extends Component<IProps, {}> {
         addmyappTip: true,
       });
     }, 5 * 1000);
-    // Taro.showShareMenu({
-    //   withShareTicket: true,
-    // });
+    Taro.showShareMenu();
     console.log(this.$router.params, 'this.$router.params- -- componentDidMount');
     this.props
       .dispatch({
