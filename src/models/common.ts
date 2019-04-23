@@ -91,8 +91,9 @@ export default {
             userInfo,
           },
         });
+        return res.data;
       }
-      return res && res.errno === 0;
+      return false;
     },
     *BindPhone({ payload }, { call, put, select }) {
       // const { wxLoginCode } = yield select(state => state.common);

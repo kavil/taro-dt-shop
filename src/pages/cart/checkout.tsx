@@ -299,7 +299,7 @@ class CheckOut extends Component<IProps, {}> {
                     <AtInput
                       placeholder="我的详细楼栋、门牌号"
                       name="house"
-                      disabled={this.props.userInfo.house}
+                      disabled={!!this.props.userInfo.house}
                       value={house}
                       onChange={this.inputHouse}
                     />
@@ -425,24 +425,26 @@ class CheckOut extends Component<IProps, {}> {
               <Text className="erduufont ed-back go" />
             </View>
           </View>
-          <View className="item">
-            <View className="label">
-              积分
-              <View className="span">
-                共<Text className="b">{totalScore}</Text>积分，100积分抵扣1元，
-                {totalScore < 100 ? '满100积分可用' : `可抵扣${(totalScore / 100).toFixed(1)}元`}
+          {!userInfo.isColonel && (
+            <View className="item">
+              <View className="label">
+                积分
+                <View className="span">
+                  共<Text className="b">{totalScore}</Text>积分，100积分抵扣1元，
+                  {totalScore < 100 ? '满100积分可用' : `可抵扣${(totalScore / 100).toFixed(1)}元`}
+                </View>
+              </View>
+              <View className="value">
+                <Switch
+                  color="#f39b8b"
+                  disabled={totalScore < 100}
+                  checked={score}
+                  onClick={this.scoreClick}
+                  onChange={this.setScore}
+                />
               </View>
             </View>
-            <View className="value">
-              <Switch
-                color="#f39b8b"
-                disabled={totalScore < 100}
-                checked={score}
-                onClick={this.scoreClick}
-                onChange={this.setScore}
-              />
-            </View>
-          </View>
+          )}
         </View>
         <View className="block-wrap">
           <View className="item">
@@ -457,10 +459,12 @@ class CheckOut extends Component<IProps, {}> {
             <View className="label">红包</View>
             <View className="value red">- {couponPrice.toFixed(1)}</View>
           </View>
-          <View className="item">
-            <View className="label">积分</View>
-            <View className="value red">- {scoreToPrice.toFixed(1)}</View>
-          </View>
+          {!userInfo.isColonel && (
+            <View className="item">
+              <View className="label">积分</View>
+              <View className="value red">- {scoreToPrice.toFixed(1)}</View>
+            </View>
+          )}
         </View>
 
         <View className="bottom">

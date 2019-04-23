@@ -79,10 +79,10 @@ class Index extends Component<IProps, {}> {
       Taro.redirectTo({ url: '/pages/login/index' });
       return;
     }
-    if (!this.props.userInfo.colonelId) {
-      Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
-      return;
-    }
+    // if (!this.props.userInfo.colonelId) {
+    //   Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
+    //   return;
+    // }
     setTimeout(() => {
       this.setState({
         addmyappTip: true,
@@ -121,13 +121,15 @@ class Index extends Component<IProps, {}> {
       cateImgList[ele.id] = ele.banner_url;
     });
 
-    if (this.props.endTime)
-      this.setState({
-        countdownPlan: Countdown(this.props.endTime),
-      });
-
+    if (this.props.endTime) {
+      setTimeout(() => {
+        this.setState({
+          countdownPlan: Countdown(this.props.endTime),
+        });
+      }, 1000);
+    }
     this.setState({ cateTopList, cateImgList });
-    await this.msFunction();
+    this.msFunction();
     const cate = this.props.cateList[0];
     if (!cate) {
       this.setState({ inited: false });

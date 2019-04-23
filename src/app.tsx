@@ -97,9 +97,13 @@ class App extends Component {
 
   async componentDidMount() {
     if (Taro.getStorageSync('token')) {
-      store.dispatch({
+      const userInfo = await store.dispatch({
         type: 'common/UserInfo',
       });
+      if (!(userInfo && userInfo.colonelId)) {
+        Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
+        return;
+      }
       store.dispatch({
         type: 'cart/Index',
       });
