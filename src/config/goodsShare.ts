@@ -20,9 +20,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
     },
     {
       type: 'text',
-      content: `会员再打${((goods.sku[0].vip_price / goods.sku[0].retail_price) * 10).toFixed(
-        1
-      )}折`,
+      content: `会员仅${goods.sku[0].vip_price.toFixed(1)}元`,
       fontSize: 13,
       color: '#f1836f',
       textAlign: 'left',
@@ -52,7 +50,8 @@ export const goodsShare = (userInfo, goods, ewm) => {
   let views = [
     {
       type: 'image',
-      url: 'https://img.kavil.com.cn/images/nba/2019352254323tJDnHdQ.jpg',
+      // url: 'https://img.kavil.com.cn/images/nba/2019352254323tJDnHdQ.jpg',
+      url: 'https://img.kavil.com.cn/images/nba/2019423179308DD6DWAS.jpg',
       top: 0,
       left: 0,
       width: 375,
@@ -165,7 +164,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
   }
 
   console.log('goodsShare');
-  
+
   return {
     width: 375,
     height: 621,

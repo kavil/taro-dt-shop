@@ -25,8 +25,10 @@ export const orderSubmit = data => Request({ url: '/order/submit', method: 'POST
 export const prepay = data => Request({ url: '/pay/prepay', method: 'GET', data });
 
 export const nearbyList = data => Request({ url: '/community/nearbyList', method: 'GET', data });
+export const idsList = data => Request({ url: '/community/idsList', method: 'POST', data });
 export const communitySearch = data => Request({ url: '/community/search', method: 'GET', data });
 export const communityBind = data => Request({ url: '/community/bind', method: 'POST', data });
+export const communityBindId = data => Request({ url: '/community/bindId', method: 'POST', data });
 
 export const orderList = data => Request({ url: '/order', method: 'GET', data });
 export const orderCancel = data => Request({ url: '/order/cancel', method: 'POST', data });

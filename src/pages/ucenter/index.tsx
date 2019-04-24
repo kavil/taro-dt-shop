@@ -209,13 +209,29 @@ class Ucenter extends Component<IProps, {}> {
           </View> */}
           </View>
 
-          {userInfo.isColonel && (
+          {userInfo.isColonel ? (
             <View>
               <View className="divsion" />
               <View className="ul">
                 <AtList>
                   <Button className="li plain" formType="submit" plain onClick={this.nextMini}>
                     <AtListItem arrow="right" title="管理我的小区" />
+                  </Button>
+                </AtList>
+              </View>
+            </View>
+          ) : (
+            <View>
+              <View className="divsion" />
+              <View className="ul">
+                <AtList>
+                  <Button
+                    className="li plain"
+                    formType="submit"
+                    plain
+                    onClick={this.nextPage.bind(this, '/pages/neighbor/search')}
+                  >
+                    <AtListItem arrow="right" title="切换小区" />
                   </Button>
                 </AtList>
               </View>

@@ -159,10 +159,10 @@ class CheckOut extends Component<IProps, {}> {
       tip('请选择地址');
       return;
     }
-    if (!myAddress && !house) {
-      tip('请填写详细楼栋、门牌号');
-      return;
-    }
+    // if (!myAddress && !house) {
+    //   tip('请填写详细楼栋、门牌号');
+    //   return;
+    // }
     const payload = {
       couponId,
       score,
@@ -294,7 +294,7 @@ class CheckOut extends Component<IProps, {}> {
               <View className="community-wrap">
                 <Image src={communityImg} />
                 {userInfo.name}
-                {userInfo.colonelId && userInfo.communityId && (
+                {/* {userInfo.colonelId && userInfo.communityId && (
                   <View className="input-wrap">
                     <AtInput
                       placeholder="我的详细楼栋、门牌号"
@@ -304,7 +304,7 @@ class CheckOut extends Component<IProps, {}> {
                       onChange={this.inputHouse}
                     />
                   </View>
-                )}
+                )} */}
               </View>
             ) : (
               <View className="select-addr">

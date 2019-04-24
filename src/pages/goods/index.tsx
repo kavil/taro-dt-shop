@@ -17,6 +17,7 @@ import { AtActivityIndicator, AtSteps, AtCountdown, AtButton } from 'taro-ui';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
 import Login from '../../components/login/loginComponent';
+import ChangeCommunity from '../../components/changeCommunity/changeCommunity';
 import { tip, Countdown, getTime } from '../../utils/tool';
 const qulity1 = 'https://img.kavil.com.cn/3991547959471_.pic.jpg';
 const qulity2 = 'https://img.kavil.com.cn/4011547959487_.pic.jpg';
@@ -40,10 +41,11 @@ interface PageStateProps {
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
-@connect(({ goods, cart, common }) => ({
+@connect(({ goods, cart, common, neighbor }) => ({
   ...goods,
   ...cart,
   ...common,
+  ...neighbor,
 }))
 class Goods extends Component<IProps, {}> {
   config: Config = {
@@ -53,31 +55,32 @@ class Goods extends Component<IProps, {}> {
   };
 
   async componentDidShow() {
-    if (this.$router.params.scene) {
-      const sceneTmp = decodeURIComponent(this.$router.params.scene);
-      const scene: any = {};
+    let { id, communityId, scene } = this.$router.params;
+    this.setState({ communityId });
+    if (scene) {
+      const sceneTmp = decodeURIComponent(scene);
+      const _scene: any = {};
       sceneTmp.split('&').forEach(ele => {
         const res = ele.split('=');
-        scene[res[0]] = res[1];
+        _scene[res[0]] = res[1];
       });
-      console.log(scene, 'thasdfter.scene');
-      this.$router.params.id = scene.id;
+      console.log(_scene, 'thasdfter._scene');
+      id = _scene.id;
     }
 
-    Taro.showShareMenu({
-      withShareTicket: true,
+    Taro.showShareMenu();
+    this.props.dispatch({
+      type: 'cart/Index',
     });
     await this.props.dispatch({
       type: 'goods/Detail',
       payload: {
-        id: this.$router.params.id,
+        id: id,
       },
     });
     this.timeSe();
-    await this.props.dispatch({
-      type: 'cart/Index',
-    });
   }
+
   timeSe() {
     const Info = this.props.Detail.info;
 
@@ -108,8 +111,6 @@ class Goods extends Component<IProps, {}> {
     });
 
     if (getTime() < getTime(Info.start_time)) {
-      console.log(1, getTime(), getTime(Info.start_time), getTime() < getTime(Info.start_time));
-
       const countdown = Countdown(Info.start_time);
       this.setState({
         countdown,
@@ -117,20 +118,19 @@ class Goods extends Component<IProps, {}> {
       return;
     }
     if (getTime() < getTime(Info.over_time)) {
-      console.log(2, getTime(), getTime(Info.over_time), getTime() < getTime(Info.over_time));
-
       const countdown = Countdown(Info.over_time);
       this.setState({
         countdown,
       });
       return;
     }
-    console.log(3);
   }
   onShareAppMessage() {
     return {
       title: this.props.Detail.info.goods_name,
-      // path: `/pages/goods/index?id=${this.$router.params.id}`,
+      path: `/pages/goods/index?id=${this.$router.params.id}&communityId=${
+        this.props.userInfo.communityId
+      }`,
     };
   }
   componentWillUnmount() {
@@ -221,7 +221,7 @@ class Goods extends Component<IProps, {}> {
 
   shareBtn = async () => {
     this.setState({
-      shareStart: true,
+      shareStart: !this.state.shareStart,
     });
   };
 
@@ -360,6 +360,8 @@ class Goods extends Component<IProps, {}> {
     return (
       <View className="goods-page">
         <Login show={false} onChange={this.loginSuccess} />
+
+        <ChangeCommunity show={false} />
 
         {shareImgStart && (
           <View>
@@ -519,9 +521,7 @@ class Goods extends Component<IProps, {}> {
             <View className="vip">
               ￥{info.sku[0].retail_price.toFixed(1)}
               {info.sku[0].vip_price !== info.sku[0].retail_price && (
-                <View className="label">
-                  会员再打{((info.sku[0].vip_price / info.sku[0].retail_price) * 10).toFixed(1)}折
-                </View>
+                <View className="label">会员仅{info.sku[0].vip_price.toFixed(1)}元</View>
               )}
             </View>
           </View>
@@ -645,6 +645,7 @@ class Goods extends Component<IProps, {}> {
               onClick={this.nextTab.bind(this, '/pages/index/index')}
             >
               <Text className="erduufont ed-zhuye1" />
+              <View className="bottom-text">首页</View>
             </Button>
             <Button
               formType="submit"
@@ -654,6 +655,7 @@ class Goods extends Component<IProps, {}> {
             >
               <View className="badge">{cartTotal.checkedGoodsCount || 0}</View>
               <Text className="erduufont ed-gouwuche" />
+              <View className="bottom-text">去结算</View>
             </Button>
             <View className="add-cart">
               <AtButton

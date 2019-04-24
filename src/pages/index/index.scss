@@ -248,7 +248,7 @@
 
     .colonel-div {
         @include fj(start);
-        max-width: 60%;
+        max-width: 54%;
 
         .colonel-info {
 
@@ -302,6 +302,27 @@
             font-size: 24px;
             color: $font-default;
             @include ddd;
+        }
+    }
+    .share-btn {
+        position: fixed;
+        top: 780px;
+        right: 20px;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, .7);
+        width: 110px;
+        height: 110px;
+        line-height: 110px;
+        padding: 8px;
+        text-align: center;
+        color: #fff;
+        line-height: 1.1;
+        font-size: 22px;
+        z-index: 1;
+        .ed-share {
+            color: #fff;
+            font-size: 50px;
+            display: block;
         }
     }
 }

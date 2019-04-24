@@ -1,7 +1,7 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Image, Text, ScrollView, Button, Swiper, SwiperItem } from '@tarojs/components';
+import { View, Image, Text, ScrollView, Button, Swiper, SwiperItem, Form } from '@tarojs/components';
 import {
   AtSearchBar,
   AtTabs,
@@ -19,6 +19,7 @@ import {
 import Login from '../../components/login/loginComponent';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
+import ChangeCommunity from '../../components/changeCommunity/changeCommunity';
 import './index.scss';
 import { tip, Countdown, getTime } from '../../utils/tool';
 // #region 书写注意
@@ -39,6 +40,7 @@ interface PageDva {
   MsList: any;
   userInfo: any;
   mspTime: any;
+  formIdArr: any[];
 }
 
 interface PageOwnProps {
@@ -74,6 +76,15 @@ class Index extends Component<IProps, {}> {
     // backgroundTextStyle: 'dark',
   };
 
+  onShareAppMessage() {
+    const { userInfo } = this.props;
+    console.log(`/pages/index/index?communityId=${userInfo.communityId}`);
+
+    return {
+      title: `寻味知途·${userInfo.name}今日开团链接`,
+      path: `/pages/index/index?communityId=${userInfo.communityId}`,
+    };
+  }
   async componentDidMount() {
     if (!Taro.getStorageSync('token')) {
       Taro.redirectTo({ url: '/pages/login/index' });
@@ -371,6 +382,18 @@ class Index extends Component<IProps, {}> {
   viewGoods = ele => {
     if (ele.linkto) this.nextPage('/pages/goods/index?id=' + ele.linkto);
   };
+  getFormId = e => {
+    const formId = e.detail.formId;
+    const formIdArr = [...this.props.formIdArr];
+    formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
+    console.log(formIdArr, '<---------------------formIdArr');
+    this.props.dispatch({
+      type: 'common/save',
+      payload: {
+        formIdArr,
+      },
+    });
+  };
 
   state = {
     current: 0,
@@ -472,6 +495,9 @@ class Index extends Component<IProps, {}> {
           </AtModalAction>
         </AtModal>
         <Login show={false} onChange={this.loginSuccess} />
+
+        <ChangeCommunity show={false} />
+
         <AtCurtain isOpened={curtainOpened} onClose={this.onCloseCurtain.bind(this)}>
           {curtainPng && <Image className="curtain-img" src={curtainPng + '@!640X800'} />}
         </AtCurtain>
@@ -480,6 +506,15 @@ class Index extends Component<IProps, {}> {
             <View className="arr" />
             添加到我的小程序，抢购更方便
           </View>
+        )}
+
+        {userInfo.isColonel && tabList.length && (
+          <Form reportSubmit onSubmit={this.getFormId}>
+            <Button className="share-btn plain" formType="submit" open-type="share" plain>
+              <Text className="erduufont ed-share" />
+              分享今日团购链接
+            </Button>
+          </Form>
         )}
 
         <View className="index-top">
@@ -586,7 +621,7 @@ class Index extends Component<IProps, {}> {
                     </View>
                     <View className="time-area">
                       {mspTime.map((ele, i) => (
-                        <View className={mstItem.i == i ? 'time-item active' : 'time-item'}>
+                        <View key={i} className={mstItem.i == i ? 'time-item active' : 'time-item'}>
                           {ele.start}
                           {!mstItem ? (
                             <View className="p">已结束</View>

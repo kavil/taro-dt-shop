@@ -48,9 +48,7 @@ export default class purchased extends Component<IProps, {}> {
       },
     });
     this.setState({ Detail, selled, orderId });
-    Taro.showShareMenu({
-      withShareTicket: true,
-    });
+    Taro.showShareMenu();
   }
   componentWillUnmount() {}
 
@@ -119,16 +117,13 @@ export default class purchased extends Component<IProps, {}> {
 
   onShareAppMessage() {
     let { Detail }: any = this.state;
-    console.log(
-      `/pages/goods/index?id=${Detail.orderGoods[0].goods_id}&userId=${this.props.userInfo.id}`
-    );
 
     return {
       title: `@${this.props.userInfo.colonelInfo.nickName}，我是「${
         this.props.userInfo.nickName
       }」，刚刚下单请小区长确认下订单哦`,
-      path: `/pages/goods/index?id=${Detail.orderGoods[0].goods_id}&userId=${
-        this.props.userInfo.id
+      path: `/pages/goods/index?id=${Detail.orderGoods[0].goods_id}&communityId=${
+        this.props.userInfo.communityId
       }`,
     };
   }

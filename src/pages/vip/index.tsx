@@ -33,9 +33,7 @@ class Vip extends Component<IProps, {}> {
   };
 
   async componentDidMount() {
-    Taro.showShareMenu({
-      withShareTicket: true,
-    });
+    Taro.showShareMenu();
     const vipSave = await this.props.dispatch({
       type: 'ucenter/VipSave',
     });

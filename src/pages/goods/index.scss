@@ -270,12 +270,15 @@
         .cart-wrap {
             position: relative;
             text-align: center;
-            line-height: 100px;
-            width: 100px;
+            width: 120px;
+            margin-top: 6px;
             border-right: 1PX solid $border;
             .erduufont {
                 color: $font-default;
             }
+        }
+        .bottom-text{
+            font-size: 22px;
         }
         .cart-wrap {
             border: 0;
@@ -344,8 +347,8 @@
 .badge {
     position: absolute;
     line-height: 1.1;
-    top: 3px;
-    right: 3px;
+    top: -2px;
+    right: 8px;
     padding: 3px 8px;
     font-size: 20px;
     color: #fff;

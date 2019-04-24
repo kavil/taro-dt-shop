@@ -116,45 +116,38 @@ class GoodsItem extends Component<IProps, {}> {
 
     return (
       <View className={className}>
-        <Form reportSubmit onSubmit={this.getFormId}>
-          <Button plain={true} formType="submit" className="img-wrap plain" onClick={this.nextPage}>
-            {goods.goods_type === 1 && <Text className="type-tag erduufont ed-crd" />}
-            {/* {goods.goods_type === 2 && <Text className="type-tag erduufont ed-ms" />} */}
-            {goods.goods_type === 3 && <Text className="type-tag erduufont ed-ys" />}
-            <Image lazyLoad className="img" src={goods.primary_pic_url + '@!200X200'} />
-          </Button>
-        </Form>
+        {/* <Form reportSubmit onSubmit={this.getFormId}> */}
+        <Button plain={true} className="img-wrap plain" onClick={this.nextPage}>
+          {goods.goods_type === 1 && <Text className="type-tag erduufont ed-crd" />}
+          {/* {goods.goods_type === 2 && <Text className="type-tag erduufont ed-ms" />} */}
+          {goods.goods_type === 3 && <Text className="type-tag erduufont ed-ys" />}
+          <Image lazyLoad className="img" src={goods.primary_pic_url + '@!200X200'} />
+        </Button>
+        {/* </Form> */}
         <View className="right-wrap">
-          <Form reportSubmit onSubmit={this.getFormId}>
-            <Button plain={true} formType="submit" className="title plain" onClick={this.nextPage}>
-              {goods.goods_name}
-            </Button>
-            <Button plain={true} formType="submit" className="desc plain" onClick={this.nextPage}>
-              {goods.goods_brief}
-            </Button>
-            <Button
-              plain={true}
-              formType="submit"
-              className="sale-wrap plain"
-              onClick={this.nextPage}
-            >
-              <View
-                className="sale-slide"
-                style={{ width: (goodsNumber / (goods.sell_volume + goodsNumber)) * 100 + '%' }}
-              />
-              仅剩{goodsNumber}
-              {goods.goods_unit}
-            </Button>
-          </Form>
+          {/* <Form reportSubmit onSubmit={this.getFormId}> */}
+          <Button plain={true} className="title plain" onClick={this.nextPage}>
+            {goods.goods_name}
+          </Button>
+          <Button plain={true} className="desc plain" onClick={this.nextPage}>
+            {goods.goods_brief}
+          </Button>
+          <Button plain={true} className="sale-wrap plain" onClick={this.nextPage}>
+            <View
+              className="sale-slide"
+              style={{ width: (goodsNumber / (goods.sell_volume + goodsNumber)) * 100 + '%' }}
+            />
+            仅剩{goodsNumber}
+            {goods.goods_unit}
+          </Button>
+          {/* </Form> */}
           <View className="shopping-wrap">
             <View className="price" onClick={this.nextPage}>
               <View className="retail">小区价</View>
               <View className="vip">
                 ￥{retail_price.toFixed(1)}
                 {vip_price !== retail_price && (
-                  <View className="label">
-                    会员再打{((vip_price / retail_price) * 10).toFixed(1)}折
-                  </View>
+                  <View className="label">会员仅{vip_price.toFixed(1)}元</View>
                 )}
               </View>
               {type !== 'mini' && <View className="counter">￥{counter_price.toFixed(1)}</View>}

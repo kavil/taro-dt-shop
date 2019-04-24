@@ -19,6 +19,13 @@ export default {
         });
       }
     },
+    *ids({ payload }, { call, put }) {
+      const res = yield call(Api.idsList, payload);
+      if (res.errno === 0) {
+        return res.data;
+      }
+      return [];
+    },
     *Search({ payload }, { call, put }) {
       yield put({
         type: 'save',
@@ -38,7 +45,11 @@ export default {
     },
     *Bind({ payload }, { call, put }) {
       const res = yield call(Api.communityBind, payload);
-      return res.errno === 0
+      return res.errno === 0;
+    },
+    *BindId({ payload }, { call, put }) {
+      const res = yield call(Api.communityBindId, payload);
+      return res.errno === 0;
     },
   },
 

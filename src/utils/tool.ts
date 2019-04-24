@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro';
 
 export function tip(title: string) {
-  Taro.showToast({
+  return Taro.showToast({
     title,
     icon: 'none',
     duration: 1500,

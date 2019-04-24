@@ -96,18 +96,58 @@ class App extends Component {
   };
 
   async componentDidMount() {
+    const up = Taro.getUpdateManager();
+
+    up.onUpdateReady(() => {
+      Taro.showModal({
+        title: '更新提示',
+        content: '检测到有新版本',
+        showCancel: false,
+        confirmText: '立即更新',
+        success: res => {
+          if (res.confirm) {
+            // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
+            up.applyUpdate();
+          }
+        },
+      });
+    });
     if (Taro.getStorageSync('token')) {
       const userInfo = await store.dispatch({
         type: 'common/UserInfo',
       });
-      if (!(userInfo && userInfo.colonelId)) {
-        Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
-        return;
+      const { communityId } = this.$router.params.query;
+
+      if (communityId) {
+        if (userInfo.communityId) {
+          // 之前有绑定，提出提示更换
+          if (userInfo.communityId != communityId) Taro.setStorageSync('changeCids', [userInfo.communityId, communityId].join(','));
+        } else {
+          // 没有绑定过小区的  自动绑定
+          await this.bindCommunity(communityId);
+        }
+      } else {
+        if (!(userInfo && userInfo.communityId)) {
+          Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
+          return;
+        }
       }
       store.dispatch({
         type: 'cart/Index',
       });
     }
+  }
+
+  async bindCommunity(communityId) {
+    await store.dispatch({
+      type: 'neighbor/BindId',
+      payload: {
+        id: communityId,
+      },
+    });
+    await store.dispatch({
+      type: 'common/UserInfo',
+    });
   }
 
   componentDidShow() {}
