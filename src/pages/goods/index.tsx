@@ -17,7 +17,7 @@ import { AtActivityIndicator, AtSteps, AtCountdown, AtButton } from 'taro-ui';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
 import Login from '../../components/login/loginComponent';
-import ChangeCommunity from '../../components/changeCommunity/changeCommunity';
+// import ChangeCommunity from '../../components/changeCommunity/changeCommunity';
 import { tip, Countdown, getTime } from '../../utils/tool';
 const qulity1 = 'https://img.kavil.com.cn/3991547959471_.pic.jpg';
 const qulity2 = 'https://img.kavil.com.cn/4011547959487_.pic.jpg';
@@ -66,6 +66,7 @@ class Goods extends Component<IProps, {}> {
       });
       console.log(_scene, 'thasdfter._scene');
       id = _scene.id;
+      communityId = _scene.communityId;
     }
 
     Taro.showShareMenu();
@@ -126,8 +127,9 @@ class Goods extends Component<IProps, {}> {
     }
   }
   onShareAppMessage() {
+    const now = new Date();
     return {
-      title: this.props.Detail.info.goods_name,
+      title: `【${now.getMonth() + 1}月${now.getDate()}日】 ${this.props.Detail.info.goods_name}`,
       path: `/pages/goods/index?id=${this.$router.params.id}&communityId=${
         this.props.userInfo.communityId
       }`,
@@ -236,8 +238,8 @@ class Goods extends Component<IProps, {}> {
       shareImgStart: true,
     });
     if (!this.state.shareImage) {
-      const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.$router.params.id}&userId=${
-        this.props.userInfo.id
+      const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.$router.params.id}&communityId=${
+        this.props.userInfo.communityId
       }&page=pages/goods/index&width=280px`;
       this.setState({ goodsShare: goodsShare(this.props.userInfo, this.props.Detail.info, ewm) });
       return;
@@ -361,7 +363,7 @@ class Goods extends Component<IProps, {}> {
       <View className="goods-page">
         <Login show={false} onChange={this.loginSuccess} />
 
-        <ChangeCommunity show={false} />
+        {/* <ChangeCommunity show={false} /> */}
 
         {shareImgStart && (
           <View>

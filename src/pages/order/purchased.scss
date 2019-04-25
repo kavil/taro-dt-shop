@@ -14,9 +14,9 @@
         text-align: left;
     }
     .text {
-        color: #aaa;
-        margin-top: 10rpx;
-        font-size: 24rpx
+        color: #999;
+        margin-top: 10px;
+        font-size: 24px
     }
     .op {
         @include fj(space-around);

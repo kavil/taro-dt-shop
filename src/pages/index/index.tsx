@@ -19,7 +19,7 @@ import {
 import Login from '../../components/login/loginComponent';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
-import ChangeCommunity from '../../components/changeCommunity/changeCommunity';
+// import ChangeCommunity from '../../components/changeCommunity/changeCommunity';
 import './index.scss';
 import { tip, Countdown, getTime } from '../../utils/tool';
 // #region 书写注意
@@ -81,7 +81,7 @@ class Index extends Component<IProps, {}> {
     console.log(`/pages/index/index?communityId=${userInfo.communityId}`);
 
     return {
-      title: `寻味知途·${userInfo.name}今日开团链接`,
+      title: `【${userInfo.name}】今日开团链接`,
       path: `/pages/index/index?communityId=${userInfo.communityId}`,
     };
   }
@@ -496,7 +496,7 @@ class Index extends Component<IProps, {}> {
         </AtModal>
         <Login show={false} onChange={this.loginSuccess} />
 
-        <ChangeCommunity show={false} />
+        {/* <ChangeCommunity show={false} /> */}
 
         <AtCurtain isOpened={curtainOpened} onClose={this.onCloseCurtain.bind(this)}>
           {curtainPng && <Image className="curtain-img" src={curtainPng + '@!640X800'} />}

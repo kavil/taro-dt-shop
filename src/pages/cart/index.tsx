@@ -243,7 +243,7 @@ class Cart extends Component<IProps, {}> {
                       <View className="vip">
                         ￥{(ele.retail_price * ele.number).toFixed(1)}
                         <View className="label">
-                          会员{((ele.vip_price / ele.retail_price) * 10).toFixed(1)}折
+                          会员仅{ele.vip_price.toFixed(1)}元
                         </View>
                       </View>
                     </View>

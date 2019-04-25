@@ -121,7 +121,7 @@ class App extends Component {
       if (communityId) {
         if (userInfo.communityId) {
           // 之前有绑定，提出提示更换
-          if (userInfo.communityId != communityId) Taro.setStorageSync('changeCids', [userInfo.communityId, communityId].join(','));
+          // if (userInfo.communityId != communityId) Taro.setStorageSync('changeCids', [userInfo.communityId, communityId].join(','));
         } else {
           // 没有绑定过小区的  自动绑定
           await this.bindCommunity(communityId);

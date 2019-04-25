@@ -184,16 +184,16 @@ export default class purchased extends Component<IProps, {}> {
 
             <View className="pad40">
               <AtButton type="primary" open-type="share">
-                点击提醒
+                点击提醒接单
               </AtButton>
 
-              <View className="text">点击转发到小区群，通知小区长及时查看处理订单</View>
+              <View className="text">点击转发到「寻味知途·团购小区群」通知小区长及时查看处理订单</View>
             </View>
             <View className="op">
-              <AtButton onClick={this.nextTab.bind(this, '/pages/ucenter/index', 'gotoOrder')}>
+              {/* <AtButton onClick={this.nextTab.bind(this, '/pages/ucenter/index', 'gotoOrder')}>
                 查看订单
-              </AtButton>
-              <AtButton onClick={this.nextTab.bind(this, '/pages/index/index')}>返回首页</AtButton>
+              </AtButton> */}
+              <AtButton onClick={this.nextTab.bind(this, '/pages/index/index')}>继续购物</AtButton>
             </View>
           </View>
         ) : (
