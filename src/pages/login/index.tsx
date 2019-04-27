@@ -73,10 +73,32 @@ class Login extends Component<IProps, {}> {
       if (this.props.userInfo && this.props.userInfo.communityId) {
         Taro.switchTab({ url: '/pages/index/index' });
       } else {
-        Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
+        const communityId = Taro.getStorageSync('communityId');
+        if (communityId) {
+          Taro.removeStorageSync('communityId');
+          // 没有绑定过小区的  自动绑定
+          await this.bindCommunity(communityId);
+          Taro.switchTab({ url: '/pages/index/index' });
+        } else {
+          Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
+          return;
+        }
       }
     }
   };
+
+  async bindCommunity(communityId) {
+    await this.props.dispatch({
+      type: 'neighbor/BindId',
+      payload: {
+        id: communityId,
+      },
+    });
+    await this.props.dispatch({
+      type: 'common/UserInfo',
+    });
+  }
+
   getFormId = e => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];

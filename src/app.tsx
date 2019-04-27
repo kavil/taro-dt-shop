@@ -112,21 +112,25 @@ class App extends Component {
         },
       });
     });
+
+    const { communityId } = this.$router.params.query;
+    if (communityId) Taro.setStorageSync('communityId', communityId);
+
     if (Taro.getStorageSync('token')) {
       const userInfo = await store.dispatch({
         type: 'common/UserInfo',
       });
-      const { communityId } = this.$router.params.query;
 
       if (communityId) {
         if (userInfo.communityId) {
-          // 之前有绑定，提出提示更换
+          // 之前如果有绑定，提出提示更换
           // if (userInfo.communityId != communityId) Taro.setStorageSync('changeCids', [userInfo.communityId, communityId].join(','));
         } else {
           // 没有绑定过小区的  自动绑定
           await this.bindCommunity(communityId);
         }
       } else {
+        // 如果是没带community的链接进来
         if (!(userInfo && userInfo.communityId)) {
           Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
           return;

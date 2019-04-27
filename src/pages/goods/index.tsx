@@ -154,9 +154,10 @@ class Goods extends Component<IProps, {}> {
     Taro.navigateTo({ url });
   };
   loginSuccess = async _ => {
-    await this.props.dispatch({
-      type: 'cart/Index',
-    });
+    // await this.props.dispatch({
+    //   type: 'cart/Index',
+    // });
+    this.addCartOk(this.props.Detail.info);
   };
 
   onChangeStep = () => {};

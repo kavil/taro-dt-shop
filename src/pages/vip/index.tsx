@@ -223,7 +223,7 @@ class Vip extends Component<IProps, {}> {
                 />
                 <View className="much">6个月</View>
                 <View className="money">
-                  ￥28 <Text className="del">￥48</Text>
+                  ￥24 <Text className="del">￥48</Text>
                 </View>
               </View>
             </View>

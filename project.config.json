@@ -32,7 +32,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 6,
+			"current": 4,
 			"list": [
 				{
 					"id": 0,
@@ -66,7 +66,7 @@
 					"id": 4,
 					"name": "goods",
 					"pathName": "pages/goods/index",
-					"query": "id=197&communityId=3",
+					"query": "id=197&communityId=100",
 					"scene": null
 				},
 				{

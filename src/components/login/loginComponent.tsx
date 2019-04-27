@@ -27,9 +27,10 @@ interface PageOwnProps {
 }
 
 type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
-@connect(({ common, loading, cart }) => ({
+@connect(({ common, loading, cart, neighbor }) => ({
   ...common,
   ...cart,
+  neighbor,
   userInfoLoading: loading.effects['common/getUserInfo'],
   loginLoading: loading.effects['common/login'],
 }))
@@ -78,8 +79,15 @@ class Login extends Component<IProps, {}> {
 
       if (this.props.userInfo && this.props.userInfo.communityId) {
       } else {
-        Taro.navigateTo({ url: '/pages/neighbor/search' });
-        return;
+        const communityId = Taro.getStorageSync('communityId');
+        if (communityId) {
+          Taro.removeStorageSync('communityId');
+          // 没有绑定过小区的  自动绑定
+          await this.bindCommunity(communityId);
+        } else {
+          Taro.navigateTo({ url: '/pages/neighbor/search' });
+          return;
+        }
       }
 
       await this.props.dispatch({
@@ -91,6 +99,20 @@ class Login extends Component<IProps, {}> {
       if (this.props.onChange) this.props.onChange(userInfo);
     }
   };
+
+
+  async bindCommunity(communityId) {
+    await this.props.dispatch({
+      type: 'neighbor/BindId',
+      payload: {
+        id: communityId,
+      },
+    });
+    await this.props.dispatch({
+      type: 'common/UserInfo',
+    });
+  }
+
   getFormId = e => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
