@@ -4,8 +4,8 @@ import { View, Text } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
 import './coupon.scss';
-import { AtTag } from 'taro-ui';
-import { tip } from '../../utils/tool';
+import { AtTag, AtButton } from 'taro-ui';
+import { tip, getTime } from '../../utils/tool';
 
 type PageState = {};
 interface PageDvaProps {
@@ -40,8 +40,8 @@ class Coupon extends Component<IProps, {}> {
   }
   useIt = async ele => {
     if (!this.$router.params.type) return;
-    const now = new Date().toLocaleString('zh', { hour12: false });
-    if (ele.info.use_start_date > now || ele.info.use_end_date < now) {
+    const now = getTime();
+    if (getTime(ele.info.use_start_date) > now || getTime(ele.info.use_end_date) < now) {
       tip('已过期');
       return;
     }
@@ -53,13 +53,25 @@ class Coupon extends Component<IProps, {}> {
     });
     Taro.navigateBack();
   };
+  unUse = async () => {
+    if (!this.$router.params.type) return;
+
+    await this.props.dispatch({
+      type: 'cart/save',
+      payload: {
+        couponId: 0,
+      },
+    });
+    Taro.navigateBack();
+  };
 
   render() {
     const { couponList } = this.props;
+    const type = this.$router.params.type;
     const classText = ele => {
-      const now = new Date().toLocaleString('zh', { hour12: false });
+      const now = getTime();
       let res = 'cli';
-      if (ele.use_start_date > now || ele.use_end_date < now) {
+      if (getTime(ele.use_start_date) > now || getTime(ele.use_end_date) < now) {
         res = 'cli disabled';
       }
       return res;
@@ -84,7 +96,7 @@ class Coupon extends Component<IProps, {}> {
                     <View className="name">{ele.info.name}</View>
                     {classText(ele.info) === 'cli disabled' && (
                       <AtTag active={true} size="small" circle>
-                        已过期
+                        {getTime(ele.info.use_start_date) > getTime() ? '还未开始' : '已过期'}
                       </AtTag>
                     )}
                   </View>
@@ -101,6 +113,14 @@ class Coupon extends Component<IProps, {}> {
             </View>
           )}
         </View>
+
+        {type && (
+          <View className="pad40">
+            <AtButton type="primary" onClick={this.unUse}>
+              不使用红包
+            </AtButton>
+          </View>
+        )}
       </View>
     );
   }

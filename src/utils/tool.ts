@@ -26,7 +26,22 @@ export function Countdown(over_time) {
 }
 
 export function getTime(time?) {
-  let date = new Date();
-  if (time) date = new Date(time.replace(/-/g, '/'));
+  let date;
+  if (time) {
+    date = new Date(time.replace(/-/g, '/'));
+  } else {
+    date = new Date();
+  }
+  return date.getTime();
+  // return date.toLocaleString('zh', { hour12: false });
+}
+
+export function getLocalTime(time?) {
+  let date;
+  if (time) {
+    date = new Date(time.replace(/-/g, '/'));
+  } else {
+    date = new Date();
+  }
   return date.toLocaleString('zh', { hour12: false });
 }

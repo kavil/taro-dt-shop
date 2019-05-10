@@ -59,13 +59,20 @@ class Login extends Component<IProps, {}> {
       });
       return;
     } else {
-      await this.props.dispatch({
+      const res = await this.props.dispatch({
         type: 'common/login',
         payload: {
           code,
           userInfo,
         },
       });
+      if (!res) {
+        Taro.showToast({
+          title: '登录失败，请重试',
+          icon: 'none',
+        });
+        return;
+      }
 
       this.props.dispatch({
         type: 'cart/Index',

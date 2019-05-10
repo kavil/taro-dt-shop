@@ -1,7 +1,11 @@
 @import "../../static/css/mixin";
-@import "../../static/css/vipbar";
 .cart-page {
     padding-bottom: 100px;
+    .replace{
+        background: $color-ex;
+        border: 1px solid $color-ex;
+        color: #999;
+    }
     &.bg {
         background: $bg-color-base;
     }

@@ -112,10 +112,15 @@ class GoodsItem extends Component<IProps, {}> {
       goodsNumber += ele.goods_number;
     });
     const { counter_price, retail_price, vip_price } = goods.sku[0];
-    const className = 'goods-li' + (type === 'mini' ? ' mini' : '');
+    const className = 'po goods-li' + (type === 'mini' ? ' mini' : '');
 
     return (
       <View className={className}>
+        {!goodsNumber && (
+          <View className="soldover">
+            <View className="erduufont ed-qiangguangliao" />
+          </View>
+        )}
         {/* <Form reportSubmit onSubmit={this.getFormId}> */}
         <Button plain={true} className="img-wrap plain" onClick={this.nextPage}>
           {goods.goods_type === 1 && <Text className="type-tag erduufont ed-crd" />}
@@ -137,20 +142,16 @@ class GoodsItem extends Component<IProps, {}> {
               className="sale-slide"
               style={{ width: (goodsNumber / (goods.sell_volume + goodsNumber)) * 100 + '%' }}
             />
-            仅剩{goodsNumber}
-            {goods.goods_unit}
+            {!!goodsNumber ? `仅剩${goodsNumber}${goods.goods_unit}` : '已售罄'}
           </Button>
           {/* </Form> */}
           <View className="shopping-wrap">
             <View className="price" onClick={this.nextPage}>
-              <View className="retail">小区价</View>
+              <View className="retail">团购价</View>
               <View className="vip">
                 ￥{retail_price.toFixed(1)}
-                {vip_price !== retail_price && (
-                  <View className="label">会员仅{vip_price.toFixed(1)}元</View>
-                )}
+                {type !== 'mini' && <Text className="counter">￥{counter_price.toFixed(1)}</Text>}
               </View>
-              {type !== 'mini' && <View className="counter">￥{counter_price.toFixed(1)}</View>}
             </View>
             <View className="shopping">
               {numberStatus ? (

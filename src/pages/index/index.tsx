@@ -21,7 +21,7 @@ import GoodsItem from '../../components/goods/goodsComponent';
 import Sku from '../../components/sku/skuComponent';
 // import ChangeCommunity from '../../components/changeCommunity/changeCommunity';
 import './index.scss';
-import { tip, Countdown, getTime } from '../../utils/tool';
+import { tip, Countdown, getTime, getLocalTime } from '../../utils/tool';
 // #region 书写注意
 //
 // 目前 typescript 版本还无法在装饰器模式下将 Props 注入到 Taro.Component 中的 props 属性
@@ -111,7 +111,7 @@ class Index extends Component<IProps, {}> {
           indexAd: adRes.filter(ele => ele.ad_position_id === 1),
         });
         const curtainRes = adRes.find(ele => ele.ad_position_id === 3);
-        if (Taro.getStorageSync('index-curtain') !== curtainRes.image_url) {
+        if (curtainRes && Taro.getStorageSync('index-curtain') !== curtainRes.image_url) {
           this.setState({ curtainRes, curtainOpened: true, curtainPng: curtainRes.image_url });
         }
       });
@@ -179,10 +179,10 @@ class Index extends Component<IProps, {}> {
         getTime() < getTime(this.nowPre() + this.props.mspTime[this.props.mspTime.length - 1].end)
       ) {
         if (mstItem.before) {
-          msTime = getTime(nowPre);
+          msTime = getLocalTime(nowPre);
         } else {
           msText = '距结束';
-          msTime = getTime(this.nowPre() + ele.end);
+          msTime = getLocalTime(this.nowPre() + ele.end);
         }
         this.setState({
           countdown: Countdown(msTime),

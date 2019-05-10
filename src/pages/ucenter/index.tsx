@@ -42,10 +42,6 @@ class Ucenter extends Component<IProps, {}> {
     if (this.$router.params.to) {
       await this.nextPage('/pages/' + this.$router.params.to + '/index');
     }
-    const vipSave = await this.props.dispatch({
-      type: 'ucenter/VipSave',
-    });
-    this.setState({ vipSave });
   }
 
   async onPullDownRefresh() {
@@ -102,12 +98,10 @@ class Ucenter extends Component<IProps, {}> {
     });
   };
   state = {
-    vipSave: 0,
   };
 
   render() {
     const { userInfo } = this.props;
-    const { vipSave } = this.state;
     return (
       <View className="ucenter-page">
         <Login show={false} onChange={this.loginSuccess} />
@@ -137,34 +131,6 @@ class Ucenter extends Component<IProps, {}> {
           </View>
         )}
         <Form reportSubmit onSubmit={this.getFormId}>
-          {userInfo.id && (
-            <Button
-              plain
-              formType="submit"
-              className="plain"
-              onClick={this.nextPage.bind(this, '/pages/vip/index')}
-            >
-              <View className="vip-bar">
-                <View className="left">
-                  {userInfo.level === 0 ? (
-                    <View className="tag">开通会员</View>
-                  ) : (
-                    <View className="tag">您已开通会员</View>
-                  )}
-                  {vipSave && (
-                    <Text className="text">
-                      已为您省了
-                      <Text style={{ color: '#f5735b' }}>{vipSave.toFixed(1)}</Text>元
-                    </Text>
-                  )}
-                </View>
-                <Text className="right">
-                  {userInfo.level === 0 ? '立即开通' : '续费'}
-                  <Text className="erduufont ed-back go" />
-                </Text>
-              </View>
-            </Button>
-          )}
           <View className="divsion" />
           <View className="operate-wrap">
             <Button

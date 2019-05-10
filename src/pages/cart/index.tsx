@@ -165,35 +165,6 @@ class Cart extends Component<IProps, {}> {
         </AtModal>
 
         <Form reportSubmit onSubmit={this.getFormId}>
-          {userInfo.id && (
-            <Button plain formType="submit" className="plain" onClick={this.nextPage.bind(this, '/pages/vip/index')}>
-              <View className="vip-bar">
-                <View className="left">
-                  {userInfo.level === 0 ? (
-                    <View className="tag">开通会员</View>
-                  ) : (
-                    <View className="tag">您已开通会员</View>
-                  )}
-                  {cartTotal && cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount > 0 && (
-                    <Text className="text">
-                      会员立省
-                      <Text style={{ color: '#f5735b' }}>
-                        {(cartTotal.checkedGoodsAmount - cartTotal.checkedGoodsVipAmount).toFixed(
-                          1
-                        )}
-                      </Text>
-                      元
-                    </Text>
-                  )}
-                </View>
-                <Text className="right">
-                  {userInfo.level === 0 ? '立即开通' : '续费'}
-                  <Text className="erduufont ed-back go" />
-                </Text>
-              </View>
-            </Button>
-          )}
-
           {cartList && cartList.length ? null : (
             <View className="nodata">
               <Text className="erduufont ed-zanwushangpin" />
@@ -237,27 +208,12 @@ class Cart extends Component<IProps, {}> {
                 <View className="b">{ele.goods_name}</View>
                 <View className="p">{ele.specifition_names}</View>
                 <View className="price-wrap">
-                  {userInfo.level === 0 ? (
-                    <View className="price">
-                      <View className="retail">小区价</View>
-                      <View className="vip">
-                        ￥{(ele.retail_price * ele.number).toFixed(1)}
-                        <View className="label">
-                          会员仅{ele.vip_price.toFixed(1)}元
-                        </View>
-                      </View>
+                  <View className="price">
+                    <View className="retail">团购价</View>
+                    <View className="vip">
+                      ￥{(ele.retail_price * ele.number).toFixed(1)}
                     </View>
-                  ) : (
-                    <View className="price">
-                      <View className="retail">会员价</View>
-                      <View className="vip">
-                        ￥{(ele.vip_price * ele.number).toFixed(1)}
-                        <View className="label">
-                          省{((ele.retail_price - ele.vip_price) * ele.number).toFixed(1)}元
-                        </View>
-                      </View>
-                    </View>
-                  )}
+                  </View>
                 </View>
                 <View className="input-number">
                   <AtInputNumber
@@ -285,7 +241,6 @@ class Cart extends Component<IProps, {}> {
                 onChange={this.handleCheckAll}
               />
             </View>
-            {userInfo.level === 0 ? (
               <View className="cart-wrap">
                 合计
                 <Text className="main-color">
@@ -295,30 +250,12 @@ class Cart extends Component<IProps, {}> {
                   <Text className="info-color">免配送费</Text>
                 ) : null}
               </View>
-            ) : (
-              <View className="cart-wrap">
-                合计
-                <Text className="main-color">
-                  ￥
-                  {cartTotal && cartTotal.checkedGoodsVipAmount
-                    ? cartTotal.checkedGoodsVipAmount.toFixed(1)
-                    : 0}
-                </Text>
-                {cartTotal.checkedGoodsVipAmount >= 39 ? (
-                  <Text className="info-color">免配送费</Text>
-                ) : null}
-              </View>
-            )}
             <View className="add-cart">
               <Form reportSubmit onSubmit={this.getFormId}>
                 <AtButton
                   type="primary"
                   formType="submit"
-                  disabled={
-                    userInfo.level === 0
-                      ? cartTotal.checkedGoodsAmount === 0
-                      : cartTotal.checkedGoodsVipAmount === 0
-                  }
+                  disabled={cartTotal.checkedGoodsAmount === 0}
                   onClick={this.nextPage.bind(this, '/pages/cart/checkout', 'noCheckout')}
                 >
                   去结算

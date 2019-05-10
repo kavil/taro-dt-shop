@@ -32,7 +32,6 @@ class App extends Component {
       'pages/index/index',
       'pages/login/index',
       'pages/colonelApply/index',
-      'pages/vip/index',
       'pages/index/search',
       'pages/ucenter/index',
       'pages/ucenter/coupon',

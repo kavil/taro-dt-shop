@@ -1,33 +1,6 @@
 // 输出share config
 
 export const goodsShare = (userInfo, goods, ewm) => {
-  const vip: any = [
-    {
-      type: 'rect',
-      background: '#f1836f',
-      top: 474,
-      left: 132,
-      width: 93,
-      height: 18,
-    },
-    {
-      type: 'rect',
-      background: '#fff',
-      top: 475,
-      left: 133,
-      width: 91,
-      height: 16,
-    },
-    {
-      type: 'text',
-      content: `会员仅${goods.sku[0].vip_price.toFixed(1)}元`,
-      fontSize: 13,
-      color: '#f1836f',
-      textAlign: 'left',
-      top: 476,
-      left: 135,
-    },
-  ];
   const user: any = [
     {
       type: 'image',
@@ -156,9 +129,6 @@ export const goodsShare = (userInfo, goods, ewm) => {
     },
   ];
 
-  if (goods.sku[0].vip_price !== goods.sku[0].retail_price) {
-    views = views.concat(vip);
-  }
   if (userInfo.id) {
     views = views.concat(user);
   }

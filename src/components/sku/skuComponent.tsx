@@ -158,15 +158,10 @@ class Sku extends Component<IProps, {}> {
                 {goods.goods_unit}
               </Text>
               <View className="price">
-                <View className="retail">小区价</View>
+                <View className="retail">团购价</View>
                 <View className="vip">
                   ￥{getSkuResult.retail_price}
                   <View className="counter">￥{getSkuResult.counter_price}</View>
-                  {getSkuResult.vip_price !== getSkuResult.retail_price && (
-                    <View className="label">
-                      会员{((getSkuResult.vip_price / getSkuResult.retail_price) * 10).toFixed(1)}折
-                    </View>
-                  )}
                 </View>
               </View>
             </View>

@@ -53,9 +53,10 @@ class CheckOut extends Component<IProps, {}> {
     });
     this.setState({
       ...res,
+      couponList: res.couponList,
     });
     this.setState({
-      house: this.props.userInfo.house,
+      postscript: this.props.userInfo.postscript,
     });
     if (!this.props.userInfo.mobile) {
       setTimeout(() => {
@@ -142,14 +143,14 @@ class CheckOut extends Component<IProps, {}> {
       myAddress: res,
     });
   };
-  inputHouse = async house => {
-    console.log(house);
-    this.setState({ house });
+  inputPostscript = async postscript => {
+    console.log(postscript);
+    this.setState({ postscript });
   };
 
-  submitOrder = async () => {
+  submitOrder = async isReplace => {
     const { userInfo, dispatch, couponId } = this.props;
-    const { myAddress, score, house } = this.state;
+    const { myAddress, score, postscript } = this.state;
     if (!userInfo.uid) {
       tip('请先绑定小区');
       return;
@@ -159,14 +160,17 @@ class CheckOut extends Component<IProps, {}> {
       tip('请选择地址');
       return;
     }
-    // if (!myAddress && !house) {
-    //   tip('请填写详细楼栋、门牌号');
-    //   return;
-    // }
+    console.log(isReplace);
+
+    if (isReplace && !postscript) {
+      tip('请填写代客下单信息');
+      return;
+    }
+    this.close();
     const payload = {
       couponId,
       score,
-      house,
+      postscript,
     };
     if (myAddress) {
       Object.assign(payload, myAddress);
@@ -217,6 +221,13 @@ class CheckOut extends Component<IProps, {}> {
     });
   };
 
+  replaceOrder = () => {
+    this.setState({ openModalRep: true });
+  };
+  close = () => {
+    this.setState({ openModalRep: false });
+  };
+
   getFormId = e => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
@@ -245,7 +256,8 @@ class CheckOut extends Component<IProps, {}> {
 
     myAddress: null,
     openModal: false,
-    house: '',
+    openModalRep: false,
+    postscript: '',
     addrSet: false,
   };
 
@@ -256,6 +268,7 @@ class CheckOut extends Component<IProps, {}> {
       checkedGoodsList,
       myAddress,
       openModal,
+      openModalRep,
       actualPrice,
       goodsTotalPrice,
       freightPrice,
@@ -263,13 +276,15 @@ class CheckOut extends Component<IProps, {}> {
       scoreToPrice,
       totalScore,
       couponList,
-      house,
+      postscript,
       addrSet,
     }: any = this.state;
 
     const cgl1 = checkedGoodsList.filter(ele => ele.goods_type !== 3);
     const cgl2 = checkedGoodsList.filter(ele => ele.goods_type === 3);
     const couponInfo = couponList.find(ele => ele.id === couponId);
+    console.log(couponInfo);
+
     return (
       <View className="cart-page bg">
         {userInfo.colonelId && (
@@ -421,7 +436,9 @@ class CheckOut extends Component<IProps, {}> {
           >
             <View className="label">红包</View>
             <View className="value">
-              {couponInfo ? couponInfo.name : '无可用红包'}
+              {couponList.find(ele => ele.id === couponId)
+                ? couponList.find(ele => ele.id === couponId).name
+                : '无可用红包'}
               <Text className="erduufont ed-back go" />
             </View>
           </View>
@@ -472,9 +489,21 @@ class CheckOut extends Component<IProps, {}> {
             <Text className="big">￥{actualPrice.toFixed(1)}</Text>
           </View>
 
+          {userInfo.isColonel && (
+            <View className="add-cart">
+              <AtButton type="primary" className="replace" onClick={this.replaceOrder}>
+                代客下单
+              </AtButton>
+            </View>
+          )}
+
           <View className="add-cart">
             <Form reportSubmit onSubmit={this.getFormId}>
-              <AtButton type="primary" formType="submit" onClick={this.submitOrder}>
+              <AtButton
+                type="primary"
+                formType="submit"
+                onClick={this.submitOrder.bind(this, null)}
+              >
                 提交订单
               </AtButton>
             </Form>
@@ -494,6 +523,26 @@ class CheckOut extends Component<IProps, {}> {
               type="primary"
             >
               确定
+            </Button>
+          </AtModalAction>
+        </AtModal>
+        <AtModal isOpened={openModalRep} closeOnClickOverlay={true} onClose={this.close}>
+          <AtModalHeader>请备注客户信息</AtModalHeader>
+          <AtModalContent>
+            <View className="input-wrap">
+              <AtInput
+                placeholder="客户称呼或手机号"
+                name="postscript"
+                disabled={!!this.props.userInfo.postscript}
+                value={postscript}
+                onChange={this.inputPostscript}
+              />
+            </View>
+          </AtModalContent>
+          <AtModalAction>
+            <Button onClick={this.close}>取消</Button>
+            <Button type="primary" onClick={this.submitOrder.bind(this, 'replace')}>
+              确定代客下单
             </Button>
           </AtModalAction>
         </AtModal>

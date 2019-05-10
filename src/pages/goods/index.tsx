@@ -97,6 +97,8 @@ class Goods extends Component<IProps, {}> {
     if (goodsNumber === 0) {
       disabled = '已售罄';
     }
+    console.log(getTime(Info.over_time), getTime(), getTime(Info.over_time) > getTime());
+
     if (Info.goods_type !== 1) {
       if (getTime(Info.start_time) > getTime()) {
         disabled = '马上开始 ' + Info.start_time.split(' ')[1];
@@ -458,6 +460,11 @@ class Goods extends Component<IProps, {}> {
               <View className="ribbon-text">{info.goods_type === 2 ? '秒杀' : '预售'}</View>
             </View>
           ) : null}
+          {!goodsNumber && (
+            <View className="soldover">
+              <View className="erduufont ed-qiangguangliao" />
+            </View>
+          )}
           <Swiper className="swiper" indicatorDots indicatorActiveColor="#f1836f" autoplay>
             {imgList.map((ele, i) => (
               <SwiperItem key={i}>
@@ -517,15 +524,10 @@ class Goods extends Component<IProps, {}> {
         ) : null}
         <View className="price-wrap">
           <View className="price">
-            <View className="retail">
-              小区价
-              <View className="counter">￥{info.sku[0].counter_price.toFixed(1)}</View>
-            </View>
+            <View className="retail">团购价</View>
             <View className="vip">
               ￥{info.sku[0].retail_price.toFixed(1)}
-              {info.sku[0].vip_price !== info.sku[0].retail_price && (
-                <View className="label">会员仅{info.sku[0].vip_price.toFixed(1)}元</View>
-              )}
+              <View className="counter">￥{info.sku[0].counter_price.toFixed(1)}</View>
             </View>
           </View>
           {selledUsers && selledUsers.data.length ? (
@@ -545,40 +547,9 @@ class Goods extends Component<IProps, {}> {
               className="sale-slide"
               style={{ width: (goodsNumber / (info.sell_volume + goodsNumber)) * 100 + '%' }}
             />
-            仅剩{goodsNumber}
-            {info.goods_unit}
+            {!!goodsNumber ? `仅剩${goodsNumber}${info.goods_unit}` : '已售罄'}
           </View>
-          <Form reportSubmit onSubmit={this.getFormId}>
-            <Button
-              plain
-              formType="submit"
-              className="plain"
-              onClick={this.nextPage.bind(this, '/pages/vip/index')}
-            >
-              <View className="vip-bar">
-                <View className="left">
-                  {userInfo && userInfo.level !== 0 ? (
-                    <View className="tag">您已开通会员</View>
-                  ) : (
-                    <View className="tag">开通会员</View>
-                  )}
-                  {info.sku[0].retail_price !== info.sku[0].vip_price && (
-                    <Text className="text">
-                      会员立省
-                      <Text style={{ color: '#f5735b' }}>
-                        {(info.sku[0].retail_price - info.sku[0].vip_price).toFixed(1)}
-                      </Text>
-                      元
-                    </Text>
-                  )}
-                </View>
-                <Text className="right">
-                  {userInfo && userInfo.level !== 0 ? '续费' : '立即开通'}
-                  <Text className="erduufont ed-back go" />
-                </Text>
-              </View>
-            </Button>
-          </Form>
+
           {info.goods_type === 3 ? (
             <AtSteps
               className="steps"
@@ -619,11 +590,7 @@ class Goods extends Component<IProps, {}> {
           <View className="p">
             <Text className="b">未划线价格：</Text>
             指商品的实时标价, 不因表述的差异改变性质。
-            具体成交价格更具商品参加活动,或会员使用优惠券、积分等发生变化最终以订单结算页价格为准.
-          </View>
-          <View className="p">
-            <Text className="b">会员价格：</Text>
-            指在商品的实时标价上进行打折, 不因表述的差异改变性质。仅针对平台会员。
+            具体成交价格更具商品参加活动,或使用优惠券、积分等发生变化最终以订单结算页价格为准.
           </View>
           <View className="h3">工商资质</View>
           <View className="qulity-wrap">
