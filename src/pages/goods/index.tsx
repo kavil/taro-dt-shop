@@ -56,7 +56,6 @@ class Goods extends Component<IProps, {}> {
 
   async componentDidShow() {
     let { id, communityId, scene } = this.$router.params;
-    this.setState({ communityId });
     if (scene) {
       const sceneTmp = decodeURIComponent(scene);
       const _scene: any = {};
@@ -68,6 +67,7 @@ class Goods extends Component<IProps, {}> {
       id = _scene.id;
       communityId = _scene.communityId;
     }
+    this.setState({ id, communityId });
 
     Taro.showShareMenu();
     this.props.dispatch({
@@ -130,11 +130,11 @@ class Goods extends Component<IProps, {}> {
   }
   onShareAppMessage() {
     const now = new Date();
+    console.log(this.state.id, 'this.state.id');
+
     return {
       title: `【${now.getMonth() + 1}月${now.getDate()}日】 ${this.props.Detail.info.goods_name}`,
-      path: `/pages/goods/index?id=${this.$router.params.id}&communityId=${
-        this.props.userInfo.communityId
-      }`,
+      path: `/pages/goods/index?id=${this.state.id}&communityId=${this.props.userInfo.communityId}`,
     };
   }
   componentWillUnmount() {
@@ -146,7 +146,7 @@ class Goods extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'goods/Detail',
       payload: {
-        id: this.$router.params.id,
+        id: this.state.id,
       },
     });
     this.timeSe();
@@ -241,7 +241,7 @@ class Goods extends Component<IProps, {}> {
       shareImgStart: true,
     });
     if (!this.state.shareImage) {
-      const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.$router.params.id}&communityId=${
+      const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&communityId=${
         this.props.userInfo.communityId
       }&page=pages/goods/index&width=280px`;
       this.setState({ goodsShare: goodsShare(this.props.userInfo, this.props.Detail.info, ewm) });
@@ -317,6 +317,7 @@ class Goods extends Component<IProps, {}> {
     shareStart: false,
     shareImgStart: false,
     checkSave: true,
+    id: null,
   };
 
   render() {
