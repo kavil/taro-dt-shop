@@ -159,7 +159,7 @@ export default class purchased extends Component<IProps, {}> {
             <View className="long">
               <View className="info">刚刚购买用户</View>
               {selledMore.map((ele, i) => (
-                <View key={i} className="long-li">
+                <View key={ele.id} className="long-li">
                   {selled.count - i}、
                   <View className="img-wrap">
                     <Image className="img" src={ele.userInfo.avatarUrl} />

@@ -43,5 +43,8 @@ export const getUser = data => Request({ url: '/colonel/getUser', method: 'GET',
 // common
 export const formId = data => Request({ url: '/user/formId', method: 'POST', data });
 
+export const deliverCommunity = data => Request({ url: '/order/community', method: 'GET', data });
+export const deliverSetline = data => Request({ url: '/deliver/setline', method: 'GET', data });
+
 // 模板自动生成占位 勿删
 

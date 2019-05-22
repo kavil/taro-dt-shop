@@ -5,6 +5,7 @@ import ucenterModel from './ucenterModel';
 import orderModel from './orderModel';
 import scoreModel from './scoreModel';
 import colonelApplyModel from './colonelApplyModel';
+import deliverModel from './deliverModel';
 import common from './common';
 
 export default [
@@ -15,5 +16,6 @@ export default [
   orderModel,
   ucenterModel,
   colonelApplyModel,
+  deliverModel,
   common,
 ]

@@ -81,7 +81,7 @@ class Coupon extends Component<IProps, {}> {
         <View className="coupon-ul">
           {couponList && couponList.length ? (
             couponList.map((ele, i) => (
-              <View key={i} className={classText(ele.info)} onClick={this.useIt.bind(this, ele)}>
+              <View key={ele.id} className={classText(ele.info)} onClick={this.useIt.bind(this, ele)}>
                 <View className="cicle l" />
                 <View className="cicle r" />
                 <View className="top">

@@ -30,6 +30,7 @@ class App extends Component {
   config: Config = {
     pages: [
       'pages/index/index',
+      'pages/deliver/index',
       'pages/login/index',
       'pages/colonelApply/index',
       'pages/index/search',

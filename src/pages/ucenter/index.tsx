@@ -97,8 +97,7 @@ class Ucenter extends Component<IProps, {}> {
       },
     });
   };
-  state = {
-  };
+  state = {};
 
   render() {
     const { userInfo } = this.props;
@@ -180,10 +179,21 @@ class Ucenter extends Component<IProps, {}> {
               <View className="divsion" />
               <View className="ul">
                 <AtList>
-                  <Button className="li plain" formType="submit" plain onClick={this.nextMini}>
+                  <Button className="li plain" plain onClick={this.nextMini}>
                     <AtListItem arrow="right" title="管理我的小区" />
                   </Button>
                 </AtList>
+                {userInfo.roleId < 3 && (
+                  <AtList>
+                    <Button
+                      className="li plain"
+                      plain
+                      onClick={this.nextPage.bind(this, '/pages/deliver/index')}
+                    >
+                      <AtListItem arrow="right" title="配送路线" />
+                    </Button>
+                  </AtList>
+                )}
               </View>
             </View>
           ) : (

@@ -1,0 +1,24 @@
+
+@import "../../static/css/mixin";
+
+.deliver-page {
+    .label{
+        font-size: 26px;
+        padding: 10px;
+        @include fj;
+        align-items: center;
+    }
+    .at-modal__container{
+        width: 94% !important;
+    }
+    .bts{
+        @include fj;
+        padding: 40px;
+        .bt{
+            flex: 1;
+        }
+    }
+    .map-op{
+        padding: 0 20px;
+    }
+}
