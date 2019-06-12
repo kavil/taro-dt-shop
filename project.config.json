@@ -32,7 +32,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 8,
+			"current": 11,
 			"list": [
 				{
 					"id": 0,
@@ -66,7 +66,7 @@
 					"id": 4,
 					"name": "goods",
 					"pathName": "pages/goods/index",
-					"query": "id=144&communityId=100",
+					"query": "id=303&c=100&n=6/7&p=1",
 					"scene": null
 				},
 				{
@@ -85,15 +85,37 @@
 				},
 				{
 					"id": -1,
-					"name": "goods",
-					"pathName": "pages/cart/checkout",
+					"name": "配送",
+					"pathName": "pages/deliver/index",
 					"query": "",
 					"scene": null
 				},
 				{
 					"id": -1,
-					"name": "配送",
-					"pathName": "pages/deliver/index",
+					"name": "个人中心",
+					"pathName": "pages/ucenter/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "card",
+					"pathName": "pages/ucenter/card",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": 10,
+					"name": "shop",
+					"pathName": "pages/shop/index",
+					"query": "id=2",
+					"scene": null
+				},
+				{
+					"id": 11,
+					"name": "product",
+					"pathName": "pages/shop/product",
+					"query": "id=1",
 					"scene": null
 				}
 			]

@@ -98,6 +98,14 @@ export default {
       }
       return null;
     },
+    *OrderSubmitShop({ payload }, { call, select }) {
+      const { cityId } = yield select(state => state.common);
+      const res = yield call(Api.orderSubmitShop, { ...payload, cityId });
+      if (res && res.errno === 0) {
+        return res.data;
+      }
+      return res;
+    },
     *Prepay({ payload }, { call }) {
       const res = yield call(Api.prepay, payload);
       if (res && res.errno === 0) {

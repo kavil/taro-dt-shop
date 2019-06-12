@@ -2,10 +2,21 @@ import Taro, { Component } from '@tarojs/taro';
 import { ComponentClass } from 'react';
 import { View, Image, Text, Form, Button } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
-import { AtList, AtListItem, AtTag, AtButton } from 'taro-ui';
+import {
+  AtList,
+  AtListItem,
+  AtTag,
+  AtButton,
+  AtModal,
+  AtModalHeader,
+  AtModalContent,
+  AtModalAction,
+  AtAvatar,
+} from 'taro-ui';
 import Login from '../../components/login/loginComponent';
 import './index.scss';
 import { tip } from '../../utils/tool';
+import Product from '../../components/product/productComponent';
 
 type PageState = {};
 interface PageDvaProps {
@@ -19,12 +30,14 @@ interface PageStateProps {
   // 自己要用的
   userInfo: any;
   formIdArr: any[];
+  accountInfo: any;
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
-@connect(({ ucenter, common }) => ({
+@connect(({ ucenter, common, account }) => ({
   ...common,
   ...ucenter,
+  ...account,
 }))
 class Ucenter extends Component<IProps, {}> {
   config = {
@@ -36,12 +49,19 @@ class Ucenter extends Component<IProps, {}> {
       Taro.setStorageSync('gotoOrder', '');
       this.nextPage('/pages/order/index');
     }
+    if (Taro.getStorageSync('gotoCard')) {
+      Taro.setStorageSync('gotoCard', '');
+      this.nextPage('/pages/ucenter/card');
+    }
   }
 
   async componentDidMount() {
     if (this.$router.params.to) {
       await this.nextPage('/pages/' + this.$router.params.to + '/index');
     }
+    await this.props.dispatch({
+      type: 'account/load',
+    });
   }
 
   async onPullDownRefresh() {
@@ -97,10 +117,66 @@ class Ucenter extends Component<IProps, {}> {
       },
     });
   };
-  state = {};
+
+  scanCode = async () => {
+    const res: any = await Taro.scanCode({
+      onlyFromCamera: true,
+    });
+    console.log(res);
+    if (res.errMsg !== 'scanCode:ok') {
+      tip('无效二维码');
+      return;
+    }
+    const cardInfo = await this.props.dispatch({
+      type: 'ucenter/CardCheckOut',
+      payload: {
+        checkcode: res.result,
+      },
+    });
+    this.setState({
+      cardInfo,
+      checkcode: res.result,
+      open: true,
+    });
+  };
+
+  cancel() {
+    this.setState({
+      open: false,
+    });
+  }
+
+  sure = async () => {
+    const res = await this.props.dispatch({
+      type: 'ucenter/CardcheckIt',
+      payload: {
+        checkcode: this.state.checkcode,
+      },
+    });
+    console.log(res, 'hhhhhhhres');
+    this.setState({
+      open: false,
+    });
+    if (res) {
+      await Taro.showModal({
+        title: '提示',
+        content: '核销成功',
+        showCancel: false,
+      });
+    }
+  };
+
+  state = {
+    open: false,
+    checkcode: null,
+    cardInfo: null,
+  };
 
   render() {
-    const { userInfo } = this.props;
+    const { userInfo, accountInfo } = this.props;
+
+    const { open, cardInfo }: any = this.state;
+
     return (
       <View className="ucenter-page">
         <Login show={false} onChange={this.loginSuccess} />
@@ -120,6 +196,11 @@ class Ucenter extends Component<IProps, {}> {
                   <AtTag active={true} size="small" circle>
                     小区长
                   </AtTag>
+                )}{' '}
+                {userInfo.cshopId && (
+                  <AtTag active={true} size="small" circle>
+                    门店管理员
+                  </AtTag>
                 )}
               </View>
               <View className="p">{userInfo.mobile || ''}</View>
@@ -131,6 +212,7 @@ class Ucenter extends Component<IProps, {}> {
         )}
         <Form reportSubmit onSubmit={this.getFormId}>
           <View className="divsion" />
+          <View className="h4">我自己的订单</View>
           <View className="operate-wrap">
             <Button
               className="li plain"
@@ -174,6 +256,42 @@ class Ucenter extends Component<IProps, {}> {
           </View> */}
           </View>
 
+          {userInfo.cshopId && (
+            <View>
+              <View className="divsion" />
+              <View className="h4">管理我的门店</View>
+              <View className="operate-wrap">
+                <Button className="li plain" plain onClick={this.scanCode}>
+                  <Text className="erduufont ed-saoyisao" />
+                  扫码核销
+                </Button>
+                <Button
+                  className="li plain"
+                  plain
+                  onClick={this.nextPage.bind(this, '/pages/ucenter/checkRecord')}
+                >
+                  <Text className="erduufont ed-dingdan" />
+                  核销列表
+                </Button>
+                <Button
+                  className="li plain"
+                  plain
+                  onClick={this.nextPage.bind(this, '/pages/shop/index?id=' + userInfo.cshopId)}
+                >
+                  <Text className="erduufont ed-dianpu" />
+                  查看门店
+                </Button>
+                <Button
+                  className="li plain"
+                  plain
+                  onClick={this.nextPage.bind(this, '/pages/ucenter/shopUser')}
+                >
+                  <Text className="erduufont ed-chengyuan" />
+                  成员管理
+                </Button>
+              </View>
+            </View>
+          )}
           {userInfo.isColonel ? (
             <View>
               <View className="divsion" />
@@ -183,7 +301,13 @@ class Ucenter extends Component<IProps, {}> {
                     <AtListItem arrow="right" title="管理我的小区" />
                   </Button>
                 </AtList>
-                {userInfo.roleId < 3 && (
+              </View>
+            </View>
+          ) : (
+            <View>
+              <View className="divsion" />
+              <View className="ul">
+                {userInfo.roleId >= 0 && (
                   <AtList>
                     <Button
                       className="li plain"
@@ -194,12 +318,6 @@ class Ucenter extends Component<IProps, {}> {
                     </Button>
                   </AtList>
                 )}
-              </View>
-            </View>
-          ) : (
-            <View>
-              <View className="divsion" />
-              <View className="ul">
                 <AtList>
                   <Button
                     className="li plain"
@@ -220,6 +338,19 @@ class Ucenter extends Component<IProps, {}> {
                 className="li plain"
                 formType="submit"
                 plain
+                onClick={this.nextPage.bind(this, '/pages/account/index')}
+              >
+                <AtListItem
+                  className="em"
+                  arrow="right"
+                  extraText={'￥' + (accountInfo ? accountInfo.totalMoney || 0 : 0) + '元'}
+                  title="我的余额"
+                />
+              </Button>
+              <Button
+                className="li plain"
+                formType="submit"
+                plain
                 onClick={this.nextPage.bind(this, '/pages/ucenter/coupon')}
               >
                 <AtListItem arrow="right" title="我的红包" />
@@ -231,6 +362,14 @@ class Ucenter extends Component<IProps, {}> {
                 onClick={this.nextPage.bind(this, '/pages/ucenter/score')}
               >
                 <AtListItem arrow="right" title="我的积分" />
+              </Button>
+              <Button
+                className="li plain"
+                formType="submit"
+                plain
+                onClick={this.nextPage.bind(this, '/pages/ucenter/card')}
+              >
+                <AtListItem arrow="right" title="我的卡券" />
               </Button>
             </AtList>
           </View>
@@ -249,6 +388,14 @@ class Ucenter extends Component<IProps, {}> {
               <Button className="li plain" formType="submit" plain onClick={this.callme}>
                 <AtListItem arrow="right" title="供应商联系" />
               </Button>
+              <Button
+                className="li plain"
+                formType="submit"
+                plain
+                onClick={this.nextPage.bind(this, '/pages/pickup/index')}
+              >
+                <AtListItem arrow="right" title="商铺门店入驻" />
+              </Button>
             </AtList>
           </View>
           <View className="contact-wrap">
@@ -260,6 +407,33 @@ class Ucenter extends Component<IProps, {}> {
             </View>
           </View>
         </Form>
+
+        <AtModal isOpened={open}>
+          <AtModalHeader>{cardInfo.used_time ? '该二维码已被核销' : '确认核销？'}</AtModalHeader>
+          <AtModalContent>
+            <View>
+              <View className="colonel-wrap">
+                <View className="colonel">
+                  <AtAvatar circle size="small" image={cardInfo.userInfo.avatarUrl} />
+                </View>
+                <View className="name">
+                  {cardInfo.userInfo.nickName} · {cardInfo.userInfo.mobile}
+                </View>
+              </View>
+              <Product item={cardInfo} />
+            </View>
+          </AtModalContent>
+          {!cardInfo.used_time ? (
+            <AtModalAction>
+              <Button onClick={this.cancel.bind(this)}>取消</Button>
+              <Button onClick={this.sure.bind(this)}>确定</Button>
+            </AtModalAction>
+          ) : (
+            <AtModalAction>
+              <Button onClick={this.cancel.bind(this)}>关闭</Button>
+            </AtModalAction>
+          )}
+        </AtModal>
       </View>
     );
   }

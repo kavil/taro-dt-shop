@@ -10,6 +10,9 @@
         background-color: rgba(0, 0, 0, .4);
         z-index: 2;
     }
+    .mt-wrap{
+        border-top: 20px solid $bg-color-base;
+    }
     .shareImage {
         width: 70%;
         position: fixed;
@@ -49,7 +52,6 @@
     .share-bottom {
         position: fixed;
         bottom: 0;
-        height: 160px;
         border-radius: 20px 20px 0 0;
         background: #fefefe;
         width: 100%;
@@ -61,6 +63,33 @@
         padding-top: 20px;
         box-shadow:0 0 30px 10px #ddd;
         @include fj();
+        flex-direction: column;
+        .p-text{
+            width: 500px;
+            margin: 0 auto;
+            margin-bottom: 20px;
+        }
+        .share-bottom-in{
+            @include fj();
+            height: 160px;
+        }
+        .active{
+            color: $color-brand-dark;
+        }
+        .close.erduufont{
+            margin-top: -100px;
+            border-radius: 50%;
+            border: 1PX solid #ddd;
+            color: #aaa;
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            font-size: 50px;
+            position:absolute;
+            left:50%;
+            transform:translateX(-50%);
+            background:#fff;
+        }
         .share-item {
             flex: 1;
             padding: 0;

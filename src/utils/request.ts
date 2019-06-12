@@ -41,7 +41,7 @@ export default (options: IOption = { method: 'GET', data: {}, url: '', noLoading
     const { statusCode, data } = res;
     if (statusCode >= 200 && statusCode < 300) {
       if (!noConsole) {
-        console.log(`${new Date().toLocaleString()}【${options.url} 】【返回】`, res.data);
+        console.log(`${new Date().toLocaleString('zh', { hour12: false })}【${options.url} 】【返回】`, res.data);
       }
       if (data.errno !== 0) {
         if (data.errno === 401) {

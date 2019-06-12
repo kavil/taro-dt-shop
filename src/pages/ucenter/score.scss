@@ -58,3 +58,28 @@
         }
     }
 }
+
+.check-record{
+    padding: 0;
+    .top {
+        @include fj('space-between');
+        border-top: 10px solid $border;
+        padding: 15px 20px 0;
+        .user {
+            @include ddd;
+            @include fj(flex-start);
+            align-items: center;
+            flex: 1;
+            &.r {
+                text-align: right;
+                @include fj(flex-end);
+                color: $font-default;
+            }       
+        }
+
+        .nick {
+            padding: 0 10px;
+            font-size: 24px;
+        }
+    }
+}

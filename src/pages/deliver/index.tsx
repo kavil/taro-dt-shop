@@ -12,7 +12,7 @@ import {
   AtModal,
   AtRadio,
 } from 'taro-ui';
-import { getLocalTime, getTime } from '../../utils/tool';
+import { getLocalTime, getTime, getTextTime } from '../../utils/tool';
 import posiImg1 from '../../static/images/posi1.png';
 import posiImg2 from '../../static/images/posi2.png';
 import posiImg0 from '../../static/images/posi0.png';
@@ -42,12 +42,8 @@ class Deliver extends Component<IProps, {}> {
 
   async componentDidMount() {
     this.setState({
-      startTmp:
-        new Date(getTime() - 86400000 * 2).toLocaleString('zh', { hour12: false }).split(' ')[0] +
-        ' 23:59:59',
-      endTmp:
-        new Date(getTime() - 86400000 * 1).toLocaleString('zh', { hour12: false }).split(' ')[0] +
-        ' 23:59:59',
+      startTmp: getTextTime(getTime() - 86400000 * 2).split(' ')[0] + ' 23:59:59',
+      endTmp: getTextTime(getTime() - 86400000 * 1).split(' ')[0] + ' 23:59:59',
     });
 
     // 获取地理位置
@@ -92,8 +88,8 @@ class Deliver extends Component<IProps, {}> {
   };
   changeDate = async e => {
     this.setState({
-      start: getLocalTime(e.value.start).split(' ')[0] + ' 23:59:59',
-      end: getLocalTime(e.value.end).split(' ')[0] + ' 23:59:59',
+      start: getTextTime(e.value.start).split(' ')[0] + ' 23:59:59',
+      end: getTextTime(e.value.end).split(' ')[0] + ' 23:59:59',
     });
   };
   closeDate = async e => {
@@ -122,7 +118,7 @@ class Deliver extends Component<IProps, {}> {
         width: 30,
         height: 30,
         line: ele.line,
-        mobile: ele.mobile,
+        mobile: ele.colonelMobile,
         callout: {
           content: (ele.colonel.house ? '·' + ele.colonel.house : '') + '·' + ele.colonelMobile,
           borderColor: '#1fa0ff',
@@ -176,7 +172,7 @@ class Deliver extends Component<IProps, {}> {
     console.log(e);
     const line = Number(e);
     const { curMarker }: any = this.state;
-    const res = this.props.dispatch({
+    const res = await this.props.dispatch({
       type: 'deliver/Setline',
       payload: {
         communityId: curMarker.id,
@@ -198,20 +194,22 @@ class Deliver extends Component<IProps, {}> {
     });
   };
 
+  showLineFun = () => {
+    
+    this.setState({ showLine: !this.state.showLine });
+  };
+
   state = {
     localSetting: true,
     local: {},
     openDate: false,
-    start:
-      new Date(getTime() - 86400000 * 2).toLocaleString('zh', { hour12: false }).split(' ')[0] +
-      ' 23:59:59',
-    end:
-      new Date(getTime() - 86400000 * 1).toLocaleString('zh', { hour12: false }).split(' ')[0] +
-      ' 23:59:59',
+    start: getTextTime(getTime() - 86400000 * 2).split(' ')[0] + ' 23:59:59',
+    end: getTextTime(getTime() - 86400000 * 1).split(' ')[0] + ' 23:59:59',
     markers: [],
     polyline: [],
     curMarker: null,
     posiImg: [null, posiImg1, posiImg2],
+    showLine: false,
   };
 
   render() {
@@ -227,6 +225,7 @@ class Deliver extends Component<IProps, {}> {
       markers,
       polyline,
       curMarker,
+      showLine
     }: any = this.state;
     return (
       <View className="deliver-page">
@@ -272,15 +271,20 @@ class Deliver extends Component<IProps, {}> {
           {curMarker && (
             <View className="cur-map">
               当前选中：{curMarker.title}
-              <AtRadio
-                options={[
-                  { label: '设为小货车线路', value: 1 },
-                  { label: '设为三轮车线路', value: 2 },
-                ]}
-                value={curMarker.line}
-                onClick={this.handleRadio.bind(this)}
-              />
+              {showLine && (
+                <AtRadio
+                  options={[
+                    { label: '设为大货车线路', value: 1 },
+                    { label: '设为三轮车线路', value: 2 },
+                  ]}
+                  value={curMarker.line}
+                  onClick={this.handleRadio.bind(this)}
+                />
+              )}
               <View className="bts">
+                <AtButton type="primary" size="small" className="bt" onClick={this.showLineFun}>
+                  路线设置
+                </AtButton>
                 <AtButton type="primary" size="small" className="bt" onClick={this.makePhoneCall}>
                   电话
                 </AtButton>

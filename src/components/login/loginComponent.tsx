@@ -5,7 +5,7 @@ import { View, Text, Image, Button, Form } from '@tarojs/components';
 import { AtModal, AtModalHeader, AtModalContent, AtModalAction } from 'taro-ui';
 import './loginComponent.scss';
 import wxImg from '../../static/images/wx.png';
-import nbImg from '../../static/images/nb.png';
+import nbImg from '../../static/images/nb.jpg';
 
 interface PageState {}
 interface PageDva {

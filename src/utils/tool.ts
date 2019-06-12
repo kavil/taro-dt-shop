@@ -45,3 +45,23 @@ export function getLocalTime(time?) {
   }
   return date.toLocaleString('zh', { hour12: false });
 }
+
+export function getTextTime(time?) {
+  let date;
+  if (time) {
+    date = new Date(time);
+  } else {
+    date = new Date()
+  }
+  const dateText = date.getFullYear().toString() + '/'
+    + ten(Number(date.getMonth() + 1).toString()) + '/'
+    + date.getDate().toString()
+    + ' ' + date.toLocaleString('zh', { hour12: false }).split(' ')[1]
+
+  return dateText;
+}
+
+function ten(num) {
+  if (num < 10) return '0' + num;
+  return num;
+}

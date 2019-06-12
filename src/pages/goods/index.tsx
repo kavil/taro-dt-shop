@@ -15,9 +15,9 @@ import { connect } from '@tarojs/redux';
 import './index.scss';
 import { AtActivityIndicator, AtSteps, AtCountdown, AtButton } from 'taro-ui';
 import GoodsItem from '../../components/goods/goodsComponent';
+import Product from '../../components/product/productComponent';
 import Sku from '../../components/sku/skuComponent';
 import Login from '../../components/login/loginComponent';
-// import ChangeCommunity from '../../components/changeCommunity/changeCommunity';
 import { tip, Countdown, getTime } from '../../utils/tool';
 const qulity1 = 'https://img.kavil.com.cn/3991547959471_.pic.jpg';
 const qulity2 = 'https://img.kavil.com.cn/4011547959487_.pic.jpg';
@@ -41,11 +41,12 @@ interface PageStateProps {
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
-@connect(({ goods, cart, common, neighbor }) => ({
+@connect(({ goods, cart, common, neighbor, shop }) => ({
   ...goods,
   ...cart,
   ...common,
   ...neighbor,
+  ...shop,
 }))
 class Goods extends Component<IProps, {}> {
   config: Config = {
@@ -55,7 +56,18 @@ class Goods extends Component<IProps, {}> {
   };
 
   async componentDidShow() {
-    let { id, communityId, scene } = this.$router.params;
+    const rp = this.$router.params;
+    let id = rp.id;
+    let communityId = rp.c;
+    let fromUserId = rp.f;
+    let shopPlanId = rp.p;
+    let nowStr = rp.n;
+    let scene = rp.scene;
+    // if (!Taro.getStorageSync('token')) {
+    //   Taro.redirectTo({ url: '/pages/login/index?back=/pages/goods/index&id=' + id });
+    //   return;
+    // }
+
     if (scene) {
       const sceneTmp = decodeURIComponent(scene);
       const _scene: any = {};
@@ -63,11 +75,32 @@ class Goods extends Component<IProps, {}> {
         const res = ele.split('=');
         _scene[res[0]] = res[1];
       });
-      console.log(_scene, 'thasdfter._scene');
       id = _scene.id;
-      communityId = _scene.communityId;
+      communityId = _scene.c;
+      fromUserId = _scene.f;
+      shopPlanId = _scene.p;
+      nowStr = _scene.n;
+      console.log(_scene);
     }
-    this.setState({ id, communityId });
+    console.log(rp);
+
+    if (
+      !shopPlanId &&
+      nowStr &&
+      getTime(new Date().getFullYear() + '/' + nowStr) + 86400000 < getTime()
+    ) {
+      const res = await Taro.showModal({
+        title: '提示',
+        content: `该链接已过期，点击确定回到首页`,
+        showCancel: false,
+      });
+      if (res) {
+        Taro.switchTab({ url: '/pages/index/index' });
+      }
+    }
+
+    this.setState({ id, communityId, fromUserId, shopPlanId });
+    console.log({ id, communityId, fromUserId, shopPlanId });
 
     Taro.showShareMenu();
     this.props.dispatch({
@@ -76,9 +109,18 @@ class Goods extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'goods/Detail',
       payload: {
-        id: id,
+        id,
       },
     });
+    if (shopPlanId) {
+      const { data } = await this.props.dispatch({
+        type: 'shop/ProductList',
+        payload: {
+          shopPlanId,
+        },
+      });
+      this.setState({ productList: data });
+    }
     this.timeSe();
   }
 
@@ -97,7 +139,6 @@ class Goods extends Component<IProps, {}> {
     if (goodsNumber === 0) {
       disabled = '已售罄';
     }
-    console.log(getTime(Info.over_time), getTime(), getTime(Info.over_time) > getTime());
 
     if (Info.goods_type !== 1) {
       if (getTime(Info.start_time) > getTime()) {
@@ -130,11 +171,25 @@ class Goods extends Component<IProps, {}> {
   }
   onShareAppMessage() {
     const now = new Date();
-    console.log(this.state.id, 'this.state.id');
+    const nowStr = `${now.getMonth() + 1}/${now.getDate()}`;
+
+    const { shopPlanId, id } = this.state;
+    const { userInfo, Detail } = this.props;
+    if (shopPlanId) {
+      return {
+        title: `全城免费，吃喝玩乐用通通免费，我是「${userInfo.nickName}」，邀你一起来狂欢`,
+        path: `/pages/goods/index?id=${id}&f=${userInfo.id}&c=${
+          userInfo.communityId
+        }&p=${shopPlanId}`,
+        imageUrl: Detail.share_img,
+      };
+    }
 
     return {
-      title: `【${now.getMonth() + 1}月${now.getDate()}日】 ${this.props.Detail.info.goods_name}`,
-      path: `/pages/goods/index?id=${this.state.id}&communityId=${this.props.userInfo.communityId}`,
+      title: `【${now.getMonth() + 1}月${now.getDate()}日】 ${Detail.info.goods_name}`,
+      path: `/pages/goods/index?id=${this.state.id}&f=${userInfo.id}&c=${
+        userInfo.communityId
+      }&n=${nowStr}&p=${shopPlanId}`,
     };
   }
   componentWillUnmount() {
@@ -195,11 +250,67 @@ class Goods extends Component<IProps, {}> {
       if (res.errno === 401) Taro.eventCenter.trigger('login', true);
     }
   };
+  submitShop = async goods => {
+    if (goods.sku.length > 1) {
+      // 调出 选择规格组件
+      this.setState({ curGoods: goods, openSku: true });
+    } else {
+      const orderRes = await this.props.dispatch({
+        type: 'cart/OrderSubmitShop',
+        payload: {
+          productId: goods.sku[0].id,
+          goodsId: goods.id,
+          distributorId: this.state.fromUserId,
+        },
+      });
+      if (!orderRes) return;
+      if (orderRes.errno === 401) {
+        Taro.navigateTo({ url: '/pages/login/index?back=back' });
+        return;
+      }
+
+      const payParam = await this.props.dispatch({
+        type: 'cart/Prepay',
+        payload: {
+          orderId: orderRes.id,
+        },
+      });
+      const res = await Taro.requestPayment({
+        timeStamp: payParam.timeStamp,
+        nonceStr: payParam.nonceStr,
+        package: payParam.package,
+        signType: payParam.signType,
+        paySign: payParam.paySign,
+        success: res => {
+          if (res.errMsg === 'requestPayment:fail cancel') {
+            this.props.dispatch({
+              type: 'order/Cancel',
+              payload: {
+                orderId: orderRes.id,
+              },
+            });
+            tip('支付失败，请重新下单支付');
+          } else {
+            Taro.redirectTo({
+              url: `/pages/order/purchasedShop?orderId=${orderRes.id}&type=ok`,
+            });
+          }
+        },
+        fail: () => {
+          this.props.dispatch({
+            type: 'order/Cancel',
+            payload: {
+              orderId: orderRes.id,
+            },
+          });
+        },
+      });
+    }
+  };
   handleCloseSku = () => {
     this.setState({ openSku: false });
   };
   handleChangeSku = async payload => {
-    console.log('handleSkuOk', payload);
     // 加入购物车
     const res = await this.props.dispatch({
       type: 'cart/Add',
@@ -220,11 +331,24 @@ class Goods extends Component<IProps, {}> {
     });
   };
 
+  lookBigM = (img, imgList) => {
+    console.log(img);
+    const list = imgList.map(ele => ele + '@!q90');
+    Taro.previewImage({
+      current: img + '@!q90',
+      urls: list,
+    });
+  };
+
   nextTab(url) {
     Taro.switchTab({ url });
   }
 
   shareBtn = async () => {
+    if (!Taro.getStorageSync('token')) {
+      Taro.navigateTo({ url: '/pages/login/index?back=back' });
+      return;
+    }
     this.setState({
       shareStart: !this.state.shareStart,
     });
@@ -241,7 +365,12 @@ class Goods extends Component<IProps, {}> {
       shareImgStart: true,
     });
     if (!this.state.shareImage) {
-      const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&communityId=${
+      const now = new Date();
+      const nowStr = `${now.getMonth() + 1}/${now.getDate()}`;
+
+      const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&n=${nowStr}&f=${
+        this.props.userInfo.id
+      }&p=${this.state.shopPlanId}&c=${
         this.props.userInfo.communityId
       }&page=pages/goods/index&width=280px`;
       this.setState({ goodsShare: goodsShare(this.props.userInfo, this.props.Detail.info, ewm) });
@@ -286,7 +415,6 @@ class Goods extends Component<IProps, {}> {
   }
 
   eventGetImage(event) {
-    console.log(event, 'eventGetImage(event) {eventGetImage(event) {');
     const { tempFilePath, errMsg } = event.detail;
     Taro.hideLoading();
     if (errMsg === 'canvasdrawer:ok') {
@@ -318,6 +446,8 @@ class Goods extends Component<IProps, {}> {
     shareImgStart: false,
     checkSave: true,
     id: null,
+    shopPlanId: null,
+    fromUserId: null,
   };
 
   render() {
@@ -332,6 +462,8 @@ class Goods extends Component<IProps, {}> {
       checkSave,
       goodsNumber,
       disabled,
+      shopPlanId,
+      productList,
     }: any = this.state;
     const { Detail, cartTotal, userInfo } = this.props;
     if (!Detail.info)
@@ -356,8 +488,10 @@ class Goods extends Component<IProps, {}> {
     const type3 = {
       items: [
         { title: formate(info.start_time) + '开始', icon: { value: 'clock' } },
-        { title: formate(info.over_time) + '结束', icon: { value: 'shopping-bag-2' } },
-        { title: formate(info.predict_time) + '预计发货', icon: { value: 'lightning-bolt' } },
+        { title: formate(info.over_time) + '截止下单', icon: { value: 'shopping-bag-2' } },
+        shopPlanId
+          ? { title: formate(info.predict_time) + '结束使用', icon: { value: 'lightning-bolt' } }
+          : { title: formate(info.predict_time) + '预计配送', icon: { value: 'lightning-bolt' } },
       ],
       current,
     };
@@ -395,55 +529,65 @@ class Goods extends Component<IProps, {}> {
           <View>
             <Form reportSubmit onSubmit={this.getFormId}>
               <View className="share-bottom">
-                {!shareImgStart ? (
-                  <Button
-                    className="share-item"
-                    plain={true}
-                    open-type="share"
-                    formType="submit"
-                    onClick={this.closeShare}
-                  >
-                    <Text className="erduufont ed-weixin" />
-                    分享群或好友
-                  </Button>
-                ) : (
-                  <Button
-                    className="share-item"
-                    plain={true}
-                    formType="submit"
-                    onClick={this.lookBig.bind(this, shareImage)}
-                  >
-                    <Text className="erduufont ed-weixin" />
-                    点击出现大图，长按分享群或好友
-                  </Button>
-                )}
-                {checkSave ? (
-                  <Button
-                    className="share-item"
-                    plain={true}
-                    formType="submit"
-                    onClick={this.saveImage}
-                  >
-                    <Text className="erduufont ed-xiazai" />
-                    {shareImage ? '保存图片' : '生成图片分享'}
-                  </Button>
-                ) : (
-                  <View className="share-item">
-                    <View className="mt30">
-                      <AtButton
-                        className="share-set"
-                        type="primary"
-                        circle
-                        size="small"
-                        formType="submit"
-                        open-type="openSetting"
-                        onOpenSetting={this.onOpenSetting}
-                      >
-                        打开保存图片授权
-                      </AtButton>
-                    </View>
+                <View className="close erduufont ed-close" onClick={this.shareBtn} />
+                {info.sku[0].distributorMoney && (
+                  <View className="p-text">
+                    好东西就要分享给朋友，通过你的链接下单后， 您即可获得佣金
+                    <Text className="active">￥{info.sku[0].distributorMoney}</Text>
+                    ，且不限次数。
                   </View>
                 )}
+                <View className="share-bottom-in">
+                  {!shareImgStart ? (
+                    <Button
+                      className="share-item"
+                      plain={true}
+                      open-type="share"
+                      formType="submit"
+                      onClick={this.closeShare}
+                    >
+                      <Text className="erduufont ed-weixin" />
+                      分享群或好友
+                    </Button>
+                  ) : (
+                    <Button
+                      className="share-item"
+                      plain={true}
+                      formType="submit"
+                      onClick={this.lookBig.bind(this, shareImage)}
+                    >
+                      <Text className="erduufont ed-weixin" />
+                      点击出现大图，长按分享群或好友
+                    </Button>
+                  )}
+                  {checkSave ? (
+                    <Button
+                      className="share-item"
+                      plain={true}
+                      formType="submit"
+                      onClick={this.saveImage}
+                    >
+                      <Text className="erduufont ed-xiazai" />
+                      {shareImage ? '保存图片' : '生成图片分享'}
+                    </Button>
+                  ) : (
+                    <View className="share-item">
+                      <View className="mt30">
+                        <AtButton
+                          className="share-set"
+                          type="primary"
+                          circle
+                          size="small"
+                          formType="submit"
+                          open-type="openSetting"
+                          onOpenSetting={this.onOpenSetting}
+                        >
+                          打开保存图片授权
+                        </AtButton>
+                      </View>
+                    </View>
+                  )}
+                </View>
               </View>
             </Form>
           </View>
@@ -455,7 +599,7 @@ class Goods extends Component<IProps, {}> {
         </Button>
 
         <View className="swiper-wrap">
-          {info.goods_type > 1 ? (
+          {info.goods_type > 1 && !shopPlanId ? (
             <View className="goods-type-wrap">
               <View className="ribbon" />
               <View className="ribbon-text">{info.goods_type === 2 ? '秒杀' : '预售'}</View>
@@ -469,7 +613,11 @@ class Goods extends Component<IProps, {}> {
           <Swiper className="swiper" indicatorDots indicatorActiveColor="#f1836f" autoplay>
             {imgList.map((ele, i) => (
               <SwiperItem key={i}>
-                <Image className="image" src={ele + '@!750X500'} />
+                <Image
+                  onClick={this.lookBigM.bind(this, ele, imgList)}
+                  className="image"
+                  src={ele + '@!750X500'}
+                />
               </SwiperItem>
             ))}
           </Swiper>
@@ -495,7 +643,7 @@ class Goods extends Component<IProps, {}> {
                     <View>
                       {countdown.time ? (
                         <View className="miaosha">
-                          马上结束
+                          {shopPlanId ? '限时抢购' : '马上结束'}
                           <AtCountdown
                             format={{ day: '天', hours: ':', minutes: ':', seconds: '' }}
                             isShowDay={countdown.isShowDay}
@@ -525,7 +673,7 @@ class Goods extends Component<IProps, {}> {
         ) : null}
         <View className="price-wrap">
           <View className="price">
-            <View className="retail">团购价</View>
+            <View className="retail">{shopPlanId ? '抢购价' : '团购价'}</View>
             <View className="vip">
               ￥{info.sku[0].retail_price.toFixed(1)}
               <View className="counter">￥{info.sku[0].counter_price.toFixed(1)}</View>
@@ -560,27 +708,39 @@ class Goods extends Component<IProps, {}> {
             />
           ) : null}
         </View>
-        <View className="wrap reco-wrap">
-          <View className="h3">推荐商品</View>
-          <ScrollView scrollX={true}>
-            <View className="scroll-view-wrap">
-              {recommendList && recommendList.length
-                ? recommendList.map(ele => (
-                    <GoodsItem key={ele.id} type="mini" goods={ele} onChange={this.addCartOk} />
-                  ))
-                : null}
-            </View>
-          </ScrollView>
-        </View>
+        {!shopPlanId && recommendList && recommendList.length && (
+          <View className="wrap reco-wrap">
+            <View className="h3">推荐商品</View>
+            <ScrollView scrollX={true}>
+              <View className="scroll-view-wrap">
+                {recommendList.map(ele => (
+                  <GoodsItem key={ele.id} type="mini" goods={ele} onChange={this.addCartOk} />
+                ))}
+              </View>
+            </ScrollView>
+          </View>
+        )}
+        {shopPlanId && (
+          <View className="wrap mt-wrap">
+            <View className="h3">可用项目</View>
+            {productList.map(ele => (
+              <Product key={ele.id} item={ele} />
+            ))}
+          </View>
+        )}
         <View className="wrap rich-wrap">
-          <View className="h3">商品详情</View>
+          <View className="h3">{shopPlanId ? '项目' : '商品'}详情</View>
           <RichText nodes={detailNodes} onClick={this.clickDetail.bind(this)} />
 
-          <View className="h3">发货须知</View>
-          <View className="p">
-            <View>当天团购结束后，次日下午送达小区长代收点；</View>
-            <View>如标明预售则按预售日期发货配送。</View>
-          </View>
+          {!shopPlanId && (
+            <View>
+              <View className="h3">发货须知</View>
+              <View className="p">
+                <View>当天团购结束后，次日下午送达小区长代收点；</View>
+                <View>如标明预售则按预售日期发货配送。</View>
+              </View>
+            </View>
+          )}
 
           <View className="h3">价格说明</View>
           <View className="p">
@@ -607,10 +767,34 @@ class Goods extends Component<IProps, {}> {
             />
           </View>
         </View>
-        <Form reportSubmit onSubmit={this.getFormId}>
+        {shopPlanId ? (
           <View className="bottom">
             <Button
-              formType="submit"
+              className="zhuye-wrap plain"
+              plain
+              onClick={this.nextTab.bind(this, '/pages/index/index')}
+            >
+              <Text className="erduufont ed-zhuye1" />
+              <View className="bottom-text">首页</View>
+            </Button>
+            <Button className="cart-wrap plain" plain onClick={this.shareBtn}>
+              {/* <View className="badge">{cartTotal.checkedGoodsCount || 0}</View> */}
+              <Text className="erduufont ed-share" />
+              <View className="bottom-text">分享赚{info.sku[0].distributorMoney}</View>
+            </Button>
+            <View className="add-cart">
+              <AtButton
+                type="primary"
+                disabled={!!disabled}
+                onClick={this.submitShop.bind(this, info)}
+              >
+                {disabled || '立即抢购'}
+              </AtButton>
+            </View>
+          </View>
+        ) : (
+          <View className="bottom">
+            <Button
               className="zhuye-wrap plain"
               plain
               onClick={this.nextTab.bind(this, '/pages/index/index')}
@@ -619,7 +803,6 @@ class Goods extends Component<IProps, {}> {
               <View className="bottom-text">首页</View>
             </Button>
             <Button
-              formType="submit"
               className="cart-wrap plain"
               plain
               onClick={this.nextTab.bind(this, '/pages/cart/index')}
@@ -631,7 +814,6 @@ class Goods extends Component<IProps, {}> {
             <View className="add-cart">
               <AtButton
                 type="primary"
-                formType="submit"
                 disabled={!!disabled}
                 onClick={this.addCartOk.bind(this, info)}
               >
@@ -639,7 +821,7 @@ class Goods extends Component<IProps, {}> {
               </AtButton>
             </View>
           </View>
-        </Form>
+        )}
         {openSku ? (
           <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />
         ) : null}

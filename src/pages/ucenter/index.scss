@@ -1,5 +1,12 @@
 @import "../../static/css/mixin";
 
+.at-modal__container{
+    width: 94% !important;
+}
+.h4{
+    font-weight: 200;
+    padding: 20px;
+}
 .me-wrap {
     @include fj();
     padding: 40px 20px 20px;
@@ -26,6 +33,10 @@
 .contact-wrap {
     padding: 50px;
     text-align: center;
+}
+
+.em.at-list__item .item-extra__info{
+    color: $color-brand-dark;
 }
 
 .divsion {
@@ -63,6 +74,32 @@
     padding: 100px 0;
     text-align: center;
 }
+.cen{
+    color: #fff;
+    text-align: center;
+    .note{
+        text-align: center;
+        border-top: 1PX dashed #ddd;
+        background: #fff;
+        color: $font-default;
+        font-size: 24px;
+        margin: 0 auto;
+        width: 500px;
+        padding: 10px 20px;
+        box-sizing: border-box;
+        font-weight: 100;
+    }
+    .code{
+        font-size: 30px;
+        color: #333;
+    }
+    .curtainImg{
+        width: 500px;
+        height: 500px;
+        display: block;
+        margin: 0 auto;
+    }
+}
 
 .callkf {
     color: #ddd;
@@ -71,6 +108,56 @@
 
 .coupon-page {
     background: $bg-color-base;
+    &.card-page{
+        .card-ul {
+            padding: 0 40px 50px;
+            overflow: hidden;
+        }
+        .cli{
+            margin-top: 0px;
+            .head{
+                padding:20px;
+            }
+            .title{
+                font-weight: 200;
+            }
+            .p{
+                font-weight: 400;
+            }
+            .ewm{
+                position: absolute;
+                top: 20%;
+                right: 20px;
+                height: 80px;
+                width: 80px;
+                border-radius: 50%;
+                line-height: 80px;
+                text-align: center;
+                background: $color-brand;
+                .erduufont{
+                    color: #fff;
+                }
+            }
+            .foot{
+                padding: 10px 20px;
+                font-size: 26px;
+                border-top:1px dashed #ddd;
+                color: #666;
+            }
+            .foot-in{
+                @include fj;
+                align-items: center;
+                color: #333;
+            }
+            .sli{
+                font-weight: 100;
+            }
+            .op-wrap{
+                @include fj;
+                width: 220px;
+            }
+        }
+    }
     .coupon-ul {
         padding: 0 40px 50px;
         overflow: hidden;

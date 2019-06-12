@@ -5,7 +5,7 @@ import { View, Text, Image, Button, Form } from '@tarojs/components';
 import { AtButton } from 'taro-ui';
 import './index.scss';
 import wxImg from '../../static/images/wx.png';
-import nbImg from '../../static/images/nb.png';
+import nbImg from '../../static/images/nb.jpg';
 
 interface PageState {}
 interface PageDva {
@@ -78,7 +78,19 @@ class Login extends Component<IProps, {}> {
         type: 'cart/Index',
       });
       if (this.props.userInfo && this.props.userInfo.communityId) {
-        Taro.switchTab({ url: '/pages/index/index' });
+        let url = '/pages/index/index';
+        if (this.$router.params.back) {
+          if (this.$router.params.back === 'back') {
+            Taro.navigateBack();
+            return;
+          }
+          url = this.$router.params.back + '?id=' + this.$router.params.id;
+          Taro.redirectTo({ url });
+          return;
+        }
+        console.log(url);
+
+        Taro.switchTab({ url });
       } else {
         const communityId = Taro.getStorageSync('communityId');
         if (communityId) {
