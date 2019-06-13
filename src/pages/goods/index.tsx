@@ -530,10 +530,10 @@ class Goods extends Component<IProps, {}> {
             <Form reportSubmit onSubmit={this.getFormId}>
               <View className="share-bottom">
                 <View className="close erduufont ed-close" onClick={this.shareBtn} />
-                {info.sku[0].distributorMoney && (
+                {info.sku[0].distributeMoney && (
                   <View className="p-text">
                     好东西就要分享给朋友，通过你的链接下单后， 您即可获得佣金
-                    <Text className="active">￥{info.sku[0].distributorMoney}</Text>
+                    <Text className="active">￥{info.sku[0].distributeMoney}</Text>
                     ，且不限次数。
                   </View>
                 )}
@@ -780,7 +780,7 @@ class Goods extends Component<IProps, {}> {
             <Button className="cart-wrap plain" plain onClick={this.shareBtn}>
               {/* <View className="badge">{cartTotal.checkedGoodsCount || 0}</View> */}
               <Text className="erduufont ed-share" />
-              <View className="bottom-text">分享赚{info.sku[0].distributorMoney}</View>
+              <View className="bottom-text">分享赚{info.sku[0].distributeMoney}</View>
             </Button>
             <View className="add-cart">
               <AtButton

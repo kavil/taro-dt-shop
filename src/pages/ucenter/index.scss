@@ -5,7 +5,8 @@
 }
 .h4{
     font-weight: 200;
-    padding: 20px;
+    padding: 20px 20px 0;
+    font-size: 26px;
 }
 .me-wrap {
     @include fj();
@@ -81,7 +82,7 @@
         text-align: center;
         border-top: 1PX dashed #ddd;
         background: #fff;
-        color: $font-default;
+        color: $font-active;
         font-size: 24px;
         margin: 0 auto;
         width: 500px;
@@ -115,11 +116,13 @@
         }
         .cli{
             margin-top: 0px;
+            margin-bottom: 20px;
             .head{
-                padding:20px;
+                padding: 20px 100px 20px 20px;
             }
             .title{
                 font-weight: 200;
+                font-size: 30px;
             }
             .p{
                 font-weight: 400;
@@ -219,5 +222,25 @@
             line-height: 2.5;
             padding-left: 20px;
         }
+    }
+}
+.check-record .top {
+    @include fj('space-between');
+    padding: 15px 20px 0;
+    .user {
+        @include ddd;
+        @include fj(flex-start);
+        align-items: center;
+        flex: 1;
+        &.r {
+            text-align: right;
+            @include fj(flex-end);
+            color: $font-default;
+        }       
+    }
+
+    .nick {
+        padding: 0 10px;
+        font-size: 24px;
     }
 }

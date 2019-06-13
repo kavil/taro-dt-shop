@@ -31,7 +31,7 @@ export default {
 
     *CheckRecordList(_, { call, put, select }) {
       const { loadOver, checkRecordList, refresh, page, size, opType } = yield select(
-        state => state.score
+        state => state.pickup
       );
       if (loadOver) return;
 

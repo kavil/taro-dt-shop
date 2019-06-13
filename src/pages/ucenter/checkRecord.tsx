@@ -53,6 +53,7 @@ export default class CheckRecordList extends Component<IProps, {}> {
         page: 1, // 归位
         refresh: true,
         loadOver: false,
+        List: [],
       },
     });
     this.getList();
@@ -90,10 +91,10 @@ export default class CheckRecordList extends Component<IProps, {}> {
                   </View>
                   <View className="user r">
                     <View>
-                      <View className="nick">核销人：{li.userInfo.nickName}</View>
-                      <View className="nick">{li.userInfo.mobile}</View>
+                      <View className="nick">核销人：{li.shopUser.nickName}</View>
+                      <View className="nick">{li.shopUser.mobile}</View>
                     </View>
-                    <AtAvatar size="small" circle image={li.userInfo.avatarUrl} />
+                    <AtAvatar size="small" circle image={li.shopUser.avatarUrl} />
                   </View>
                 </View>
                 <Product item={li} />

@@ -4,7 +4,7 @@ import { View, Text, Image } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
 import { AtButton, AtSegmentedControl, AtCurtain } from 'taro-ui';
-import { getTime } from '../../utils/tool';
+import { getTime, tip } from '../../utils/tool';
 import { baseUrl } from '../../config/index';
 
 type PageState = {};
@@ -85,6 +85,10 @@ class Card extends Component<IProps, {}> {
     });
   }
   useIt = async ele => {
+    if (getTime(ele.use_end_date) < getTime()) {
+      tip('已过期');
+      return;
+    }
     this.setState({
       isOpened: true,
       cur: {
@@ -97,6 +101,10 @@ class Card extends Component<IProps, {}> {
   onClose = () => {
     this.setState({ cur: null, isOpened: false });
   };
+
+  nextPage(url) {
+    Taro.navigateTo({ url });
+  }
 
   state = {
     current: 0,
@@ -113,7 +121,7 @@ class Card extends Component<IProps, {}> {
     const classText = ele => {
       const now = getTime();
       let res = 'cli';
-      if (getTime(ele.use_start_date) > now || getTime(ele.use_end_date) < now) {
+      if (getTime(ele.use_end_date) < now) {
         res = 'cli disabled';
       }
       return res;
@@ -142,23 +150,30 @@ class Card extends Component<IProps, {}> {
               <View key={ele.id} className={classText(ele)}>
                 <View className="cicle l" />
                 <View className="cicle r" />
-                <View className="head">
+                <View
+                  className="head"
+                  onClick={this.nextPage.bind(this, '/pages/shop/product?id=' + ele.productId)}
+                >
                   <View className="title">{ele.name}</View>
                   <View className="p">{ele.desc}</View>
-                  <View className="ewm" onClick={this.useIt.bind(this, ele)}>
-                    <Text className="erduufont ed-ewm" />
-                  </View>
-
                   <View className="p">
                     有效期：{ele.use_start_date.split(' ')[0]} ~{' '}
                     {ele.use_end_date ? ele.use_end_date.split(' ')[0] : '无限制'}
                   </View>
                 </View>
+                <View className="ewm" onClick={this.useIt.bind(this, ele)}>
+                  <Text className="erduufont ed-ewm" />
+                </View>
                 <View className="foot">
                   可用店铺
                   {ele.shop.map(s => (
                     <View className="foot-in" key={s.id}>
-                      <View className="sli">{s.name}</View>
+                      <View
+                        className="sli"
+                        onClick={this.nextPage.bind(this, '/pages/shop/index?id=' + ele.shopId)}
+                      >
+                        {s.name}
+                      </View>
                       <View className="op-wrap">
                         <AtButton
                           type="secondary"

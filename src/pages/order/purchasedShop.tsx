@@ -98,7 +98,7 @@ export default class purchasedShop extends Component<IProps, {}> {
 
           <View className="pad40">
             <AtButton type="primary" open-type="share">
-              转发赚取佣金￥{Detail.distributorMoney}
+              转发赚取佣金￥{Detail.distributeMoney}
             </AtButton>
             <View className="text">点击转发给好友或群，通过你的链接下单成功后，佣金立即到账</View>
           </View>

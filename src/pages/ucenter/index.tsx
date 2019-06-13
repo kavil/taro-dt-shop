@@ -133,6 +133,10 @@ class Ucenter extends Component<IProps, {}> {
         checkcode: res.result,
       },
     });
+    if (!cardInfo.id) {
+      tip('无效二维码！');
+      return;
+    }
     this.setState({
       cardInfo,
       checkcode: res.result,
@@ -203,6 +207,7 @@ class Ucenter extends Component<IProps, {}> {
                   </AtTag>
                 )}
               </View>
+              <View className="p">{userInfo.mobile || ''}</View>
               <View className="p">{userInfo.mobile || ''}</View>
             </View>
             <View className="ava-wrap">
@@ -349,6 +354,13 @@ class Ucenter extends Component<IProps, {}> {
               </Button>
               <Button
                 className="li plain"
+                plain
+                onClick={this.nextPage.bind(this, '/pages/goods/index?id=303&p=1')}
+              >
+                <AtListItem className="em" arrow="right" title="测试连接" />
+              </Button>
+              <Button
+                className="li plain"
                 formType="submit"
                 plain
                 onClick={this.nextPage.bind(this, '/pages/ucenter/coupon')}
@@ -411,13 +423,14 @@ class Ucenter extends Component<IProps, {}> {
         <AtModal isOpened={open}>
           <AtModalHeader>{cardInfo.used_time ? '该二维码已被核销' : '确认核销？'}</AtModalHeader>
           <AtModalContent>
-            <View>
-              <View className="colonel-wrap">
-                <View className="colonel">
-                  <AtAvatar circle size="small" image={cardInfo.userInfo.avatarUrl} />
-                </View>
-                <View className="name">
-                  {cardInfo.userInfo.nickName} · {cardInfo.userInfo.mobile}
+            <View className="check-record">
+              <View className="top">
+                <View className="user">
+                  <AtAvatar size="small" circle image={cardInfo.userInfo.avatarUrl} />
+                  <View>
+                    <View className="nick">{cardInfo.userInfo.nickName}</View>
+                    <View className="nick">{cardInfo.userInfo.mobile}</View>
+                  </View>
                 </View>
               </View>
               <Product item={cardInfo} />
