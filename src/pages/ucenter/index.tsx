@@ -124,7 +124,11 @@ class Ucenter extends Component<IProps, {}> {
     });
     console.log(res);
     if (res.errMsg !== 'scanCode:ok') {
-      tip('无效二维码');
+      Taro.showModal({
+        title: '错误提示',
+        content: '扫一扫错误，请重试',
+        showCancel: false,
+      });
       return;
     }
     const cardInfo = await this.props.dispatch({
@@ -134,7 +138,11 @@ class Ucenter extends Component<IProps, {}> {
       },
     });
     if (!cardInfo.id) {
-      tip('无效二维码！');
+      Taro.showModal({
+        title: '错误提示',
+        content: '无效二维码',
+        showCancel: false,
+      });
       return;
     }
     this.setState({
@@ -207,7 +215,6 @@ class Ucenter extends Component<IProps, {}> {
                   </AtTag>
                 )}
               </View>
-              <View className="p">{userInfo.mobile || ''}</View>
               <View className="p">{userInfo.mobile || ''}</View>
             </View>
             <View className="ava-wrap">
@@ -357,7 +364,7 @@ class Ucenter extends Component<IProps, {}> {
                 plain
                 onClick={this.nextPage.bind(this, '/pages/goods/index?id=303&p=1')}
               >
-                <AtListItem className="em" arrow="right" title="测试连接" />
+                <AtListItem className="em" arrow="right" title="测试链接" />
               </Button>
               <Button
                 className="li plain"

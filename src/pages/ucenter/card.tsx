@@ -133,7 +133,7 @@ class Card extends Component<IProps, {}> {
           <View className="cen">
             {cur.png && <Image className="curtainImg" src={cur.png} />}
             <View className="note">
-              <View className="code">{cur.code}</View>请让「{cur.name}」的工作人员扫码核销
+              <View className="code">{cur.code}</View>请让「{cur.shop[0].name}」的工作人员扫码核销
             </View>
           </View>
         </AtCurtain>
@@ -155,7 +155,7 @@ class Card extends Component<IProps, {}> {
                   onClick={this.nextPage.bind(this, '/pages/shop/product?id=' + ele.productId)}
                 >
                   <View className="title">{ele.name}</View>
-                  <View className="p">{ele.desc}</View>
+                  {/* <View className="p">{ele.desc}</View> */}
                   <View className="p">
                     有效期：{ele.use_start_date.split(' ')[0]} ~{' '}
                     {ele.use_end_date ? ele.use_end_date.split(' ')[0] : '无限制'}

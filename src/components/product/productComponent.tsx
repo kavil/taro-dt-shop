@@ -70,16 +70,6 @@ class Product extends Component<IProps, {}> {
             </View>
           </View>
         </View>
-        <View className="op-wrap">
-          {/* <AtButton
-            type="secondary"
-            size="small"
-            className="bt"
-            onClick={this.navMap.bind(this, item)}
-          >
-            导航
-          </AtButton> */}
-        </View>
       </View>
     );
   }

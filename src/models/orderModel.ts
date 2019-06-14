@@ -62,6 +62,13 @@ export default {
         });
       }
     },
+    *goodsDetail({ payload }, { call }) {
+      const res = yield call(Api.orderGoodsDetail, payload);
+      if (res.errno === 0) {
+        return res.data;
+      }
+      return null;
+    },
   },
 
   reducers: {

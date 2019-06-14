@@ -5,6 +5,7 @@ export const spread = data => Request({ url: '/index/spread', method: 'GET', dat
 export const loginByWeixin = data => Request({ url: '/auth/loginByWeixin', method: 'POST', data });
 export const userInfo = data => Request({ url: '/user/info', method: 'GET', data });
 export const bindPhone = data => Request({ url: '/user/bindPhone', method: 'POST', data });
+export const hasGoods = data => Request({ url: '/user/hasGoods', method: 'GET', data });
 export const uploadSign = data => Request({ url: '/index/uploadSign', method: 'GET', data });
 export const cityOpen = data => Request({ url: '/index/cityOpen', method: 'GET', data });
 
@@ -34,6 +35,7 @@ export const communityBindId = data => Request({ url: '/community/bindId', metho
 export const orderList = data => Request({ url: '/order', method: 'GET', data });
 export const orderCancel = data => Request({ url: '/order/cancel', method: 'POST', data });
 export const orderDetail = data => Request({ url: '/order/info', method: 'GET', data });
+export const orderGoodsDetail = data => Request({ url: '/order/goodsDetail', method: 'GET', data });
 
 export const getCoupon = data => Request({ url: '/coupon/list', method: 'GET', data });
 export const scoreList = data => Request({ url: '/score', method: 'GET', data });

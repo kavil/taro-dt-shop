@@ -74,3 +74,111 @@
         }
     }
 }
+.kh{
+    .text{
+        padding: 10px 40px 0;
+        font-weight: 100;
+        font-size: 30px;
+        color: #111;
+        width: 540px;
+        display: inline-block;
+        margin: 0 auto;
+    }
+
+}
+.active{
+    color: $color-deep;
+    font-weight: 500;
+}
+.share-bottom {
+    position: fixed;
+    bottom: 0;
+    border-radius: 20px 20px 0 0;
+    background: #fefefe;
+    width: 100%;
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.2;
+    z-index: 3;
+    text-align: center;
+    padding-top: 20px;
+    box-shadow:0 0 30px 10px #ddd;
+    @include fj();
+    flex-direction: column;
+    .p-text{
+        width: 508px;
+        margin: 0 auto;
+        margin-bottom: 20px;
+    }
+    .share-bottom-in{
+        @include fj();
+        height: 160px;
+    }
+
+    .close.erduufont{
+        margin-top: -100px;
+        border-radius: 50%;
+        border: 1PX solid #ddd;
+        color: #aaa;
+        width: 60px;
+        height: 60px;
+        line-height: 60px;
+        font-size: 50px;
+        position:absolute;
+        left:50%;
+        transform:translateX(-50%);
+        background:#fff;
+    }
+    .share-item {
+        flex: 1;
+        padding: 0;
+        border: 0;
+        line-height: 1;
+        font-size: 24px;
+    }
+    .erduufont {
+        font-size: 90px;
+        color: #777;
+        display: block;
+        margin-bottom: 10px;
+    }
+}
+.center {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    .at-activity-indicator__body {
+        text-align: center;
+    }
+    .at-activity-indicator__content {
+        color: #eee;
+        font-size: 28px;
+        font-weight: 300;
+    }
+}
+
+.loading {
+    background: rgba(0, 0, 0, .6);
+    padding: 30px;
+    border-radius: 10px;
+}
+.curtain {
+    display: block;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, .4);
+    z-index: 2;
+}
+.shareImage {
+    width: 70%;
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}

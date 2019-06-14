@@ -40,6 +40,18 @@ export default class CheckRecordList extends Component<IProps, {}> {
     this.getList();
   };
 
+  componentWillUnmount = () => {
+    this.props.dispatch({
+      type: 'pickup/save',
+      payload: {
+        page: 1, // 归位
+        refresh: true,
+        loadOver: false,
+        List: [],
+      },
+    });
+  };
+
   getList() {
     this.props.dispatch({
       type: 'pickup/CheckRecordList',

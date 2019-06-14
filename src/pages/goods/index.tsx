@@ -13,7 +13,7 @@ import {
 } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
-import { AtActivityIndicator, AtSteps, AtCountdown, AtButton } from 'taro-ui';
+import { AtActivityIndicator, AtSteps, AtCountdown, AtButton, AtTag } from 'taro-ui';
 import GoodsItem from '../../components/goods/goodsComponent';
 import Product from '../../components/product/productComponent';
 import Sku from '../../components/sku/skuComponent';
@@ -63,10 +63,6 @@ class Goods extends Component<IProps, {}> {
     let shopPlanId = rp.p;
     let nowStr = rp.n;
     let scene = rp.scene;
-    // if (!Taro.getStorageSync('token')) {
-    //   Taro.redirectTo({ url: '/pages/login/index?back=/pages/goods/index&id=' + id });
-    //   return;
-    // }
 
     if (scene) {
       const sceneTmp = decodeURIComponent(scene);
@@ -99,6 +95,19 @@ class Goods extends Component<IProps, {}> {
       }
     }
 
+    if (shopPlanId) {
+      // 检测是否购买过
+      const hasNum = await this.props.dispatch({
+        type: 'common/HasGoods',
+        payload: {
+          goodsId: id,
+        },
+      });
+      if (hasNum > 0) {
+        this.setState({ hasNum });
+      }
+    }
+
     this.setState({ id, communityId, fromUserId, shopPlanId });
     console.log({ id, communityId, fromUserId, shopPlanId });
 
@@ -112,16 +121,22 @@ class Goods extends Component<IProps, {}> {
         id,
       },
     });
-    if (shopPlanId) {
-      const { data } = await this.props.dispatch({
-        type: 'shop/ProductList',
-        payload: {
-          shopPlanId,
-        },
-      });
-      this.setState({ productList: data });
-    }
+
     this.timeSe();
+  }
+  componentDidMount() {
+    setTimeout(async () => {
+      const { shopPlanId } = this.state;
+      if (shopPlanId) {
+        const { data } = await this.props.dispatch({
+          type: 'shop/ProductList',
+          payload: {
+            shopPlanId,
+          },
+        });
+        this.setState({ productList: data });
+      }
+    }, 500);
   }
 
   timeSe() {
@@ -170,26 +185,30 @@ class Goods extends Component<IProps, {}> {
     }
   }
   onShareAppMessage() {
-    const now = new Date();
-    const nowStr = `${now.getMonth() + 1}/${now.getDate()}`;
-
     const { shopPlanId, id } = this.state;
     const { userInfo, Detail } = this.props;
+
     if (shopPlanId) {
-      return {
-        title: `全城免费，吃喝玩乐用通通免费，我是「${userInfo.nickName}」，邀你一起来狂欢`,
-        path: `/pages/goods/index?id=${id}&f=${userInfo.id}&c=${
+      let path = `/pages/goods/index?id=${id}&c=${userInfo.communityId}&p=${shopPlanId}`;
+      if (this.state.hasNum)
+        path = `/pages/goods/index?id=${id}&f=${userInfo.id}&c=${
           userInfo.communityId
-        }&p=${shopPlanId}`,
+        }&p=${shopPlanId}`;
+      return {
+        title: `全城吃喝玩乐嗨通通免费，我是「${userInfo.nickName}」，邀您一起来狂欢`,
+        path,
         imageUrl: Detail.share_img,
       };
     }
+
+    const now = new Date();
+    const nowStr = `${now.getMonth() + 1}/${now.getDate()}`;
 
     return {
       title: `【${now.getMonth() + 1}月${now.getDate()}日】 ${Detail.info.goods_name}`,
       path: `/pages/goods/index?id=${this.state.id}&f=${userInfo.id}&c=${
         userInfo.communityId
-      }&n=${nowStr}&p=${shopPlanId}`,
+      }&n=${nowStr}`,
     };
   }
   componentWillUnmount() {
@@ -263,7 +282,7 @@ class Goods extends Component<IProps, {}> {
           distributorId: this.state.fromUserId,
         },
       });
-      if (!orderRes) return;
+      if (!orderRes.id) return;
       if (orderRes.errno === 401) {
         Taro.navigateTo({ url: '/pages/login/index?back=back' });
         return;
@@ -368,11 +387,16 @@ class Goods extends Component<IProps, {}> {
       const now = new Date();
       const nowStr = `${now.getMonth() + 1}/${now.getDate()}`;
 
-      const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&n=${nowStr}&f=${
-        this.props.userInfo.id
-      }&p=${this.state.shopPlanId}&c=${
-        this.props.userInfo.communityId
-      }&page=pages/goods/index&width=280px`;
+      let ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&n=${nowStr}&p=${
+        this.state.shopPlanId
+      }&c=${this.props.userInfo.communityId}&page=pages/goods/index&width=280px`;
+      if (this.state.hasNum) {
+        ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&n=${nowStr}&f=${
+          this.props.userInfo.id
+        }&p=${this.state.shopPlanId}&c=${
+          this.props.userInfo.communityId
+        }&page=pages/goods/index&width=280px`;
+      }
       this.setState({ goodsShare: goodsShare(this.props.userInfo, this.props.Detail.info, ewm) });
       return;
     }
@@ -448,6 +472,7 @@ class Goods extends Component<IProps, {}> {
     id: null,
     shopPlanId: null,
     fromUserId: null,
+    hasNum: 0,
   };
 
   render() {
@@ -464,6 +489,7 @@ class Goods extends Component<IProps, {}> {
       disabled,
       shopPlanId,
       productList,
+      hasNum,
     }: any = this.state;
     const { Detail, cartTotal, userInfo } = this.props;
     if (!Detail.info)
@@ -531,10 +557,15 @@ class Goods extends Component<IProps, {}> {
               <View className="share-bottom">
                 <View className="close erduufont ed-close" onClick={this.shareBtn} />
                 {info.sku[0].distributeMoney && (
-                  <View className="p-text">
-                    好东西就要分享给朋友，通过你的链接下单后， 您即可获得佣金
-                    <Text className="active">￥{info.sku[0].distributeMoney}</Text>
-                    ，且不限次数。
+                  <View>
+                    <View className="p-text">
+                      好东西就要分享给朋友，通过您的链接下单后， 您即可获得分成
+                      <Text className="active">￥{info.sku[0].distributeMoney}</Text>
+                      ，且不限次数。
+                    </View>
+                    {!hasNum && (
+                      <View className="p-text">注：您必须先自己购买成功才能获得推荐分成！</View>
+                    )}
                   </View>
                 )}
                 <View className="share-bottom-in">
@@ -691,6 +722,21 @@ class Goods extends Component<IProps, {}> {
         <View className="wrap">
           <View className="h3">{info.goods_name}</View>
           <View className="desc">{info.goods_brief}</View>
+          {info.is_limited && (
+            <View className="desc">
+              <AtTag active={true} size="small">
+                限购{info.is_limited}
+                {info.goods_unit}
+              </AtTag>
+            </View>
+          )}
+          {shopPlanId && (
+            <View className="desc">
+              <AtTag active={true} size="small">
+                不支持退款
+              </AtTag>
+            </View>
+          )}
           <View className="sale-wrap">
             <View
               className="sale-slide"
@@ -780,7 +826,9 @@ class Goods extends Component<IProps, {}> {
             <Button className="cart-wrap plain" plain onClick={this.shareBtn}>
               {/* <View className="badge">{cartTotal.checkedGoodsCount || 0}</View> */}
               <Text className="erduufont ed-share" />
-              <View className="bottom-text">分享赚{info.sku[0].distributeMoney}</View>
+              <View className="bottom-text">
+                分享赚<Text className="active">￥{info.sku[0].distributeMoney}</Text>
+              </View>
             </Button>
             <View className="add-cart">
               <AtButton

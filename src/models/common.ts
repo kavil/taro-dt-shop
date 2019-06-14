@@ -39,7 +39,7 @@ export default {
       }
       return null;
     },
-    *wxCode(_, {}) {
+    *wxCode(_, { }) {
       // let { wxLoginCode } = yield select(state => state.common);
       // if (!wxLoginCode) {
       const res = yield Taro.login();
@@ -127,6 +127,10 @@ export default {
       Taro.setStorageSync('uploadSign', JSON.stringify(res.data));
       return res.data;
     },
+    *HasGoods({ payload }, { call }) {
+      const res = yield call(Api.hasGoods, payload);
+      return res.data;
+    }
   },
 
   reducers: {

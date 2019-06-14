@@ -1,7 +1,16 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import { View, Image, Text, ScrollView, Button, Swiper, SwiperItem, Form } from '@tarojs/components';
+import {
+  View,
+  Image,
+  Text,
+  ScrollView,
+  Button,
+  Swiper,
+  SwiperItem,
+  Form,
+} from '@tarojs/components';
 import {
   AtSearchBar,
   AtTabs,
@@ -499,7 +508,11 @@ class Index extends Component<IProps, {}> {
         {/* <ChangeCommunity show={false} /> */}
 
         <AtCurtain isOpened={curtainOpened} onClose={this.onCloseCurtain.bind(this)}>
-          {curtainPng && <Image className="curtain-img" src={curtainPng + '@!640X800'} />}
+          {curtainPng && (
+            <View onClick={this.viewGoods.bind(this, this.state.curtainRes)}>
+              <Image className="curtain-img" src={curtainPng + '@!640X800'} />
+            </View>
+          )}
         </AtCurtain>
         {!addmyappTip && (
           <View className="addmyapp">
@@ -535,7 +548,12 @@ class Index extends Component<IProps, {}> {
               </View>
             </View>
           ) : (
-            <View className="colonel-div" />
+            <View
+              className="colonel-div"
+              onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}
+            >
+              点击绑定小区团购
+            </View>
           )}
           <View className="search-wrap">
             <AtSearchBar value="" onChange={this.handNull} />

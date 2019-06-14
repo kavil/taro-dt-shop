@@ -110,11 +110,15 @@
 .coupon-page {
     background: $bg-color-base;
     &.card-page{
+        background: #f1f1f1;
         .card-ul {
             padding: 0 40px 50px;
             overflow: hidden;
         }
         .cli{
+            .cicle{
+                background: #f1f1f1;
+            }
             margin-top: 0px;
             margin-bottom: 20px;
             .head{
@@ -129,7 +133,7 @@
             }
             .ewm{
                 position: absolute;
-                top: 20%;
+                top: 12%;
                 right: 20px;
                 height: 80px;
                 width: 80px;
