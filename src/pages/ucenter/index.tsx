@@ -359,13 +359,13 @@ class Ucenter extends Component<IProps, {}> {
                   title="我的余额"
                 />
               </Button>
-              <Button
+              {/* <Button
                 className="li plain"
                 plain
                 onClick={this.nextPage.bind(this, '/pages/goods/index?id=303&p=1')}
               >
                 <AtListItem className="em" arrow="right" title="测试链接" />
-              </Button>
+              </Button> */}
               <Button
                 className="li plain"
                 formType="submit"
