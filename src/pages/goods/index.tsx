@@ -95,19 +95,6 @@ class Goods extends Component<IProps, {}> {
       }
     }
 
-    if (shopPlanId) {
-      // 检测是否购买过
-      const hasNum = await this.props.dispatch({
-        type: 'common/HasGoods',
-        payload: {
-          goodsId: id,
-        },
-      });
-      if (hasNum > 0) {
-        this.setState({ hasNum });
-      }
-    }
-
     this.setState({ id, communityId, fromUserId, shopPlanId });
     console.log({ id, communityId, fromUserId, shopPlanId });
 
@@ -123,6 +110,19 @@ class Goods extends Component<IProps, {}> {
     });
 
     this.timeSe();
+
+    if (shopPlanId) {
+      // 检测是否购买过
+      const hasNum = await this.props.dispatch({
+        type: 'common/HasGoods',
+        payload: {
+          goodsId: id,
+        },
+      });
+      if (hasNum > 0) {
+        this.setState({ hasNum });
+      }
+    }
   }
   componentDidMount() {
     setTimeout(async () => {
@@ -206,9 +206,7 @@ class Goods extends Component<IProps, {}> {
 
     return {
       title: `【${now.getMonth() + 1}月${now.getDate()}日】 ${Detail.info.goods_name}`,
-      path: `/pages/goods/index?id=${this.state.id}&f=${userInfo.id}&c=${
-        userInfo.communityId
-      }&n=${nowStr}`,
+      path: `/pages/goods/index?id=${this.state.id}&c=${userInfo.communityId}&n=${nowStr}`,
     };
   }
   componentWillUnmount() {
@@ -229,10 +227,15 @@ class Goods extends Component<IProps, {}> {
   nextPage = url => {
     Taro.navigateTo({ url });
   };
-  loginSuccess = async _ => {
-    // await this.props.dispatch({
-    //   type: 'cart/Index',
-    // });
+  loginSuccess = async (_, next) => {
+    if (next === 'submitShop') {
+      this.submitShop(this.props.Detail.info);
+      return;
+    } else if (next === 'shareBtn') {
+      this.shareBtn();
+      return;
+    }
+
     this.addCartOk(this.props.Detail.info);
   };
 
@@ -282,12 +285,14 @@ class Goods extends Component<IProps, {}> {
           distributorId: this.state.fromUserId,
         },
       });
-      if (!orderRes.id) return;
       if (orderRes.errno === 401) {
-        Taro.navigateTo({ url: '/pages/login/index?back=back' });
+        Taro.eventCenter.trigger('login', {
+          shopPlanId: this.state.shopPlanId,
+          next: 'submitShop',
+        });
         return;
       }
-
+      if (!orderRes.id) return;
       const payParam = await this.props.dispatch({
         type: 'cart/Prepay',
         payload: {
@@ -365,7 +370,7 @@ class Goods extends Component<IProps, {}> {
 
   shareBtn = async () => {
     if (!Taro.getStorageSync('token')) {
-      Taro.navigateTo({ url: '/pages/login/index?back=back' });
+      Taro.eventCenter.trigger('login', { shopPlanId: this.state.shopPlanId, next: 'shareBtn' });
       return;
     }
     this.setState({
@@ -387,17 +392,26 @@ class Goods extends Component<IProps, {}> {
       const now = new Date();
       const nowStr = `${now.getMonth() + 1}/${now.getDate()}`;
 
-      let ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&n=${nowStr}&p=${
-        this.state.shopPlanId
-      }&c=${this.props.userInfo.communityId}&page=pages/goods/index&width=280px`;
-      if (this.state.hasNum) {
-        ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&n=${nowStr}&f=${
-          this.props.userInfo.id
-        }&p=${this.state.shopPlanId}&c=${
-          this.props.userInfo.communityId
-        }&page=pages/goods/index&width=280px`;
+      let ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&n=${nowStr}&c=${
+        this.props.userInfo.communityId
+      }&page=pages/goods/index&width=300px`;
+
+      if (this.state.shopPlanId) {
+        ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&p=${
+          this.state.shopPlanId
+        }&c=${this.props.userInfo.communityId}&page=pages/goods/index&width=300px`;
+
+        if (this.state.hasNum) {
+          ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&f=${
+            this.props.userInfo.id
+          }&p=${this.state.shopPlanId}&c=${
+            this.props.userInfo.communityId
+          }&page=pages/goods/index&width=300px`;
+        }
       }
+
       this.setState({ goodsShare: goodsShare(this.props.userInfo, this.props.Detail.info, ewm) });
+
       return;
     }
     // if (!this.state.shareImage) return;
@@ -720,10 +734,16 @@ class Goods extends Component<IProps, {}> {
           ) : null}
         </View>
         <View className="wrap">
-          <View className="h3">{info.goods_name}</View>
+          <View className="fj">
+            <View className="h3">{info.goods_name}</View>
+            <View className="hot-w">
+              <Text className="erduufont ed-huorecuxiao-" />
+              <Text className="hot">{info.hot}</Text>
+            </View>
+          </View>
           <View className="desc">{info.goods_brief}</View>
           {info.is_limited && (
-            <View className="desc">
+            <View className="desc dib mr10">
               <AtTag active={true} size="small">
                 限购{info.is_limited}
                 {info.goods_unit}
@@ -731,7 +751,7 @@ class Goods extends Component<IProps, {}> {
             </View>
           )}
           {shopPlanId && (
-            <View className="desc">
+            <View className="desc dib">
               <AtTag active={true} size="small">
                 不支持退款
               </AtTag>

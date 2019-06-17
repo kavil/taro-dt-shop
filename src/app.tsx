@@ -140,13 +140,14 @@ class App extends Component {
           // 没有绑定过小区的  自动绑定
           await this.bindCommunity(communityId);
         }
-      } else {
-        // 如果是没带community的链接进来
-        if (!(userInfo && userInfo.communityId)) {
-          Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
-          return;
-        }
       }
+      //  else {
+      // 如果是没带community的链接进来
+      // if (!(userInfo && userInfo.communityId)) {
+      // Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
+      // return;
+      // }
+      // }
       store.dispatch({
         type: 'cart/Index',
       });

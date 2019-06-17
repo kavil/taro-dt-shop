@@ -157,7 +157,7 @@ class Card extends Component<IProps, {}> {
                   <View className="title">{ele.name}</View>
                   {/* <View className="p">{ele.desc}</View> */}
                   <View className="p">
-                    有效期：{ele.use_start_date.split(' ')[0]} ~{' '}
+                    有效期至 {' '}
                     {ele.use_end_date ? ele.use_end_date.split(' ')[0] : '无限制'}
                   </View>
                 </View>

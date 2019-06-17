@@ -37,8 +37,14 @@ type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
 class Login extends Component<IProps, {}> {
   componentDidMount() {
     Taro.eventCenter.on('login', status => {
+      if (typeof status !== 'boolean') {
+        this.setState({
+          shopPlanId: status.shopPlanId,
+          next: status.next,
+        });
+      }
       this.setState({
-        openLogin: status,
+        openLogin: !!status,
       });
     });
   }
@@ -79,14 +85,16 @@ class Login extends Component<IProps, {}> {
 
       if (this.props.userInfo && this.props.userInfo.communityId) {
       } else {
-        const communityId = Taro.getStorageSync('communityId');
-        if (communityId) {
-          Taro.removeStorageSync('communityId');
-          // 没有绑定过小区的  自动绑定
-          await this.bindCommunity(communityId);
-        } else {
-          Taro.navigateTo({ url: '/pages/neighbor/search' });
-          return;
+        if (!this.state.shopPlanId) {
+          const communityId = Taro.getStorageSync('communityId');
+          if (communityId) {
+            Taro.removeStorageSync('communityId');
+            // 没有绑定过小区的  自动绑定
+            await this.bindCommunity(communityId);
+          } else {
+            Taro.navigateTo({ url: '/pages/neighbor/search' });
+            return;
+          }
         }
       }
 
@@ -96,10 +104,9 @@ class Login extends Component<IProps, {}> {
       this.setState({
         openLogin: false,
       });
-      if (this.props.onChange) this.props.onChange(userInfo);
+      if (this.props.onChange) this.props.onChange(userInfo, this.state.next);
     }
   };
-
 
   async bindCommunity(communityId) {
     await this.props.dispatch({
@@ -127,6 +134,8 @@ class Login extends Component<IProps, {}> {
   };
   state = {
     openLogin: false,
+    shopPlanId: null,
+    next: null,
   };
 
   render() {

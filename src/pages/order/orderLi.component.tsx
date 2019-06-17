@@ -3,6 +3,7 @@ import { View, Text } from '@tarojs/components';
 import { AtAvatar, AtButton, AtCountdown } from 'taro-ui';
 import { connect } from '@tarojs/redux';
 import './index.scss';
+import { tip } from '../../utils/tool';
 
 interface DispatchOption {
   type?: string;
@@ -50,34 +51,56 @@ export class OrderLi extends Component<IProps, {}> {
   };
 
   pay = async () => {
+    const { order } = this.props;
+    const orderId = this.props.order.id;
     const payParam = await this.props.dispatch({
       type: 'cart/Prepay',
       payload: {
-        orderId: this.props.order.id,
+        orderId,
       },
     });
     if (!payParam) {
       return;
     }
-    await Taro.requestPayment({
-      timeStamp: payParam.timeStamp,
-      nonceStr: payParam.nonceStr,
-      package: payParam.package,
-      signType: payParam.signType,
-      paySign: payParam.paySign,
 
-      success: res => {
-        if (res.errMsg === 'requestPayment:fail cancel') {
-          Taro.redirectTo({
-            url: `/pages/order/purchased?orderId=${this.props.order.id}&type=no`,
-          });
-        } else {
-          Taro.redirectTo({
-            url: `/pages/order/purchased?orderId=${this.props.order.id}&type=ok`,
-          });
-        }
-      },
-    });
+    if (!order.distribute) {
+      await Taro.requestPayment({
+        timeStamp: payParam.timeStamp,
+        nonceStr: payParam.nonceStr,
+        package: payParam.package,
+        signType: payParam.signType,
+        paySign: payParam.paySign,
+
+        success: res => {
+          if (res.errMsg === 'requestPayment:fail cancel') {
+            Taro.redirectTo({
+              url: `/pages/order/purchased?orderId=${orderId}&type=no`,
+            });
+          } else {
+            Taro.redirectTo({
+              url: `/pages/order/purchased?orderId=${orderId}&type=ok`,
+            });
+          }
+        },
+      });
+    } else {
+      await Taro.requestPayment({
+        timeStamp: payParam.timeStamp,
+        nonceStr: payParam.nonceStr,
+        package: payParam.package,
+        signType: payParam.signType,
+        paySign: payParam.paySign,
+        success: res => {
+          if (res.errMsg === 'requestPayment:fail cancel') {
+            tip('支付失败，请重新支付');
+          } else {
+            Taro.redirectTo({
+              url: `/pages/order/purchasedShop?orderId=${orderId}&type=ok`,
+            });
+          }
+        },
+      });
+    }
   };
   refund = () => {};
   onTimeUp = () => {};
@@ -116,12 +139,12 @@ export class OrderLi extends Component<IProps, {}> {
               <View className="nick">{order.order_sn}</View>
             </View>
           </View>
-          {order.getcode && (
+          {/* {order.getcode && (
             <View className="sn">
               <View className="block">取件码</View>
               {order.getcode.getcode}
             </View>
-          )}
+          )} */}
           {/* 不知道为啥这里 countdown 有问题 不显示 // 估计是setstate */}
           {op && op.pay && countdown && (
             <View className="last-time">

@@ -99,7 +99,8 @@ class Login extends Component<IProps, {}> {
           await this.bindCommunity(communityId);
           Taro.switchTab({ url: '/pages/index/index' });
         } else {
-          Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
+          Taro.switchTab({ url: '/pages/index/index' });
+          // Taro.redirectTo({ url: '/pages/neighbor/search?mode=redirect' });
           return;
         }
       }

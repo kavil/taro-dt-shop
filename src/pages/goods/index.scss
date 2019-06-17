@@ -415,3 +415,17 @@
 .image-wrap img {
     width: 100%;
 }
+
+.dib{display: inline-block;}
+.mr10{margin-right: 10px}
+.fj{
+    align-items: center;
+    @include fj;
+}
+.hot-w{
+    @include fj(flex-start);
+    align-items: center;
+    .erduufont{font-size: 32px; color: $color-brand-light; margin-right: 5px;}
+    .hot {color: $color-info; font-size: 28px;}
+
+}
