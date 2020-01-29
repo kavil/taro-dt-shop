@@ -82,6 +82,11 @@
             width: 100%;
             border-radius: 10px;
         }
+        &.big{
+            .swiper{
+                height: 900px;
+            }
+        }
     }
 
     .curtain-img {

@@ -128,13 +128,14 @@ class Goods extends Component<IProps, {}> {
     setTimeout(async () => {
       const { shopPlanId } = this.state;
       if (shopPlanId) {
-        const { data } = await this.props.dispatch({
+        const res = await this.props.dispatch({
           type: 'shop/ProductList',
           payload: {
             shopPlanId,
+            size: 10,
           },
         });
-        this.setState({ productList: data });
+        this.setState({ shopProduct: res });
       }
     }, 500);
   }
@@ -461,6 +462,20 @@ class Goods extends Component<IProps, {}> {
       });
     }
   }
+
+  lookMore = async () => {
+    let { shopPlanId }: any = this.state;
+
+    const res = await this.props.dispatch({
+      type: 'shop/ProductList',
+      payload: {
+        shopPlanId,
+        size: 100,
+      },
+    });
+    this.setState({ shopProduct: res, nomore: true });
+  };
+
   getFormId = e => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
@@ -487,6 +502,8 @@ class Goods extends Component<IProps, {}> {
     shopPlanId: null,
     fromUserId: null,
     hasNum: 0,
+    nomore: false,
+    shopProduct: {}
   };
 
   render() {
@@ -502,9 +519,12 @@ class Goods extends Component<IProps, {}> {
       goodsNumber,
       disabled,
       shopPlanId,
-      productList,
       hasNum,
+      nomore,
+      shopProduct,
     }: any = this.state;
+    const productList = shopProduct.data;
+
     const { Detail, cartTotal, userInfo } = this.props;
     if (!Detail.info)
       return <AtActivityIndicator className="center" mode="center" color="#f1836f" />;
@@ -792,6 +812,11 @@ class Goods extends Component<IProps, {}> {
             {productList.map(ele => (
               <Product key={ele.id} item={ele} />
             ))}
+            {!nomore && (
+              <View className="more" onClick={this.lookMore}>
+                点击查看更多 v
+              </View>
+            )}
           </View>
         )}
         <View className="wrap rich-wrap">

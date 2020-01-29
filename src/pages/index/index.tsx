@@ -453,6 +453,11 @@ class Index extends Component<IProps, {}> {
       return cateImgList[cate_id];
     };
 
+    const getIndexAdClass = () => {
+      if (indexAd[0].linkto.includes('303')) return 'index-ad big';
+      return 'index-ad';
+    };
+
     return (
       <View className="index wrap">
         <AtModal isOpened={noCommunityOpen}>
@@ -603,11 +608,18 @@ class Index extends Component<IProps, {}> {
           {tabList.map((_, i) => (
             <AtTabsPane key={i} current={current} index={i}>
               {current === 0 && indexAd.length && (
-                <View className="index-ad">
+                <View className={getIndexAdClass()}>
                   <Swiper className="swiper" indicatorDots indicatorActiveColor="#f1836f" autoplay>
                     {indexAd.map((ele, i) => (
                       <SwiperItem key={i} onClick={this.viewGoods.bind(this, ele)}>
-                        <Image mode="widthFix" className="img" src={ele.image_url + '@!900X383'} />
+                        <Image
+                          mode="widthFix"
+                          className="img"
+                          src={
+                            ele.image_url +
+                            (getIndexAdClass() === 'index-ad big' ? '@!710X900' : '@!900X383')
+                          }
+                        />
                       </SwiperItem>
                     ))}
                   </Swiper>

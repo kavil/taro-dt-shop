@@ -65,7 +65,7 @@ class Product extends Component<IProps, {}> {
               <View className="purple-tag">价值</View>
               <Text className="money">
                 <Text className="small">￥</Text>
-                {item.retail_price}
+                <Text className="del">{item.retail_price}</Text>
               </Text>
             </View>
           </View>

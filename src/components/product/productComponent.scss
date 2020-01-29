@@ -64,7 +64,7 @@ button.plain {
         color: $font-info;
     }
     .money{
-        color: $color-brand-dark;
+        color: $font-default;
         line-height:1;
         display:inline-block;
     }
@@ -90,5 +90,7 @@ button.plain {
     .bt{
         padding: 10px 0
     }
-
+    .del{
+        text-decoration: line-through;
+    }
 }
