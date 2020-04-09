@@ -1,10 +1,10 @@
-@import "../../static/css/mixin";
+@import '../../static/css/mixin';
 .at-icon.at-icon-check {
-    color: #fff;
+  color: #fff;
 }
 
 .at-checkbox::after,
 .at-checkbox::before {
-    border-top: 2px solid #fff;
-    border-bottom: 0;
+  border-top: 2px solid #fff;
+  border-bottom: 0;
 }

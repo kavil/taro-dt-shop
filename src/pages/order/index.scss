@@ -1,129 +1,130 @@
-@import "../../static/css/mixin";
-page, .page{
-    background: $bg-color-base;
+@import '../../static/css/mixin';
+page,
+.page {
+  background: $bg-color-base;
 }
 .order-page {
-    padding-top: 80px;
+  padding-top: 80px;
+  background: $bg-color-base;
+  .at-divider__content {
     background: $bg-color-base;
-    .at-divider__content {
-        background: $bg-color-base;
-    }
+  }
 }
 
 .st {
-    font-size: 28px;
-    margin-right: 20px;
-    line-height: 50px;
+  font-size: 28px;
+  margin-right: 20px;
+  line-height: 50px;
 }
 
 .st-201 {
-    color: $btn-active;
+  color: $btn-active;
 }
 
 .st-300 {
-    color: $color-primary;
+  color: $color-primary;
 }
 
 .st-301 {
-    color: #44b549;
+  color: #44b549;
 }
 
 .order-ul {
-    margin: 20px 0;
+  margin: 20px 0;
 }
 
 .order-li {
-    background: #fff;
-    margin-bottom: 20px;
-    padding-left: 20px;
-    border-top: 1px solid $border;
+  background: #fff;
+  margin-bottom: 20px;
+  padding-left: 20px;
+  border-top: 1px solid $border;
+  border-bottom: 1px solid $border;
+  .top {
+    @include fj('space-between');
     border-bottom: 1px solid $border;
-    .top {
-        @include fj('space-between');
-        border-bottom: 1px solid $border;
-        padding: 15px 20px 15px 0;
-        .user {
-            @include ddd;
-            @include fj('flex-start');
-            align-items: center;
-            flex: 1;
-        }
-        .sn {
-            width: 300px;
-            text-align: right;
-            font-size: 24px;
-        }
-        .nick {
-            padding-left: 10px;
-            font-size: 24px;
-        }
-        .block {
-            font-size: 24px;
-        }
+    padding: 15px 20px 15px 0;
+    .user {
+      @include ddd;
+      @include fj('flex-start');
+      align-items: center;
+      flex: 1;
     }
-    .center {
-        @include fj('space-between');
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px 0;
-        .main {
-            @include fj('space-between');
-            flex: 1;
-            .ava {
-                width: 140px;
-            }
-            .name {
-                flex: 1;
-            }
-        }
-        .price {
-            width: 200px;
-            text-align: right;
-            padding-right: 20px;
-            color: $btn-active;
-        }
-        .p {
-            color: $font-info;
-            font-size: 26px;
-        }
+    .sn {
+      width: 300px;
+      text-align: right;
+      font-size: 24px;
     }
-    .bottom {
-        @include fj('space-between');
-        border-top: 1px solid $border;
-        padding: 15px 20px 5px 0;
-        .right {
-            text-align: right;
-            font-size: 24px;
-            flex: 1;
-            color: $font-default;
-            @include fj(flex-end);
-            .at-button--small {
-                height: 54px;
-                line-height: 52px;
-            }
-            at-button {
-                margin-left: 10px;
-            }
-        }
-        .left {
-            width: 300px;
-            color: $btn-active;
-            font-size: 24px;
-            display: flex;
-            align-items: stretch;
-            line-height: 48px;
-        }
+    .nick {
+      padding-left: 10px;
+      font-size: 24px;
     }
-    .coupon {
-        padding-right: 20px;
-        padding-bottom: 10px;
-        color: $font-info;
-        font-size: 26px;
-        text-align: right;
+    .block {
+      font-size: 24px;
     }
+  }
+  .center {
+    @include fj('space-between');
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    .main {
+      @include fj('space-between');
+      flex: 1;
+      .ava {
+        width: 140px;
+      }
+      .name {
+        flex: 1;
+      }
+    }
+    .price {
+      width: 200px;
+      text-align: right;
+      padding-right: 20px;
+      color: $btn-active;
+    }
+    .p {
+      color: $font-info;
+      font-size: 26px;
+    }
+  }
+  .bottom {
+    @include fj('space-between');
+    border-top: 1px solid $border;
+    padding: 15px 20px 5px 0;
+    .right {
+      text-align: right;
+      font-size: 24px;
+      flex: 1;
+      color: $font-default;
+      @include fj(flex-end);
+      .at-button--small {
+        height: 54px;
+        line-height: 52px;
+      }
+      at-button {
+        margin-left: 10px;
+      }
+    }
+    .left {
+      width: 300px;
+      color: $btn-active;
+      font-size: 24px;
+      display: flex;
+      align-items: stretch;
+      line-height: 48px;
+    }
+  }
+  .coupon {
+    padding-right: 20px;
+    padding-bottom: 10px;
+    color: $font-info;
+    font-size: 26px;
+    text-align: right;
+  }
 }
 
 .at-avatar--small {
-    width: 50px !important;
-    height: 50px !important;
+  width: 50px !important;
+  height: 50px !important;
 }

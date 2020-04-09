@@ -27,11 +27,11 @@ type PageOwnProps = {
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
 @connect(({ score }) => ({
-  ...score,
+  ...score
 }))
 export default class List extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '我的积分明细',
+    navigationBarTitleText: '我的积分明细'
   };
 
   componentDidMount = () => {
@@ -40,7 +40,7 @@ export default class List extends Component<IProps, {}> {
 
   getAccountList() {
     this.props.dispatch({
-      type: 'score/ScoreList',
+      type: 'score/ScoreList'
     });
   }
 
@@ -53,8 +53,8 @@ export default class List extends Component<IProps, {}> {
         opType,
         page: 1, // 归位
         refresh: true,
-        loadOver: false,
-      },
+        loadOver: false
+      }
     });
     this.getAccountList();
   }
@@ -65,8 +65,8 @@ export default class List extends Component<IProps, {}> {
       payload: {
         page: 1, // 归位
         refresh: true,
-        loadOver: false,
-      },
+        loadOver: false
+      }
     });
     this.getAccountList();
   }
@@ -74,14 +74,14 @@ export default class List extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'score/save',
       payload: {
-        page: this.props.page + 1,
-      },
+        page: this.props.page + 1
+      }
     });
     this.getAccountList();
   }
   nextPage(url) {
     Taro.navigateTo({
-      url: url,
+      url: url
     });
   }
 
@@ -91,29 +91,17 @@ export default class List extends Component<IProps, {}> {
     const { scoreList, loadOver, opType } = this.props;
     return (
       <View className="score-page">
-        <Picker
-          className="pick"
-          mode="selector"
-          range={this.typeRange}
-          value={opType}
-          onChange={this.changeType.bind(this)}
-        >
+        <Picker className="pick" mode="selector" range={this.typeRange} value={opType} onChange={this.changeType.bind(this)}>
           {this.typeRange[opType]}
           <Text className="erduufont ed-back down" />
         </Picker>
         {scoreList && scoreList.length ? (
           <View className="base-ul">
-            {scoreList.map(item => {
+            {scoreList.map((item) => {
               return (
-                <View
-                  key={item.id}
-                  className="li"
-                  onClick={this.nextPage.bind(this, `./detail?id=${item.id}`)}
-                >
+                <View key={item.id} className="li" onClick={this.nextPage.bind(this, `./detail?id=${item.id}`)}>
                   <View className="left">
-                    <View className="h2">
-                      {item.orderId == 0 ? item.note : '订单号 ' + item.orderId}
-                    </View>
+                    <View className="h2">{item.orderId == 0 ? item.note : '订单号 ' + item.orderId}</View>
                     <View className="type">[{this.typeRange[item.opType]}]</View>
                     <View className="time">{item.createdTime}</View>
                   </View>

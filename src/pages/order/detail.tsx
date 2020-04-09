@@ -25,11 +25,11 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
 @connect(({ order, common }) => ({
   ...order,
-  ...common,
+  ...common
 }))
 export default class orderDetail extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '订单详情',
+    navigationBarTitleText: '订单详情'
     // backgroundColor: '#f8f8f8',
   };
 
@@ -37,12 +37,12 @@ export default class orderDetail extends Component<IProps, {}> {
     const { Detail } = this.props;
     if (!Detail) Taro.navigateBack();
     this.setState({
-      Detail,
+      Detail
     });
   }
 
   state = {
-    Detail: null,
+    Detail: null
   };
 
   async onPullDownRefresh() {
@@ -54,8 +54,8 @@ export default class orderDetail extends Component<IProps, {}> {
     const payParam = await this.props.dispatch({
       type: 'cart/Prepay',
       payload: {
-        orderId: Detail.id,
-      },
+        orderId: Detail.id
+      }
     });
     if (!payParam) {
       return;
@@ -66,17 +66,17 @@ export default class orderDetail extends Component<IProps, {}> {
       package: payParam.package,
       signType: payParam.signType,
       paySign: payParam.paySign,
-      success: res => {
+      success: (res) => {
         if (res.errMsg === 'requestPayment:fail cancel') {
           Taro.redirectTo({
-            url: `/pages/order/purchased?orderId=${Detail.id}&type=no`,
+            url: `/pages/order/purchased?orderId=${Detail.id}&type=no`
           });
         } else {
           Taro.redirectTo({
-            url: `/pages/order/purchased?orderId=${Detail.id}&type=ok`,
+            url: `/pages/order/purchased?orderId=${Detail.id}&type=ok`
           });
         }
-      },
+      }
     });
   };
 

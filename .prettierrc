@@ -1,11 +1,6 @@
 {
-  "singleQuote": true,
-  "trailingComma": "es5",
-  "printWidth": 100,
-  "overrides": [
-    {
-      "files": ".prettierrc",
-      "options": { "parser": "json" }
-    }
-  ]
+  "printWidth": 140,
+  "tabWidth": 2,
+  "arrowParens": "always",
+  "singleQuote": true
 }

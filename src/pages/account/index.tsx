@@ -20,11 +20,11 @@ interface PageStateProps {
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ account, loading }) => ({
-  ...account,
+  ...account
 }))
 class Account extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '我的可用余额',
+    navigationBarTitleText: '我的可用余额'
   };
 
   componentDidMount = () => {};
@@ -40,7 +40,7 @@ class Account extends Component<IProps, {}> {
   render() {
     const { accountInfo } = this.props;
     console.log(accountInfo);
-    
+
     return (
       <View className="account-page">
         <View className="account-top">

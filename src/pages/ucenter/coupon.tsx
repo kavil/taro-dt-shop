@@ -22,23 +22,23 @@ interface PageStateProps {
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ ucenter }) => ({
-  ...ucenter,
+  ...ucenter
 }))
 class Coupon extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '我的红包',
+    navigationBarTitleText: '我的红包'
   };
 
   async componentDidMount() {
     await this.props.dispatch({
-      type: 'ucenter/Coupon',
+      type: 'ucenter/Coupon'
     });
   }
   async onPullDownRefresh() {
     await this.componentDidMount();
     Taro.stopPullDownRefresh();
   }
-  useIt = async ele => {
+  useIt = async (ele) => {
     if (!this.$router.params.type) return;
     const now = getTime();
     if (getTime(ele.info.use_start_date) > now || getTime(ele.info.use_end_date) < now) {
@@ -48,8 +48,8 @@ class Coupon extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'cart/save',
       payload: {
-        couponId: ele.coupon_id,
-      },
+        couponId: ele.coupon_id
+      }
     });
     Taro.navigateBack();
   };
@@ -59,8 +59,8 @@ class Coupon extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'cart/save',
       payload: {
-        couponId: 0,
-      },
+        couponId: 0
+      }
     });
     Taro.navigateBack();
   };
@@ -68,7 +68,7 @@ class Coupon extends Component<IProps, {}> {
   render() {
     const { couponList } = this.props;
     const type = this.$router.params.type;
-    const classText = ele => {
+    const classText = (ele) => {
       const now = getTime();
       let res = 'cli';
       if (getTime(ele.use_start_date) > now || getTime(ele.use_end_date) < now) {

@@ -1,16 +1,6 @@
 import Taro, { Component, Config } from '@tarojs/taro';
 import { ComponentClass } from 'react';
-import {
-  View,
-  Swiper,
-  Image,
-  SwiperItem,
-  Text,
-  RichText,
-  ScrollView,
-  Button,
-  Form,
-} from '@tarojs/components';
+import { View, Swiper, Image, SwiperItem, Text, RichText, ScrollView, Button, Form } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
 import { AtActivityIndicator, AtSteps, AtCountdown, AtButton, AtTag } from 'taro-ui';
@@ -46,13 +36,13 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
   ...cart,
   ...common,
   ...neighbor,
-  ...shop,
+  ...shop
 }))
 class Goods extends Component<IProps, {}> {
   config: Config = {
     usingComponents: {
-      canvasdrawer: '../../components/canvasdrawer/canvasdrawer',
-    },
+      canvasdrawer: '../../components/canvasdrawer/canvasdrawer'
+    }
   };
 
   async componentDidShow() {
@@ -67,7 +57,7 @@ class Goods extends Component<IProps, {}> {
     if (scene) {
       const sceneTmp = decodeURIComponent(scene);
       const _scene: any = {};
-      sceneTmp.split('&').forEach(ele => {
+      sceneTmp.split('&').forEach((ele) => {
         const res = ele.split('=');
         _scene[res[0]] = res[1];
       });
@@ -80,15 +70,11 @@ class Goods extends Component<IProps, {}> {
     }
     console.log(rp);
 
-    if (
-      !shopPlanId &&
-      nowStr &&
-      getTime(new Date().getFullYear() + '/' + nowStr) + 86400000 < getTime()
-    ) {
+    if (!shopPlanId && nowStr && getTime(new Date().getFullYear() + '/' + nowStr) + 86400000 < getTime()) {
       const res = await Taro.showModal({
         title: '提示',
         content: `该链接已过期，点击确定回到首页`,
-        showCancel: false,
+        showCancel: false
       });
       if (res) {
         Taro.switchTab({ url: '/pages/index/index' });
@@ -100,13 +86,13 @@ class Goods extends Component<IProps, {}> {
 
     Taro.showShareMenu();
     this.props.dispatch({
-      type: 'cart/Index',
+      type: 'cart/Index'
     });
     await this.props.dispatch({
       type: 'goods/Detail',
       payload: {
-        id,
-      },
+        id
+      }
     });
 
     this.timeSe();
@@ -116,8 +102,8 @@ class Goods extends Component<IProps, {}> {
       const hasNum = await this.props.dispatch({
         type: 'common/HasGoods',
         payload: {
-          goodsId: id,
-        },
+          goodsId: id
+        }
       });
       if (hasNum > 0) {
         this.setState({ hasNum });
@@ -132,8 +118,8 @@ class Goods extends Component<IProps, {}> {
           type: 'shop/ProductList',
           payload: {
             shopPlanId,
-            size: 10,
-          },
+            size: 10
+          }
         });
         this.setState({ shopProduct: res });
       }
@@ -145,7 +131,7 @@ class Goods extends Component<IProps, {}> {
 
     let goodsNumber = 0;
     if (!Info.sku) Info.sku = [];
-    Info.sku.forEach(ele => {
+    Info.sku.forEach((ele) => {
       goodsNumber += ele.goods_number;
     });
     let disabled;
@@ -167,20 +153,20 @@ class Goods extends Component<IProps, {}> {
     }
     this.setState({
       disabled,
-      goodsNumber,
+      goodsNumber
     });
 
     if (getTime() < getTime(Info.start_time)) {
       const countdown = Countdown(Info.start_time);
       this.setState({
-        countdown,
+        countdown
       });
       return;
     }
     if (getTime() < getTime(Info.over_time)) {
       const countdown = Countdown(Info.over_time);
       this.setState({
-        countdown,
+        countdown
       });
       return;
     }
@@ -191,14 +177,11 @@ class Goods extends Component<IProps, {}> {
 
     if (shopPlanId) {
       let path = `/pages/goods/index?id=${id}&c=${userInfo.communityId}&p=${shopPlanId}`;
-      if (this.state.hasNum)
-        path = `/pages/goods/index?id=${id}&f=${userInfo.id}&c=${
-          userInfo.communityId
-        }&p=${shopPlanId}`;
+      if (this.state.hasNum) path = `/pages/goods/index?id=${id}&f=${userInfo.id}&c=${userInfo.communityId}&p=${shopPlanId}`;
       return {
         title: `全城吃喝玩乐嗨通通免费，我是「${userInfo.nickName}」，邀您一起来狂欢`,
         path,
-        imageUrl: Detail.share_img,
+        imageUrl: Detail.share_img
       };
     }
 
@@ -207,25 +190,25 @@ class Goods extends Component<IProps, {}> {
 
     return {
       title: `【${now.getMonth() + 1}月${now.getDate()}日】 ${Detail.info.goods_name}`,
-      path: `/pages/goods/index?id=${this.state.id}&c=${userInfo.communityId}&n=${nowStr}`,
+      path: `/pages/goods/index?id=${this.state.id}&c=${userInfo.communityId}&n=${nowStr}`
     };
   }
   componentWillUnmount() {
     this.props.dispatch({
-      type: 'goods/clearDetail',
+      type: 'goods/clearDetail'
     });
   }
   async onPullDownRefresh() {
     await this.props.dispatch({
       type: 'goods/Detail',
       payload: {
-        id: this.state.id,
-      },
+        id: this.state.id
+      }
     });
     this.timeSe();
     Taro.stopPullDownRefresh();
   }
-  nextPage = url => {
+  nextPage = (url) => {
     Taro.navigateTo({ url });
   };
   loginSuccess = async (_, next) => {
@@ -251,10 +234,10 @@ class Goods extends Component<IProps, {}> {
       this.avoid = false;
     }, 1000);
   };
-  clickDetail = a => {
+  clickDetail = (a) => {
     console.log(a);
   };
-  addCartOk = async goods => {
+  addCartOk = async (goods) => {
     if (goods.sku.length > 1) {
       // 调出 选择规格组件
       this.setState({ curGoods: goods, openSku: true });
@@ -263,8 +246,8 @@ class Goods extends Component<IProps, {}> {
         type: 'cart/Add',
         payload: {
           productId: goods.sku[0].id,
-          goodsId: goods.id,
-        },
+          goodsId: goods.id
+        }
       });
       if (res.errno === 0)
         setTimeout(() => {
@@ -273,7 +256,7 @@ class Goods extends Component<IProps, {}> {
       if (res.errno === 401) Taro.eventCenter.trigger('login', true);
     }
   };
-  submitShop = async goods => {
+  submitShop = async (goods) => {
     if (goods.sku.length > 1) {
       // 调出 选择规格组件
       this.setState({ curGoods: goods, openSku: true });
@@ -283,13 +266,13 @@ class Goods extends Component<IProps, {}> {
         payload: {
           productId: goods.sku[0].id,
           goodsId: goods.id,
-          distributorId: this.state.fromUserId,
-        },
+          distributorId: this.state.fromUserId
+        }
       });
       if (orderRes.errno === 401) {
         Taro.eventCenter.trigger('login', {
           shopPlanId: this.state.shopPlanId,
-          next: 'submitShop',
+          next: 'submitShop'
         });
         return;
       }
@@ -297,8 +280,8 @@ class Goods extends Component<IProps, {}> {
       const payParam = await this.props.dispatch({
         type: 'cart/Prepay',
         payload: {
-          orderId: orderRes.id,
-        },
+          orderId: orderRes.id
+        }
       });
       const res = await Taro.requestPayment({
         timeStamp: payParam.timeStamp,
@@ -306,18 +289,18 @@ class Goods extends Component<IProps, {}> {
         package: payParam.package,
         signType: payParam.signType,
         paySign: payParam.paySign,
-        success: res => {
+        success: (res) => {
           if (res.errMsg === 'requestPayment:fail cancel') {
             this.props.dispatch({
               type: 'order/Cancel',
               payload: {
-                orderId: orderRes.id,
-              },
+                orderId: orderRes.id
+              }
             });
             tip('支付失败，请重新下单支付');
           } else {
             Taro.redirectTo({
-              url: `/pages/order/purchasedShop?orderId=${orderRes.id}&type=ok`,
+              url: `/pages/order/purchasedShop?orderId=${orderRes.id}&type=ok`
             });
           }
         },
@@ -325,21 +308,21 @@ class Goods extends Component<IProps, {}> {
           this.props.dispatch({
             type: 'order/Cancel',
             payload: {
-              orderId: orderRes.id,
-            },
+              orderId: orderRes.id
+            }
           });
-        },
+        }
       });
     }
   };
   handleCloseSku = () => {
     this.setState({ openSku: false });
   };
-  handleChangeSku = async payload => {
+  handleChangeSku = async (payload) => {
     // 加入购物车
     const res = await this.props.dispatch({
       type: 'cart/Add',
-      payload,
+      payload
     });
     if (res.errno === 0)
       setTimeout(() => {
@@ -352,16 +335,16 @@ class Goods extends Component<IProps, {}> {
     const bigImg = no ? img : img + '@!q90';
     Taro.previewImage({
       current: bigImg,
-      urls: [bigImg],
+      urls: [bigImg]
     });
   };
 
   lookBigM = (img, imgList) => {
     console.log(img);
-    const list = imgList.map(ele => ele + '@!q90');
+    const list = imgList.map((ele) => ele + '@!q90');
     Taro.previewImage({
       current: img + '@!q90',
-      urls: list,
+      urls: list
     });
   };
 
@@ -375,7 +358,7 @@ class Goods extends Component<IProps, {}> {
       return;
     }
     this.setState({
-      shareStart: !this.state.shareStart,
+      shareStart: !this.state.shareStart
     });
   };
 
@@ -387,27 +370,19 @@ class Goods extends Component<IProps, {}> {
 
   async saveImage() {
     this.setState({
-      shareImgStart: true,
+      shareImgStart: true
     });
     if (!this.state.shareImage) {
       const now = new Date();
       const nowStr = `${now.getMonth() + 1}/${now.getDate()}`;
 
-      let ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&n=${nowStr}&c=${
-        this.props.userInfo.communityId
-      }&page=pages/goods/index&width=300px`;
+      let ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&n=${nowStr}&c=${this.props.userInfo.communityId}&page=pages/goods/index&width=300px`;
 
       if (this.state.shopPlanId) {
-        ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&p=${
-          this.state.shopPlanId
-        }&c=${this.props.userInfo.communityId}&page=pages/goods/index&width=300px`;
+        ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&p=${this.state.shopPlanId}&c=${this.props.userInfo.communityId}&page=pages/goods/index&width=300px`;
 
         if (this.state.hasNum) {
-          ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&f=${
-            this.props.userInfo.id
-          }&p=${this.state.shopPlanId}&c=${
-            this.props.userInfo.communityId
-          }&page=pages/goods/index&width=300px`;
+          ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${this.state.id}&f=${this.props.userInfo.id}&p=${this.state.shopPlanId}&c=${this.props.userInfo.communityId}&page=pages/goods/index&width=300px`;
         }
       }
 
@@ -418,7 +393,7 @@ class Goods extends Component<IProps, {}> {
     // if (!this.state.shareImage) return;
     try {
       const res = await Taro.saveImageToPhotosAlbum({
-        filePath: this.state.shareImage || '',
+        filePath: this.state.shareImage || ''
       });
 
       if (res.errMsg === 'saveImageToPhotosAlbum:ok') {
@@ -442,14 +417,14 @@ class Goods extends Component<IProps, {}> {
   async shareFriend(bigImg) {
     await Taro.previewImage({
       current: bigImg,
-      urls: [bigImg],
+      urls: [bigImg]
     });
   }
 
   closeShare() {
     this.setState({
       shareStart: false,
-      shareImgStart: false,
+      shareImgStart: false
     });
   }
 
@@ -458,7 +433,7 @@ class Goods extends Component<IProps, {}> {
     Taro.hideLoading();
     if (errMsg === 'canvasdrawer:ok') {
       this.setState({
-        shareImage: tempFilePath,
+        shareImage: tempFilePath
       });
     }
   }
@@ -470,13 +445,13 @@ class Goods extends Component<IProps, {}> {
       type: 'shop/ProductList',
       payload: {
         shopPlanId,
-        size: 100,
-      },
+        size: 100
+      }
     });
     this.setState({ shopProduct: res, nomore: true });
   };
 
-  getFormId = e => {
+  getFormId = (e) => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
     formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
@@ -484,8 +459,8 @@ class Goods extends Component<IProps, {}> {
     this.props.dispatch({
       type: 'common/save',
       payload: {
-        formIdArr,
-      },
+        formIdArr
+      }
     });
   };
 
@@ -521,13 +496,12 @@ class Goods extends Component<IProps, {}> {
       shopPlanId,
       hasNum,
       nomore,
-      shopProduct,
+      shopProduct
     }: any = this.state;
     const productList = shopProduct.data;
 
     const { Detail, cartTotal, userInfo } = this.props;
-    if (!Detail.info)
-      return <AtActivityIndicator className="center" mode="center" color="#f1836f" />;
+    if (!Detail.info) return <AtActivityIndicator className="center" mode="center" color="#f1836f" />;
 
     const { info, selledUsers, issueList, recommendList } = Detail;
     if (!info) return null;
@@ -540,7 +514,7 @@ class Goods extends Component<IProps, {}> {
     let current = 0;
     if (getTime(info.over_time) > getTime()) current = 1;
     if (getTime(info.over_time) < getTime()) current = 2;
-    const formate = date => {
+    const formate = (date) => {
       if (!date) return '';
       return date.substr(5, 5);
     };
@@ -551,9 +525,9 @@ class Goods extends Component<IProps, {}> {
         { title: formate(info.over_time) + '截止下单', icon: { value: 'shopping-bag-2' } },
         shopPlanId
           ? { title: formate(info.predict_time) + '结束使用', icon: { value: 'lightning-bolt' } }
-          : { title: formate(info.predict_time) + '预计配送', icon: { value: 'lightning-bolt' } },
+          : { title: formate(info.predict_time) + '预计配送', icon: { value: 'lightning-bolt' } }
       ],
-      current,
+      current
     };
 
     const detailNodes = '<div class="detail-wrap">' + info.goods_desc + '</div>';
@@ -567,20 +541,9 @@ class Goods extends Component<IProps, {}> {
           <View>
             <View className="curtain" onClick={this.closeShare} />
             {shareImage ? (
-              <Image
-                className="shareImage"
-                mode="widthFix"
-                src={shareImage}
-                onClick={this.lookBig.bind(this, shareImage)}
-              />
+              <Image className="shareImage" mode="widthFix" src={shareImage} onClick={this.lookBig.bind(this, shareImage)} />
             ) : (
-              <AtActivityIndicator
-                content="分享图生成中"
-                className="center loading"
-                size={80}
-                mode="center"
-                color="#fff"
-              />
+              <AtActivityIndicator content="分享图生成中" className="center loading" size={80} mode="center" color="#fff" />
             )}
           </View>
         )}
@@ -597,41 +560,23 @@ class Goods extends Component<IProps, {}> {
                       <Text className="active">￥{info.sku[0].distributeMoney}</Text>
                       ，且不限次数。
                     </View>
-                    {!hasNum && (
-                      <View className="p-text">注：您必须先自己购买成功才能获得推荐分成！</View>
-                    )}
+                    {!hasNum && <View className="p-text">注：您必须先自己购买成功才能获得推荐分成！</View>}
                   </View>
                 )}
                 <View className="share-bottom-in">
                   {!shareImgStart ? (
-                    <Button
-                      className="share-item"
-                      plain={true}
-                      open-type="share"
-                      formType="submit"
-                      onClick={this.closeShare}
-                    >
+                    <Button className="share-item" plain={true} open-type="share" formType="submit" onClick={this.closeShare}>
                       <Text className="erduufont ed-weixin" />
                       分享群或好友
                     </Button>
                   ) : (
-                    <Button
-                      className="share-item"
-                      plain={true}
-                      formType="submit"
-                      onClick={this.lookBig.bind(this, shareImage)}
-                    >
+                    <Button className="share-item" plain={true} formType="submit" onClick={this.lookBig.bind(this, shareImage)}>
                       <Text className="erduufont ed-weixin" />
                       点击出现大图，长按分享群或好友
                     </Button>
                   )}
                   {checkSave ? (
-                    <Button
-                      className="share-item"
-                      plain={true}
-                      formType="submit"
-                      onClick={this.saveImage}
-                    >
+                    <Button className="share-item" plain={true} formType="submit" onClick={this.saveImage}>
                       <Text className="erduufont ed-xiazai" />
                       {shareImage ? '保存图片' : '生成图片分享'}
                     </Button>
@@ -678,11 +623,7 @@ class Goods extends Component<IProps, {}> {
           <Swiper className="swiper" indicatorDots indicatorActiveColor="#f1836f" autoplay>
             {imgList.map((ele, i) => (
               <SwiperItem key={i}>
-                <Image
-                  onClick={this.lookBigM.bind(this, ele, imgList)}
-                  className="image"
-                  src={ele + '@!750X500'}
-                />
+                <Image onClick={this.lookBigM.bind(this, ele, imgList)} className="image" src={ele + '@!750X500'} />
               </SwiperItem>
             ))}
           </Swiper>
@@ -778,20 +719,12 @@ class Goods extends Component<IProps, {}> {
             </View>
           )}
           <View className="sale-wrap">
-            <View
-              className="sale-slide"
-              style={{ width: (goodsNumber / (info.sell_volume + goodsNumber)) * 100 + '%' }}
-            />
+            <View className="sale-slide" style={{ width: (goodsNumber / (info.sell_volume + goodsNumber)) * 100 + '%' }} />
             {!!goodsNumber ? `仅剩${goodsNumber}${info.goods_unit}` : '已售罄'}
           </View>
 
           {info.goods_type === 3 ? (
-            <AtSteps
-              className="steps"
-              items={type3.items}
-              current={type3.current}
-              onChange={this.onChangeStep.bind(this)}
-            />
+            <AtSteps className="steps" items={type3.items} current={type3.current} onChange={this.onChangeStep.bind(this)} />
           ) : null}
         </View>
         {!shopPlanId && recommendList && recommendList.length && (
@@ -799,7 +732,7 @@ class Goods extends Component<IProps, {}> {
             <View className="h3">推荐商品</View>
             <ScrollView scrollX={true}>
               <View className="scroll-view-wrap">
-                {recommendList.map(ele => (
+                {recommendList.map((ele) => (
                   <GoodsItem key={ele.id} type="mini" goods={ele} onChange={this.addCartOk} />
                 ))}
               </View>
@@ -809,7 +742,7 @@ class Goods extends Component<IProps, {}> {
         {shopPlanId && (
           <View className="wrap mt-wrap">
             <View className="h3">可用项目</View>
-            {productList.map(ele => (
+            {productList.map((ele) => (
               <Product key={ele.id} item={ele} />
             ))}
             {!nomore && (
@@ -836,35 +769,21 @@ class Goods extends Component<IProps, {}> {
           <View className="h3">价格说明</View>
           <View className="p">
             <Text className="b">划线价格：</Text>
-            指商品的专柜价、吊牌价、正品零售价、厂商指导价或该价格的曾经展示过 的销售价等, 并非原价,
-            仅供参考。
+            指商品的专柜价、吊牌价、正品零售价、厂商指导价或该价格的曾经展示过 的销售价等, 并非原价, 仅供参考。
           </View>
           <View className="p">
             <Text className="b">未划线价格：</Text>
-            指商品的实时标价, 不因表述的差异改变性质。
-            具体成交价格更具商品参加活动,或使用优惠券、积分等发生变化最终以订单结算页价格为准.
+            指商品的实时标价, 不因表述的差异改变性质。 具体成交价格更具商品参加活动,或使用优惠券、积分等发生变化最终以订单结算页价格为准.
           </View>
           <View className="h3">工商资质</View>
           <View className="qulity-wrap">
-            <Image
-              onClick={this.lookBig.bind(this, qulity1)}
-              className="image"
-              src={qulity1 + '@!300X300'}
-            />
-            <Image
-              onClick={this.lookBig.bind(this, qulity2)}
-              className="image"
-              src={qulity2 + '@!300X300'}
-            />
+            <Image onClick={this.lookBig.bind(this, qulity1)} className="image" src={qulity1 + '@!300X300'} />
+            <Image onClick={this.lookBig.bind(this, qulity2)} className="image" src={qulity2 + '@!300X300'} />
           </View>
         </View>
         {shopPlanId ? (
           <View className="bottom">
-            <Button
-              className="zhuye-wrap plain"
-              plain
-              onClick={this.nextTab.bind(this, '/pages/index/index')}
-            >
+            <Button className="zhuye-wrap plain" plain onClick={this.nextTab.bind(this, '/pages/index/index')}>
               <Text className="erduufont ed-zhuye1" />
               <View className="bottom-text">首页</View>
             </Button>
@@ -876,48 +795,30 @@ class Goods extends Component<IProps, {}> {
               </View>
             </Button>
             <View className="add-cart">
-              <AtButton
-                type="primary"
-                disabled={!!disabled}
-                onClick={this.submitShop.bind(this, info)}
-              >
+              <AtButton type="primary" disabled={!!disabled} onClick={this.submitShop.bind(this, info)}>
                 {disabled || '立即抢购'}
               </AtButton>
             </View>
           </View>
         ) : (
           <View className="bottom">
-            <Button
-              className="zhuye-wrap plain"
-              plain
-              onClick={this.nextTab.bind(this, '/pages/index/index')}
-            >
+            <Button className="zhuye-wrap plain" plain onClick={this.nextTab.bind(this, '/pages/index/index')}>
               <Text className="erduufont ed-zhuye1" />
               <View className="bottom-text">首页</View>
             </Button>
-            <Button
-              className="cart-wrap plain"
-              plain
-              onClick={this.nextTab.bind(this, '/pages/cart/index')}
-            >
+            <Button className="cart-wrap plain" plain onClick={this.nextTab.bind(this, '/pages/cart/index')}>
               <View className="badge">{cartTotal.checkedGoodsCount || 0}</View>
               <Text className="erduufont ed-gouwuche" />
               <View className="bottom-text">去结算</View>
             </Button>
             <View className="add-cart">
-              <AtButton
-                type="primary"
-                disabled={!!disabled}
-                onClick={this.addCartOk.bind(this, info)}
-              >
+              <AtButton type="primary" disabled={!!disabled} onClick={this.addCartOk.bind(this, info)}>
                 {disabled || '加入购物车'}
               </AtButton>
             </View>
           </View>
         )}
-        {openSku ? (
-          <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />
-        ) : null}
+        {openSku ? <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} /> : null}
       </View>
     );
   }

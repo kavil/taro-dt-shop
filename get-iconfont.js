@@ -1,11 +1,13 @@
-
+/* eslint-disable import/no-commonjs */
 const fs = require('fs');
+
 const request = require('request');
+
 const newPath = process.argv[2];
 
-if(!newPath){
-  console.log('【Error】需要http://at.alicdn.com/t/...后面这一段');
-  console.log('示例：npm run icon font_153770_kdb4omr364a');
+if (!newPath) {
+  console.log('【Error】需要 http://at.alicdn.com/t/...后面这一串');
+  console.log('示例：node get-iconfont.js font_153770_kdb4omr364a');
   process.exit(0);
 }
 const fontPath = 'http://at.alicdn.com/t/' + newPath;
@@ -32,7 +34,7 @@ const promise = (ele) => {
       } else {
         fs.writeFileSync(`./src/static/iconfont/iconfont${ele}`, body);
       }
-      resolve(`iconfont${ele}下载成功`);
+      resolve(`iconfont${ele}下载更新成功`);
     });
   });
 };
@@ -43,4 +45,3 @@ Promise.all(promises).then((res) => {
   console.log(res);
   process.exit(0);
 });
-

@@ -8,7 +8,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
       top: 67,
       left: 28,
       width: 55,
-      height: 55,
+      height: 55
     },
     {
       type: 'image',
@@ -16,8 +16,8 @@ export const goodsShare = (userInfo, goods, ewm) => {
       top: 67,
       left: 28,
       width: 55,
-      height: 55,
-    },
+      height: 55
+    }
   ];
 
   let views = [
@@ -28,7 +28,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
       top: 0,
       left: 0,
       width: 375,
-      height: 621,
+      height: 621
     },
     {
       type: 'text',
@@ -38,7 +38,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
       textAlign: 'left',
       top: 84,
       left: 91,
-      bolder: true,
+      bolder: true
     },
     {
       type: 'image',
@@ -46,7 +46,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
       top: 133,
       left: 27,
       width: 320,
-      height: 320,
+      height: 320
     },
     {
       type: 'text',
@@ -56,7 +56,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
       textAlign: 'left',
       top: 462,
       left: 28,
-      bolder: true,
+      bolder: true
     },
     {
       type: 'text',
@@ -66,7 +66,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
       textAlign: 'left',
       top: 456,
       left: 53,
-      bolder: true,
+      bolder: true
     },
     {
       type: 'text',
@@ -76,7 +76,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
       textAlign: 'left',
       top: 499,
       left: 32,
-      textDecoration: 'line-through',
+      textDecoration: 'line-through'
     },
     {
       type: 'text',
@@ -90,7 +90,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
       width: 220,
       MaxLineNumber: 1,
       breakWord: true,
-      bolder: true,
+      bolder: true
     },
     {
       type: 'text',
@@ -104,7 +104,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
       width: 220,
       MaxLineNumber: 2,
       breakWord: true,
-      bolder: true,
+      bolder: true
     },
     {
       type: 'image',
@@ -112,7 +112,7 @@ export const goodsShare = (userInfo, goods, ewm) => {
       top: 500,
       left: 270,
       width: 78,
-      height: 78,
+      height: 78
     },
     {
       type: 'text',
@@ -125,8 +125,8 @@ export const goodsShare = (userInfo, goods, ewm) => {
       lineHeight: 20,
       MaxLineNumber: 2,
       breakWord: true,
-      width: 125,
-    },
+      width: 125
+    }
   ];
 
   if (userInfo.id) {
@@ -138,6 +138,6 @@ export const goodsShare = (userInfo, goods, ewm) => {
   return {
     width: 375,
     height: 621,
-    views: views,
+    views: views
   };
 };

@@ -8,11 +8,11 @@ export default {
     size: 10,
     loadOver: false,
     refresh: true,
-    checkRecordList: [],
+    checkRecordList: []
   },
 
   effects: {
-    * getcodeInfo({ payload }, { call, put }) {
+    *getcodeInfo({ payload }, { call, put }) {
       const res = yield call(Api.getcodeInfo, { ...payload });
       if (res.errno === 0) {
         yield put({
@@ -24,15 +24,13 @@ export default {
       }
       return res.errno === 0;
     },
-    * getcodeUse({ payload }, { call }) {
+    *getcodeUse({ payload }, { call }) {
       const res = yield call(Api.getcodeUse, { ...payload });
       return res.errno === 0;
     },
 
     *CheckRecordList(_, { call, put, select }) {
-      const { loadOver, checkRecordList, refresh, page, size, opType } = yield select(
-        state => state.pickup
-      );
+      const { loadOver, checkRecordList, refresh, page, size, opType } = yield select((state) => state.pickup);
       if (loadOver) return;
 
       const res = yield call(Api.checkRecordList, { page, size, opType });
@@ -44,16 +42,15 @@ export default {
         payload: {
           checkRecordList: refresh ? res.data.data : checkRecordList.concat(res.data.data),
           loadOver: res.data.data.length < size,
-          refresh: false,
-        },
+          refresh: false
+        }
       });
-    },
+    }
   },
 
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload };
-    },
-  },
-
+    }
+  }
 };

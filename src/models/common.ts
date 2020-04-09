@@ -10,7 +10,7 @@ export default {
     wxLoginCode: null,
     cityId: 1720, // 渝水区
     uploadSign: {},
-    formIdArr: [],
+    formIdArr: []
   },
 
   effects: {
@@ -22,9 +22,9 @@ export default {
       return [];
     },
     *formId(_, { call, select, put }) {
-      const { formIdArr } = yield select(state => state.common);
+      const { formIdArr } = yield select((state) => state.common);
       if (!formIdArr.length) return null;
-      formIdArr.forEach(ele => {
+      formIdArr.forEach((ele) => {
         ele.exTime = 7 * 24 * 3600 - (Math.floor(new Date().getTime() / 1000) - ele.createdTime);
       });
       const res = yield call(Api.formId, { formIdArr });
@@ -32,14 +32,14 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            formIdArr: [],
-          },
+            formIdArr: []
+          }
         });
         return res.data;
       }
       return null;
     },
-    *wxCode(_, { }) {
+    *wxCode(_, {}) {
       // let { wxLoginCode } = yield select(state => state.common);
       // if (!wxLoginCode) {
       const res = yield Taro.login();
@@ -57,7 +57,7 @@ export default {
       // 需要配合微信button
       const userInfo = yield Taro.getUserInfo({
         lang: 'zh_CN',
-        withCredentials: true,
+        withCredentials: true
       });
       return userInfo;
     },
@@ -70,13 +70,13 @@ export default {
           type: 'save',
           payload: {
             userInfo,
-            token,
-          },
+            token
+          }
         });
       } else {
         Taro.showToast({
           title: '登录失败，请重试',
-          icon: 'none',
+          icon: 'none'
         });
       }
       return res && res.errno === 0;
@@ -88,8 +88,8 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            userInfo,
-          },
+            userInfo
+          }
         });
         return res.data;
       }
@@ -99,30 +99,27 @@ export default {
       // const { wxLoginCode } = yield select(state => state.common);
       const res = yield call(Api.bindPhone, { ...payload, code: (yield Taro.login()).code });
       if (res && res.errno === 0) {
-        const { userInfo } = yield select(state => state.common);
+        const { userInfo } = yield select((state) => state.common);
         yield put({
           type: 'save',
           payload: {
-            userInfo: { ...userInfo, mobile: res.data },
-          },
+            userInfo: { ...userInfo, mobile: res.data }
+          }
         });
         console.log(userInfo, { ...userInfo, mobile: res.data });
       }
       return res;
     },
     *UploadSign(_, { call, put, select }) {
-      let { uploadSign } = yield select(state => state.common);
-      if (!uploadSign.expire)
-        uploadSign = JSON.parse(
-          Taro.getStorageSync('uploadSign') ? Taro.getStorageSync('uploadSign') : '{}'
-        );
+      let { uploadSign } = yield select((state) => state.common);
+      if (!uploadSign.expire) uploadSign = JSON.parse(Taro.getStorageSync('uploadSign') ? Taro.getStorageSync('uploadSign') : '{}');
       if (uploadSign.expire > new Date().getTime() / 1000) {
         return uploadSign;
       }
       const res = yield call(Api.uploadSign);
       yield put({
         type: 'save',
-        payload: { uploadSign: res.data },
+        payload: { uploadSign: res.data }
       });
       Taro.setStorageSync('uploadSign', JSON.stringify(res.data));
       return res.data;
@@ -136,6 +133,6 @@ export default {
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload };
-    },
-  },
+    }
+  }
 };

@@ -23,5 +23,5 @@ export default [
   shopModel,
   accountModel,
   pickupModel,
-  common,
-]
+  common
+];

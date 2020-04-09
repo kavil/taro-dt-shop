@@ -21,7 +21,7 @@ interface PageOwnProps {
 type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
 
 @connect(({ shop }) => ({
-  ...shop,
+  ...shop
 }))
 class Product extends Component<IProps, {}> {
   componentDidMount() {}
@@ -37,7 +37,7 @@ class Product extends Component<IProps, {}> {
     Taro.openLocation({
       latitude: item.lat,
       longitude: item.lng,
-      name: item.address + item.name,
+      name: item.address + item.name
     });
   }
 
@@ -47,10 +47,7 @@ class Product extends Component<IProps, {}> {
     const { item } = this.props;
 
     return (
-      <View
-        className="shop-li"
-        onClick={this.nextPage.bind(this, '/pages/shop/product?id=' + item.id)}
-      >
+      <View className="shop-li" onClick={this.nextPage.bind(this, '/pages/shop/product?id=' + item.id)}>
         <View className="img-wrap">
           <Image lazyLoad className="img" src={item.shop.avatar + '@!100X100'} />
         </View>

@@ -23,33 +23,33 @@ interface PageOwnProps {
 
 type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
 @connect(({ goods }) => ({
-  ...goods,
+  ...goods
 }))
 class Sku extends Component<IProps, {}> {
   static defaultProps = {
-    goods: {},
+    goods: {}
   };
 
   async componentDidMount() {
     const res = await this.props.dispatch({
       type: 'goods/Sku',
       payload: {
-        goods_id: this.props.goods.id,
-      },
+        goods_id: this.props.goods.id
+      }
     });
     if (!res) {
       this.props.onChange(null);
       this.onClose();
       return;
     }
-    res.config.forEach(ele => {
+    res.config.forEach((ele) => {
       ele.speList = [];
-      res.skuList.forEach(sku => {
-        sku.specification.map(spe => {
+      res.skuList.forEach((sku) => {
+        sku.specification.map((spe) => {
           if (spe.specification_id === ele.id) {
             if (!spe.skuIds) spe.skuIds = [];
-            if (ele.speList.map(v => v.value).includes(spe.value)) {
-              ele.speList.forEach(v => {
+            if (ele.speList.map((v) => v.value).includes(spe.value)) {
+              ele.speList.forEach((v) => {
                 if (v.value === spe.value) v.skuIds.push(spe.product_id);
               });
             } else {
@@ -64,7 +64,7 @@ class Sku extends Component<IProps, {}> {
     this.setState({
       skuList: res.skuList,
       config: res.config,
-      selectedSkuId: res.skuList[0].id,
+      selectedSkuId: res.skuList[0].id
     });
   }
 
@@ -79,19 +79,19 @@ class Sku extends Component<IProps, {}> {
     this.props.onClose();
   };
 
-  lookBig = img => {
+  lookBig = (img) => {
     console.log(img);
     Taro.previewImage({
       current: img + '@!q90',
-      urls: [img + '@!q90'],
+      urls: [img + '@!q90']
     });
   };
 
-  selectSpe = spe => {
+  selectSpe = (spe) => {
     console.log(spe);
     if (spe.skuIds.includes(this.state.selectedSkuId)) return;
     this.setState({
-      selectedSkuId: spe.product_id,
+      selectedSkuId: spe.product_id
     });
   };
   ok = () => {
@@ -103,7 +103,7 @@ class Sku extends Component<IProps, {}> {
     isOpened: true,
     skuList: [],
     config: [],
-    selectedSkuId: null,
+    selectedSkuId: null
   };
 
   render() {
@@ -112,16 +112,16 @@ class Sku extends Component<IProps, {}> {
 
     const checkHasSkuId = (skuIds, skuIdsMap) => {
       let flag = false;
-      skuIds.forEach(ele => {
+      skuIds.forEach((ele) => {
         if (skuIdsMap.includes(ele)) flag = true;
       });
       return flag;
     };
-    const getSpeClass = spe => {
+    const getSpeClass = (spe) => {
       let className = 'tag';
       let skuIdsMap = [];
-      config.forEach(ele => {
-        ele.speList.forEach(spe => {
+      config.forEach((ele) => {
+        ele.speList.forEach((spe) => {
           if (spe.skuIds.includes(selectedSkuId)) {
             skuIdsMap = skuIdsMap.concat(spe.skuIds);
           }
@@ -134,9 +134,9 @@ class Sku extends Component<IProps, {}> {
       }
       return className;
     };
-    const getSkuResult = skuList.find(ele => ele.id === selectedSkuId);
+    const getSkuResult = skuList.find((ele) => ele.id === selectedSkuId);
     if (!getSkuResult) return null;
-    const skuResultText = getSkuResult.specification.map(ele => ele.value).join('，');
+    const skuResultText = getSkuResult.specification.map((ele) => ele.value).join('，');
     return (
       <AtFloatLayout isOpened={isOpened} onClose={this.onClose}>
         <View className="main">
@@ -144,10 +144,7 @@ class Sku extends Component<IProps, {}> {
             ×
           </Text>
           <View className="top">
-            <View
-              className="img-wrap"
-              onClick={this.lookBig.bind(this, getSkuResult.specification[0].pic_url)}
-            >
+            <View className="img-wrap" onClick={this.lookBig.bind(this, getSkuResult.specification[0].pic_url)}>
               <Image className="img" src={getSkuResult.specification[0].pic_url + '@!300X300'} />
             </View>
             <View>

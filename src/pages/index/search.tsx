@@ -25,16 +25,16 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ common, goods }) => ({
   ...common,
-  ...goods,
+  ...goods
 }))
 class IndexSearch extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '寻味知途',
+    navigationBarTitleText: '寻味知途'
   };
 
   async componentDidMount() {
     await this.props.dispatch({
-      type: 'goods/SearchList',
+      type: 'goods/SearchList'
     });
   }
 
@@ -42,18 +42,18 @@ class IndexSearch extends Component<IProps, {}> {
     Taro.stopPullDownRefresh();
   }
 
-  onConfirm = async e => {
+  onConfirm = async (e) => {
     const value = e.detail.value.trim();
     if (this.timeCo) clearTimeout(this.timeCo);
     await this.props.dispatch({
       type: 'goods/SearchList',
       payload: {
-        name: value,
-      },
+        name: value
+      }
     });
   };
 
-  search = async val => {
+  search = async (val) => {
     const value = val.trim();
     this.setState({ searchValue: value });
     if (this.timeCo) clearTimeout(this.timeCo);
@@ -61,14 +61,14 @@ class IndexSearch extends Component<IProps, {}> {
       await this.props.dispatch({
         type: 'goods/SearchList',
         payload: {
-          name: value,
-        },
+          name: value
+        }
       });
     }, 1500);
   };
   timeCo;
 
-  addCartOk = async goods => {
+  addCartOk = async (goods) => {
     if (goods.sku.length > 1) {
       // 调出 选择规格组件
       this.setState({ curGoods: goods, openSku: true });
@@ -77,8 +77,8 @@ class IndexSearch extends Component<IProps, {}> {
         type: 'cart/Add',
         payload: {
           productId: goods.sku[0].id,
-          goodsId: goods.id,
-        },
+          goodsId: goods.id
+        }
       });
       if (res.errno === 0)
         setTimeout(() => {
@@ -94,12 +94,12 @@ class IndexSearch extends Component<IProps, {}> {
     this.setState({ openSku: false });
   };
   loginSuccess() {}
-  handleChangeSku = async payload => {
+  handleChangeSku = async (payload) => {
     console.log('handleSkuOk', payload);
     // 加入购物车
     const res = await this.props.dispatch({
       type: 'cart/Add',
-      payload,
+      payload
     });
     console.log(res, 'sdsssssssssssssss');
 
@@ -110,7 +110,7 @@ class IndexSearch extends Component<IProps, {}> {
   state = {
     searchValue: '',
     openSku: false,
-    curGoods: {},
+    curGoods: {}
   };
 
   render() {
@@ -118,22 +118,13 @@ class IndexSearch extends Component<IProps, {}> {
     const { searchValue, openSku, curGoods } = this.state;
     return (
       <View className="index-search">
-        {openSku && (
-          <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />
-        )}
+        {openSku && <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />}
         <Login show={false} onChange={this.loginSuccess} />
         <View className="search-wrap">
-          <AtSearchBar
-            focus
-            fixed
-            value={searchValue}
-            placeholder="搜索商品"
-            onChange={this.search}
-            onConfirm={this.onConfirm}
-          />
+          <AtSearchBar focus fixed value={searchValue} placeholder="搜索商品" onChange={this.search} onConfirm={this.onConfirm} />
         </View>
         <View className="pad40">
-          {SearchList.map(ele => (
+          {SearchList.map((ele) => (
             <GoodsItem key={ele.id} goods={ele} onChange={this.addCartOk} />
           ))}
         </View>

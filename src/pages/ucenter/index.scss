@@ -1,250 +1,250 @@
-@import "../../static/css/mixin";
+@import '../../static/css/mixin';
 
-.at-modal__container{
-    width: 94% !important;
+.at-modal__container {
+  width: 94% !important;
 }
-.h4{
-    font-weight: 200;
-    padding: 20px 20px 0;
-    font-size: 26px;
+.h4 {
+  font-weight: 200;
+  padding: 20px 20px 0;
+  font-size: 26px;
 }
 .me-wrap {
-    @include fj();
-    padding: 40px 20px 20px;
-    .p {
-        font-size: 28px;
+  @include fj();
+  padding: 40px 20px 20px;
+  .p {
+    font-size: 28px;
+  }
+  .info {
+    flex: 1;
+    .tag {
+      font-size: 24px;
+      padding: 4px 10px;
+      border: 1px solid $color-brand-light;
     }
-    .info {
-        flex: 1;
-        .tag {
-            font-size: 24px;
-            padding: 4px 10px;
-            border: 1PX solid $color-brand-light;
-        }
+  }
+  .ava-wrap {
+    @include wh(160px, 160px);
+    .image {
+      @include wh(160px, 160px);
+      border-radius: 50%;
     }
-    .ava-wrap {
-        @include wh(160px, 160px);
-        .image {
-            @include wh(160px, 160px);
-            border-radius: 50%;
-        }
-    }
+  }
 }
 
 .contact-wrap {
-    padding: 50px;
-    text-align: center;
+  padding: 50px;
+  text-align: center;
 }
 
-.em.at-list__item .item-extra__info{
-    color: $color-brand-dark;
+.em.at-list__item .item-extra__info {
+  color: $color-brand-dark;
 }
 
 .divsion {
-    border-top: 1PX solid $border;
-    border-bottom: 1PX solid $border;
-    height: 30px;
-    width: 100%;
-    background: $bg-color-base;
+  border-top: 1px solid $border;
+  border-bottom: 1px solid $border;
+  height: 30px;
+  width: 100%;
+  background: $bg-color-base;
 }
 
 .operate-wrap {
-    @include fj('center');
-    padding: 30px;
-    .li {
-        flex: 1;
-        text-align: center;
-        font-size: 24px;
-        color: $font-default;
-        .erduufont {
-            color: $font-default;
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+  @include fj('center');
+  padding: 30px;
+  .li {
+    flex: 1;
+    text-align: center;
+    font-size: 24px;
+    color: $font-default;
+    .erduufont {
+      color: $font-default;
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
     }
-    .at-list::after {
-        border: none !important;
-    }
-    .at-list__item::after {
-        border-color: $border;
-    }
+  }
+  .at-list::after {
+    border: none !important;
+  }
+  .at-list__item::after {
+    border-color: $border;
+  }
 }
 
 .center {
-    padding: 100px 0;
-    text-align: center;
+  padding: 100px 0;
+  text-align: center;
 }
-.cen{
-    color: #fff;
+.cen {
+  color: #fff;
+  text-align: center;
+  .note {
     text-align: center;
-    .note{
-        text-align: center;
-        border-top: 1PX dashed #ddd;
-        background: #fff;
-        color: $font-active;
-        font-size: 24px;
-        margin: 0 auto;
-        width: 500px;
-        padding: 10px 20px;
-        box-sizing: border-box;
-        font-weight: 100;
-    }
-    .code{
-        font-size: 30px;
-        color: #333;
-    }
-    .curtainImg{
-        width: 500px;
-        height: 500px;
-        display: block;
-        margin: 0 auto;
-    }
+    border-top: 1px dashed #ddd;
+    background: #fff;
+    color: $font-active;
+    font-size: 24px;
+    margin: 0 auto;
+    width: 500px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    font-weight: 100;
+  }
+  .code {
+    font-size: 30px;
+    color: #333;
+  }
+  .curtainImg {
+    width: 500px;
+    height: 500px;
+    display: block;
+    margin: 0 auto;
+  }
 }
 
 .callkf {
-    color: #ddd;
-    font-size: 26rpx;
+  color: #ddd;
+  font-size: 26rpx;
 }
 
 .coupon-page {
-    background: $bg-color-base;
-    &.card-page{
-        background: #f1f1f1;
-        .card-ul {
-            padding: 0 40px 50px;
-            overflow: hidden;
-        }
-        .cli{
-            .cicle{
-                background: #f1f1f1;
-            }
-            margin-top: 0px;
-            margin-bottom: 20px;
-            .head{
-                padding: 20px 100px 20px 20px;
-            }
-            .title{
-                font-weight: 200;
-                font-size: 30px;
-            }
-            .p{
-                font-weight: 400;
-            }
-            .ewm{
-                position: absolute;
-                top: 12%;
-                right: 20px;
-                height: 80px;
-                width: 80px;
-                border-radius: 50%;
-                line-height: 80px;
-                text-align: center;
-                background: $color-brand;
-                .erduufont{
-                    color: #fff;
-                }
-            }
-            .foot{
-                padding: 10px 20px;
-                font-size: 26px;
-                border-top:1px dashed #ddd;
-                color: #666;
-            }
-            .foot-in{
-                @include fj;
-                align-items: center;
-                color: #333;
-            }
-            .sli{
-                font-weight: 100;
-            }
-            .op-wrap{
-                @include fj;
-                width: 220px;
-            }
-        }
-    }
-    .coupon-ul {
-        padding: 0 40px 50px;
-        overflow: hidden;
+  background: $bg-color-base;
+  &.card-page {
+    background: #f1f1f1;
+    .card-ul {
+      padding: 0 40px 50px;
+      overflow: hidden;
     }
     .cli {
-        &.disabled {
-            filter: gray;
-            filter: grayscale(100%);
+      .cicle {
+        background: #f1f1f1;
+      }
+      margin-top: 0px;
+      margin-bottom: 20px;
+      .head {
+        padding: 20px 100px 20px 20px;
+      }
+      .title {
+        font-weight: 200;
+        font-size: 30px;
+      }
+      .p {
+        font-weight: 400;
+      }
+      .ewm {
+        position: absolute;
+        top: 12%;
+        right: 20px;
+        height: 80px;
+        width: 80px;
+        border-radius: 50%;
+        line-height: 80px;
+        text-align: center;
+        background: $color-brand;
+        .erduufont {
+          color: #fff;
         }
-        margin-top: 40px;
-        border-radius: 10px;
-        background: #fff;
-        position: relative;
-        box-shadow: 0 0 1px 1px $border;
-        .cicle {
-            width: 40px;
-            height: 40px;
-            background: $bg-color-base;
-            border-radius: 50%;
-            position: absolute;
-            top: 60px;
-            &.l {
-                left: -20px;
-            }
-            &.r {
-                right: -20px;
-            }
-        }
-        .name {
-            margin-right: 15px;
-        }
-        .top {
-            @include fj;
-            border-bottom: 1px dashed $border;
-        }
-        .left {
-            width: 200px;
-            text-align: center;
-            margin: 15px;
-            border-right: 1px dashed $border;
-            .money {
-                font-size: 100px;
-                padding-top: 20px;
-                line-height: 1;
-                color: $color-primary;
-                .mini {
-                    font-size: 40%;
-                    vertical-align: 6px;
-                }
-            }
-        }
-        .right {
-            flex: 1;
-            padding-left: 40px;
-            display: flex;
-            align-items: center;
-        }
-        .bottom {
-            line-height: 2.5;
-            padding-left: 20px;
-        }
+      }
+      .foot {
+        padding: 10px 20px;
+        font-size: 26px;
+        border-top: 1px dashed #ddd;
+        color: #666;
+      }
+      .foot-in {
+        @include fj;
+        align-items: center;
+        color: #333;
+      }
+      .sli {
+        font-weight: 100;
+      }
+      .op-wrap {
+        @include fj;
+        width: 220px;
+      }
     }
+  }
+  .coupon-ul {
+    padding: 0 40px 50px;
+    overflow: hidden;
+  }
+  .cli {
+    &.disabled {
+      filter: gray;
+      filter: grayscale(100%);
+    }
+    margin-top: 40px;
+    border-radius: 10px;
+    background: #fff;
+    position: relative;
+    box-shadow: 0 0 1px 1px $border;
+    .cicle {
+      width: 40px;
+      height: 40px;
+      background: $bg-color-base;
+      border-radius: 50%;
+      position: absolute;
+      top: 60px;
+      &.l {
+        left: -20px;
+      }
+      &.r {
+        right: -20px;
+      }
+    }
+    .name {
+      margin-right: 15px;
+    }
+    .top {
+      @include fj;
+      border-bottom: 1px dashed $border;
+    }
+    .left {
+      width: 200px;
+      text-align: center;
+      margin: 15px;
+      border-right: 1px dashed $border;
+      .money {
+        font-size: 100px;
+        padding-top: 20px;
+        line-height: 1;
+        color: $color-primary;
+        .mini {
+          font-size: 40%;
+          vertical-align: 6px;
+        }
+      }
+    }
+    .right {
+      flex: 1;
+      padding-left: 40px;
+      display: flex;
+      align-items: center;
+    }
+    .bottom {
+      line-height: 2.5;
+      padding-left: 20px;
+    }
+  }
 }
 .check-record .top {
-    @include fj('space-between');
-    padding: 15px 20px 0;
-    .user {
-        @include ddd;
-        @include fj(flex-start);
-        align-items: center;
-        flex: 1;
-        &.r {
-            text-align: right;
-            @include fj(flex-end);
-            color: $font-default;
-        }       
+  @include fj('space-between');
+  padding: 15px 20px 0;
+  .user {
+    @include ddd;
+    @include fj(flex-start);
+    align-items: center;
+    flex: 1;
+    &.r {
+      text-align: right;
+      @include fj(flex-end);
+      color: $font-default;
     }
+  }
 
-    .nick {
-        padding: 0 10px;
-        font-size: 24px;
-    }
+  .nick {
+    padding: 0 10px;
+    font-size: 24px;
+  }
 }

@@ -24,11 +24,11 @@ type PageOwnProps = {
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
 @connect(({ account }) => ({
-  ...account,
+  ...account
 }))
 export default class Detail extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '余额明细详情',
+    navigationBarTitleText: '余额明细详情'
   };
 
   componentDidMount = () => {
@@ -39,8 +39,8 @@ export default class Detail extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'account/accountDetail',
       payload: {
-        id: this.$router.params.id,
-      },
+        id: this.$router.params.id
+      }
     });
   }
 
@@ -112,9 +112,9 @@ export default class Detail extends Component<IProps, {}> {
             ''
           )}
           {D.goodList
-            ? D.goodList.map(item => {
+            ? D.goodList.map((item) => {
                 return (
-                  <View className="goods-area">
+                  <View key={item.goods_name} className="goods-area">
                     <View className="li">
                       <View className="left">商品：</View>
                       <View className="right">

@@ -37,10 +37,10 @@ class CheckItem extends Component<IProps, {}> {
     }
   }
 
-  handleCheck = e => {
+  handleCheck = (e) => {
     if (this.props.onChange) this.props.onChange(e[0] || null);
     this.setState({
-      checkedAt: this.state.checkedAt.length ? [] : [this.props.value],
+      checkedAt: this.state.checkedAt.length ? [] : [this.props.value]
     });
   };
 
@@ -52,11 +52,7 @@ class CheckItem extends Component<IProps, {}> {
 
     return (
       <View className="check-item">
-        <AtCheckbox
-          options={[{ value, label: label || '' }]}
-          selectedList={checkedAt}
-          onChange={this.handleCheck}
-        />
+        <AtCheckbox options={[{ value, label: label || '' }]} selectedList={checkedAt} onChange={this.handleCheck} />
       </View>
     );
   }

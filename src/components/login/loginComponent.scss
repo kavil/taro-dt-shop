@@ -1,46 +1,46 @@
-@import "../../static/css/mixin";
-@import "../../static/iconfont/iconfont.scss";
+@import '../../static/css/mixin';
+@import '../../static/iconfont/iconfont.scss';
 
 .logo-wrap {
-    padding: 50px 0;
-    @include fj('space-between');
-    text-align: center;
-    align-items: center;
+  padding: 50px 0;
+  @include fj('space-between');
+  text-align: center;
+  align-items: center;
 
-    .logo {
-        flex: 1;
+  .logo {
+    flex: 1;
 
-        .image {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 10px solid #eee;
-        }
+    .image {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 10px solid #eee;
     }
+  }
 
-    .ed-back {
-        margin-left: -5px;
-        color: #ededed;
-    }
+  .ed-back {
+    margin-left: -5px;
+    color: #ededed;
+  }
 }
 
 .go {
-    transform: rotate(180deg);
-    font-size: 36px;
-    color: $font-info;
-    display: inline-block;
+  transform: rotate(180deg);
+  font-size: 36px;
+  color: $font-info;
+  display: inline-block;
 }
 
 button.plain {
-    padding: 0;
-    color: inherit;
-    font-size: inherit;
-    margin: inherit;
-    text-align: initial;
-    line-height: initial;
-    border: 0;
-    box-sizing: initial;
-    border-radius: 0;
-    overflow: inherit;
-    text-align: center;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  margin: inherit;
+  text-align: initial;
+  line-height: initial;
+  border: 0;
+  box-sizing: initial;
+  border-radius: 0;
+  overflow: inherit;
+  text-align: center;
 }

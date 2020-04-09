@@ -1,194 +1,193 @@
+@import '../../static/css/mixin';
 
-@import "../../static/css/mixin";
-
-.account-page.withdraw{
-    background: $bg-color-base;
+.account-page.withdraw {
+  background: $bg-color-base;
 }
 
 .account-top {
-    background: $color-brand;
-    padding: 50px 20px 0;
+  background: $color-brand;
+  padding: 50px 20px 0;
+  .tip {
+    color: #fff;
+    font-size: 28px;
+    margin: 20px 0;
+  }
+  .yue {
+    font-size: 100px;
+    color: #fff;
+  }
+  &.small {
+    padding-top: 0;
     .tip {
-        color: #fff;
-        font-size: 28px;
-        margin: 20px 0;
+      font-size: 24px;
     }
     .yue {
-        font-size: 100px;
-        color: #fff;
+      font-size: 70px;
     }
-    &.small {
-        padding-top: 0;
-        .tip {
-            font-size: 24px;
-        }
-        .yue {
-            font-size: 70px;
-        }
-    }
+  }
 }
 
 .account-info {
-    background: $color-brand-dark;
-    font-size: 24px;
-    color: #fff;
-    padding: 10px 20px;
+  background: $color-brand-dark;
+  font-size: 24px;
+  color: #fff;
+  padding: 10px 20px;
 }
 
 .op-ul .li {
-    @include fj('space-between');
-    padding: 20px;
-    border-bottom: 1px solid $border;
-    background: #fff;
-    .pre-icon {
-        font-size: 36px;
-        padding-right: 20px;
-        line-height: 56px;
-    }
-    .label {
-        flex: 1;
-        font-size: 28px;
-        line-height: 56px;
-    }
+  @include fj('space-between');
+  padding: 20px;
+  border-bottom: 1px solid $border;
+  background: #fff;
+  .pre-icon {
+    font-size: 36px;
+    padding-right: 20px;
+    line-height: 56px;
+  }
+  .label {
+    flex: 1;
+    font-size: 28px;
+    line-height: 56px;
+  }
 }
 
 .op-ul.big .li {
-    .pre-icon {
-        font-size: 60px;
-        line-height: 78px;
-    }
-    .label {
-        line-height: 78px;
-    }
+  .pre-icon {
+    font-size: 60px;
+    line-height: 78px;
+  }
+  .label {
+    line-height: 78px;
+  }
 }
 
 .withdraw .op-ul {
-    margin: 40px 0;
-    .li {
-        border-top: 1px solid $border;
-    }
+  margin: 40px 0;
+  .li {
+    border-top: 1px solid $border;
+  }
 }
 
 .wd-box {
-    border-top: 1px solid $border;
+  border-top: 1px solid $border;
+  border-bottom: 1px solid $border;
+  padding: 20px;
+  background: #fff;
+  .p {
+    color: $font-info;
+    font-size: 28px;
+  }
+  .input-money {
+    position: relative;
+    padding-left: 60px;
+    margin: 20px 0;
     border-bottom: 1px solid $border;
-    padding: 20px;
-    background: #fff;
-    .p {
-        color: $font-info;
-        font-size: 28px;
+    .label {
+      @include ct;
+      font-size: 60px;
+      position: absolute;
+      left: 0;
     }
-    .input-money {
-        position: relative;
-        padding-left: 60px;
-        margin: 20px 0;
-        border-bottom: 1px solid $border;
-        .label {
-            @include ct;
-            font-size: 60px;
-            position: absolute;
-            left: 0;
-        }
-        .input {
-            font-size: 80px;
-            padding: 20px;
-            height: 80px;
-        }
+    .input {
+      font-size: 80px;
+      padding: 20px;
+      height: 80px;
     }
-    .wd-down {
-        @include fj('space-between');
-        .info {
-            font-size: 24px;
-            color: $font-info;
-            flex: 1;
-        }
-        .blue {
-            font-size: 24px;
-        }
+  }
+  .wd-down {
+    @include fj('space-between');
+    .info {
+      font-size: 24px;
+      color: $font-info;
+      flex: 1;
     }
+    .blue {
+      font-size: 24px;
+    }
+  }
 }
 
 .pick {
-    width: 100%;
-    padding: 10px;
-    border-top: 1px solid $border;
-    border-bottom: 1px solid $border;
-    background: #fff;
-    margin-bottom: 20px;
-    text-align: center;
-    .ed-back {
-        vertical-align: -2px;
-    }
+  width: 100%;
+  padding: 10px;
+  border-top: 1px solid $border;
+  border-bottom: 1px solid $border;
+  background: #fff;
+  margin-bottom: 20px;
+  text-align: center;
+  .ed-back {
+    vertical-align: -2px;
+  }
 }
 
 .base-ul {
-    border-top: 1px solid $border;
+  border-top: 1px solid $border;
+  border-bottom: 1px solid $border;
+  background: #fff;
+  .li {
+    margin: 20px 20px 0;
+    padding-bottom: 20px;
     border-bottom: 1px solid $border;
-    background: #fff;
-    .li {
-        margin: 20px 20px 0;
-        padding-bottom: 20px;
-        border-bottom: 1px solid $border;
-        &:last-child {
-            border: none;
-        }
-        @include fj('space-between');
-        .left {
-            width: 70%;
-        }
-        .right {
-            width: 30%;
-            text-align: right;
-        }
-        .h2 {
-            @include ddd;
-            font-size: 32px;
-            width: 100%;
-            height: 40px;
-            margin-bottom: 5px;
-        }
-        .type {
-            color: $font-info;
-            font-size: 24px;
-        }
-        .time {
-            color: $font-default;
-            font-size: 26px;
-        }
-        .money {
-            font-size: 50px;
-        }
+    &:last-child {
+      border: none;
     }
+    @include fj('space-between');
+    .left {
+      width: 70%;
+    }
+    .right {
+      width: 30%;
+      text-align: right;
+    }
+    .h2 {
+      @include ddd;
+      font-size: 32px;
+      width: 100%;
+      height: 40px;
+      margin-bottom: 5px;
+    }
+    .type {
+      color: $font-info;
+      font-size: 24px;
+    }
+    .time {
+      color: $font-default;
+      font-size: 26px;
+    }
+    .money {
+      font-size: 50px;
+    }
+  }
 }
 
 .simple-ul {
-    padding: 20px;
-    background: #fff;
-    .li {
-        @include fj;
-        padding: 5px 0;
-        align-items: center;
-    }
-    .left {
-        width: 200px;
-        color: $font-default;
-        font-size: 26px;
-    }
-    .right {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        font-size: 26px;
-    }
+  padding: 20px;
+  background: #fff;
+  .li {
+    @include fj;
+    padding: 5px 0;
+    align-items: center;
+  }
+  .left {
+    width: 200px;
+    color: $font-default;
+    font-size: 26px;
+  }
+  .right {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 26px;
+  }
 }
 
 .goods-area {
-    background: $bg-color-danger;
-    padding: 10px;
-    margin: 10px;
+  background: $bg-color-danger;
+  padding: 10px;
+  margin: 10px;
 }
 
 .at-list__item .item-extra__info {
-    font-size: 24px !important;
+  font-size: 24px !important;
 }

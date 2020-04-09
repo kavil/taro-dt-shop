@@ -19,7 +19,7 @@ interface PageStateProps {
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ shop, loading }) => ({
-  ...shop,
+  ...shop
 }))
 class Product extends Component<IProps, {}> {
   config = {
@@ -30,8 +30,8 @@ class Product extends Component<IProps, {}> {
     const info = await this.props.dispatch({
       type: 'shop/ProductDetail',
       payload: {
-        id: this.$router.params.id,
-      },
+        id: this.$router.params.id
+      }
     });
     this.setState({ info });
   }
@@ -43,26 +43,26 @@ class Product extends Component<IProps, {}> {
     Taro.openLocation({
       latitude: item.lat,
       longitude: item.lng,
-      name: item.address + item.name,
+      name: item.address + item.name
     });
   }
-  clickDetail = a => {
+  clickDetail = (a) => {
     console.log(a);
   };
 
   lookBig = (img, imgList) => {
     console.log(img);
-    const list = imgList.map(ele => ele + '@!q90');
+    const list = imgList.map((ele) => ele + '@!q90');
     Taro.previewImage({
       current: img + '@!q90',
-      urls: list,
+      urls: list
     });
   };
   nextPage(url) {
     Taro.navigateTo({ url });
   }
   state = {
-    info: null,
+    info: null
   };
 
   render() {
@@ -70,8 +70,7 @@ class Product extends Component<IProps, {}> {
     const { info }: any = this.state;
     if (!info) return null;
     if (!info.content) return null;
-    const imgList =
-      info && info.list_pic_url ? info.list_pic_url.split(',') : [info ? info.avatar : ''];
+    const imgList = info && info.list_pic_url ? info.list_pic_url.split(',') : [info ? info.avatar : ''];
     const detailNodes = '<div class="detail-wrap">' + info.content + '</div>';
 
     return (
@@ -86,11 +85,7 @@ class Product extends Component<IProps, {}> {
             <Swiper className="swiper" indicatorActiveColor="#f1836f">
               {imgList.map((ele, i) => (
                 <SwiperItem key={i}>
-                  <Image
-                    onClick={this.lookBig.bind(this, ele, imgList)}
-                    className="image"
-                    src={ele + '@!750X350'}
-                  />
+                  <Image onClick={this.lookBig.bind(this, ele, imgList)} className="image" src={ele + '@!750X350'} />
                 </SwiperItem>
               ))}
             </Swiper>
@@ -120,12 +115,7 @@ class Product extends Component<IProps, {}> {
                 {info.shop.address}
               </View>
               <View className="right">
-                <AtButton
-                  type="secondary"
-                  size="small"
-                  className="bt"
-                  onClick={this.navMap.bind(this, info.shop)}
-                >
+                <AtButton type="secondary" size="small" className="bt" onClick={this.navMap.bind(this, info.shop)}>
                   导航
                 </AtButton>
               </View>
@@ -136,12 +126,7 @@ class Product extends Component<IProps, {}> {
                 {info.shop.phone}
               </View>
               <View className="right">
-                <AtButton
-                  type="secondary"
-                  size="small"
-                  className="bt"
-                  onClick={this.makePhoneCall.bind(this, info.shop.phone)}
-                >
+                <AtButton type="secondary" size="small" className="bt" onClick={this.makePhoneCall.bind(this, info.shop.phone)}>
                   电话
                 </AtButton>
               </View>
@@ -155,13 +140,11 @@ class Product extends Component<IProps, {}> {
           <View className="h3">价格说明</View>
           <View className="p">
             <Text className="b">划线价格：</Text>
-            指商品的专柜价、吊牌价、正品零售价、厂商指导价或该价格的曾经展示过 的销售价等, 并非原价,
-            仅供参考。
+            指商品的专柜价、吊牌价、正品零售价、厂商指导价或该价格的曾经展示过 的销售价等, 并非原价, 仅供参考。
           </View>
           <View className="p">
             <Text className="b">未划线价格：</Text>
-            指商品的实时标价, 不因表述的差异改变性质。
-            具体成交价格更具商品参加活动,或使用优惠券、积分等发生变化最终以订单结算页价格为准.
+            指商品的实时标价, 不因表述的差异改变性质。 具体成交价格更具商品参加活动,或使用优惠券、积分等发生变化最终以订单结算页价格为准.
           </View>
         </View>
       </View>

@@ -24,24 +24,24 @@ type PageOwnProps = {
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
 @connect(({ account }) => ({
-  ...account,
+  ...account
 }))
 export default class Withdraw extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '提现',
+    navigationBarTitleText: '提现'
   };
 
   componentDidMount = () => {
     const accountInfo = this.props.accountInfo;
     console.log(accountInfo);
     this.setState({
-      myMoney: accountInfo ? accountInfo.totalMoney : 0,
+      myMoney: accountInfo ? accountInfo.totalMoney : 0
     });
   };
 
   quickAll(myMoney) {
     this.setState({
-      getMoney: myMoney,
+      getMoney: myMoney
     });
   }
 
@@ -62,7 +62,7 @@ export default class Withdraw extends Component<IProps, {}> {
       return;
     }
     this.setState({
-      getMoney,
+      getMoney
     });
     if (!this.state.getMoney) {
       Taro.showToast({ title: '请填写正确金额', icon: 'none' });
@@ -70,37 +70,37 @@ export default class Withdraw extends Component<IProps, {}> {
     }
 
     this.setState({
-      open: true,
+      open: true
     });
   }
 
   async sure() {
     this.setState({
       loading: true,
-      open: false,
+      open: false
     });
 
     const errno = await this.props.dispatch({
       type: 'account/withdraw',
       payload: {
-        money: this.state.getMoney,
-      },
+        money: this.state.getMoney
+      }
     });
     this.setState({
-      loading: false,
+      loading: false
     });
     if (errno == 0) {
       await Taro.showModal({
         title: '提示',
         content: '提现成功，请查收微信零钱',
-        showCancel: false,
+        showCancel: false
       });
       Taro.navigateBack();
     }
   }
   cancel() {
     this.setState({
-      open: false,
+      open: false
     });
   }
 
@@ -108,7 +108,7 @@ export default class Withdraw extends Component<IProps, {}> {
     getMoney: undefined,
     loading: false,
     open: false,
-    myMoney: 0,
+    myMoney: 0
   };
   render() {
     const { myMoney, open, getMoney, loading } = this.state;
@@ -125,14 +125,7 @@ export default class Withdraw extends Component<IProps, {}> {
           <View className="p">提现金额（免服务费） </View>
           <View className="input-money">
             <Text className="label">￥</Text>
-            <Input
-              className="input"
-              type="digit"
-              onInput={this.onInput}
-              value={getMoney}
-              focus
-              confirmHold
-            />
+            <Input className="input" type="digit" onInput={this.onInput} value={getMoney} focus confirmHold />
           </View>
           <View className="wd-down">
             <Text className="info">可提现金额{myMoney}</Text>

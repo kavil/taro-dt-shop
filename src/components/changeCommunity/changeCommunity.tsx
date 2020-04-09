@@ -27,7 +27,7 @@ interface PageOwnProps {
 type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
 @connect(({ common, neighber }) => ({
   ...common,
-  ...neighber,
+  ...neighber
 }))
 class ChangeCommunity extends Component<IProps, {}> {
   async componentDidMount() {
@@ -37,7 +37,7 @@ class ChangeCommunity extends Component<IProps, {}> {
     if (ids.length) {
       const communityList = await this.props.dispatch({
         type: 'neighbor/ids',
-        payload: { ids },
+        payload: { ids }
       });
       this.setState({ communityList, openCo: true });
       console.log(ids, communityList, 'ChangeCommunity');
@@ -45,18 +45,18 @@ class ChangeCommunity extends Component<IProps, {}> {
   }
   componentWillUnmount() {
     this.setState({
-      openCo: false,
+      openCo: false
     });
   }
 
-  changeFun = async id => {
+  changeFun = async (id) => {
     this.setState({
-      openCo: false,
+      openCo: false
     });
     tip('绑定成功');
     if (this.props.onChange) this.props.onChange(id);
   };
-  getFormId = e => {
+  getFormId = (e) => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
     formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
@@ -64,18 +64,18 @@ class ChangeCommunity extends Component<IProps, {}> {
     this.props.dispatch({
       type: 'common/save',
       payload: {
-        formIdArr,
-      },
+        formIdArr
+      }
     });
   };
   close = () => {
     this.setState({
-      openCo: false,
+      openCo: false
     });
   };
   state = {
     openCo: false,
-    communityList: [],
+    communityList: []
   };
 
   render() {
@@ -87,14 +87,7 @@ class ChangeCommunity extends Component<IProps, {}> {
           <AtModalContent>
             检测到您目前绑定的是【{communityList[0].name}】，点击绑定按钮确定切换小区作为新代收点
             {communityList.map((ele, i) => {
-              return i > 0 ? (
-                <CommunityItem
-                  key={ele.id}
-                  item={ele}
-                  noApply={true}
-                  onChange={this.changeFun.bind(this, ele)}
-                />
-              ) : null;
+              return i > 0 ? <CommunityItem key={ele.id} item={ele} noApply={true} onChange={this.changeFun.bind(this, ele)} /> : null;
             })}
           </AtModalContent>
           <AtModalAction>

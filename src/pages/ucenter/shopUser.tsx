@@ -20,16 +20,16 @@ interface PageStateProps {
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ ucenter }) => ({
-  ...ucenter,
+  ...ucenter
 }))
 class ShopUser extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '门店成员',
+    navigationBarTitleText: '门店成员'
   };
 
   async componentDidMount() {
     await this.props.dispatch({
-      type: 'ucenter/ShopUser',
+      type: 'ucenter/ShopUser'
     });
   }
 
@@ -37,9 +37,9 @@ class ShopUser extends Component<IProps, {}> {
     await this.componentDidMount();
     Taro.stopPullDownRefresh();
   }
-  handleClick = async current => {
+  handleClick = async (current) => {
     this.setState({
-      current,
+      current
     });
     await this.props.dispatch({
       type: 'ucenter/save',
@@ -49,9 +49,9 @@ class ShopUser extends Component<IProps, {}> {
           type: current,
           page: 1, // 归位
           refresh: true,
-          loadOver: false,
-        },
-      },
+          loadOver: false
+        }
+      }
     });
     await this.getList();
   };
@@ -61,15 +61,15 @@ class ShopUser extends Component<IProps, {}> {
       payload: {
         ShopUser: {
           ...this.props.ShopUser,
-          page: this.props.ShopUser.page + 1,
-        },
-      },
+          page: this.props.ShopUser.page + 1
+        }
+      }
     });
     await this.getList();
   }
   getList() {
     this.props.dispatch({
-      type: 'ucenter/ShopUser',
+      type: 'ucenter/ShopUser'
     });
   }
   makePhoneCall(phoneNumber) {
@@ -87,8 +87,8 @@ class ShopUser extends Component<IProps, {}> {
       type: 'shop/ApplyAction',
       payload: {
         isActive,
-        id,
-      },
+        id
+      }
     });
     if (res) {
       this.componentDidMount();
@@ -98,7 +98,7 @@ class ShopUser extends Component<IProps, {}> {
   state = {
     current: 0,
     open: false,
-    curli: null,
+    curli: null
   };
 
   render() {
@@ -109,25 +109,17 @@ class ShopUser extends Component<IProps, {}> {
     const { List } = ShopUser;
     return (
       <View className="coupon-page card-page">
-        <AtActionSheet
-          isOpened={open}
-          cancelText="取消"
-          title="通过后该成员即可帮助核销门店消费券等操作"
-        >
+        <AtActionSheet isOpened={open} cancelText="取消" title="通过后该成员即可帮助核销门店消费券等操作">
           <AtActionSheetItem onClick={this.action.bind(this, 2)}>通过</AtActionSheetItem>
           <AtActionSheetItem onClick={this.action.bind(this, 0)}>拒绝</AtActionSheetItem>
         </AtActionSheet>
         <View className="pad40">
-          <AtSegmentedControl
-            values={['门店成员', '待审核', '已拒绝']}
-            onClick={this.handleClick.bind(this)}
-            current={current}
-          />
+          <AtSegmentedControl values={['门店成员', '待审核', '已拒绝']} onClick={this.handleClick.bind(this)} current={current} />
         </View>
         <View className="card-ul">
           {List && List.length ? (
             <AtList>
-              {List.map(li => (
+              {List.map((li) => (
                 <AtListItem
                   title={li.nickName}
                   note={li.mobile}

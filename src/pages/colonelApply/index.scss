@@ -1,97 +1,97 @@
-@import "../../static/css/mixin";
+@import '../../static/css/mixin';
 .apply-page {
-    .apply-img {
-        width: 100%;
-        height: 640px;
+  .apply-img {
+    width: 100%;
+    height: 640px;
+  }
+  .ava-wrap {
+    @include wh(100px, auto);
+    border-radius: 50%;
+    left: 50%;
+    position: relative;
+    transform: translateX(-50%);
+    margin-bottom: 20px;
+    text-align: center;
+    .img {
+      @include wh(100px, 100px);
+      border-radius: 50%;
     }
-    .ava-wrap {
-        @include wh(100px, auto);
-        border-radius: 50%;
-        left: 50%;
-        position: relative;
-        transform: translateX(-50%);
-        margin-bottom: 20px;
-        text-align: center;
-        .img {
-            @include wh(100px, 100px);
-            border-radius: 50%;
-        }
-    }
-    .p {
-        margin-top: 0;
-    }
-    .label,
-    .at-input__title {
-        margin-top: 40px;
-        color: $font-default;
-    }
-    .input-wrap,
-    .at-input__input {
-        padding: 18px 5px;
-        border-bottom: 1PX solid $border;
-        font-size: 32px;
-    }
+  }
+  .p {
+    margin-top: 0;
+  }
+  .label,
+  .at-input__title {
+    margin-top: 40px;
+    color: $font-default;
+  }
+  .input-wrap,
+  .at-input__input {
+    padding: 18px 5px;
+    border-bottom: 1px solid $border;
+    font-size: 32px;
+  }
+  .at-input {
+    margin-top: 40px;
+  }
+  .community-wrap {
+    font-size: 36px;
+    font-weight: 400px;
+    @include fj('start');
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
     .at-input {
-        margin-top: 40px;
+      margin-top: 0;
     }
-    .community-wrap {
-        font-size: 36px;
-        font-weight: 400px;
-        @include fj('start');
-        display: inline-flex;
-        align-items: center;
-        width: 100%;
-        .at-input {
-            margin-top: 0;
-        }
-        image {
-            margin: 0 10px 0 0;
-            @include wh(40px, 40px);
-        }
-        .flex {
-            flex: 1;
-        }
+    image {
+      margin: 0 10px 0 0;
+      @include wh(40px, 40px);
     }
-    .ptb20 {
-        padding: 40px 0;
+    .flex {
+      flex: 1;
     }
-    .b {
-        font-weight: 500;
-        color: $color-primary;
+  }
+  .ptb20 {
+    padding: 40px 0;
+  }
+  .b {
+    font-weight: 500;
+    color: $color-primary;
+  }
+  .ava {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: text-bottom;
+    margin-right: 5px;
+  }
+  .value {
+    margin: 20px 0 40px;
+  }
+  .mxw400 {
+    max-width: 400px;
+  }
+  .back-home {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    width: 70px;
+    height: 70px;
+    line-height: 70px;
+    padding: 10px;
+    text-align: center;
+    color: #fff;
+    line-height: 1.1;
+    font-size: 22px;
+    z-index: 1;
+    .ed-zhuye1 {
+      color: #fff;
+      font-size: 40px;
+      display: block;
     }
-    .ava {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: inline-block;
-        vertical-align: text-bottom;
-        margin-right: 5px;
-    }
-    .value {
-        margin: 20px 0 40px;
-    }
-    .mxw400{
-        max-width: 400px;
-    }
-    .back-home {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        border-radius: 50%;
-        background: rgba(0, 0, 0, .5);
-        width: 70px;
-        height: 70px;
-        line-height: 70px;
-        padding: 10px;
-        text-align: center;
-        color: #fff;
-        line-height: 1.1;
-        font-size: 22px;
-        z-index: 1;
-        .ed-zhuye1 {
-            color: #fff;
-            font-size: 40px;
-            display: block;
-        }
-    }
+  }
 }

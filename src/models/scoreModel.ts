@@ -9,14 +9,12 @@ export default {
     opType: 0,
     loadOver: false,
     refresh: true,
-    scoreList: [],
+    scoreList: []
   },
 
   effects: {
     *ScoreList(_, { call, put, select }) {
-      const { loadOver, scoreList, refresh, page, size, opType } = yield select(
-        state => state.score
-      );
+      const { loadOver, scoreList, refresh, page, size, opType } = yield select((state) => state.score);
       if (loadOver) return;
 
       const res = yield call(Api.scoreList, { page, size, opType });
@@ -28,15 +26,15 @@ export default {
         payload: {
           scoreList: refresh ? res.data.data : scoreList.concat(res.data.data),
           loadOver: res.data.data.length < size,
-          refresh: false,
-        },
+          refresh: false
+        }
       });
-    },
+    }
   },
 
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload };
-    },
-  },
+    }
+  }
 };

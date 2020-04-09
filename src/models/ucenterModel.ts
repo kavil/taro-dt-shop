@@ -11,7 +11,7 @@ export default {
       used: false,
       loadOver: false,
       refresh: true,
-      cardList: [],
+      cardList: []
     },
     ShopUser: {
       page: 1,
@@ -19,7 +19,7 @@ export default {
       type: 0,
       loadOver: false,
       refresh: true,
-      List: [],
+      List: []
     }
   },
 
@@ -30,14 +30,14 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            couponList: res.data,
-          },
+            couponList: res.data
+          }
         });
       }
     },
 
     *Card(_, { call, put, select }) {
-      const { card } = yield select(state => state.ucenter);
+      const { card } = yield select((state) => state.ucenter);
       const { loadOver, cardList, refresh, page, size, used } = card;
       if (loadOver) return;
 
@@ -52,9 +52,9 @@ export default {
             ...card,
             cardList: refresh ? res.data.data : cardList.concat(res.data.data),
             loadOver: res.data.data.length < size,
-            refresh: false,
+            refresh: false
           }
-        },
+        }
       });
     },
     *CardCheckOut({ payload }, { call }) {
@@ -68,16 +68,15 @@ export default {
     *CardcheckIt({ payload }, { call }) {
       const res = yield call(Api.cardCheckIt, payload);
       console.log(payload, 'CardcheckIt');
-      
+
       if (res.errno === 0) {
         return res.data;
       }
       return null;
     },
 
-
     *ShopUser(_, { call, put, select }) {
-      const { ShopUser } = yield select(state => state.ucenter);
+      const { ShopUser } = yield select((state) => state.ucenter);
       const { loadOver, List, refresh, page, size, type } = ShopUser;
       if (loadOver) return;
 
@@ -92,18 +91,16 @@ export default {
             ...ShopUser,
             List: refresh ? res.data.data : List.concat(res.data.data),
             loadOver: res.data.data.length < size,
-            refresh: false,
+            refresh: false
           }
-        },
+        }
       });
-    },
-
-
+    }
   },
 
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload };
-    },
-  },
+    }
+  }
 };

@@ -3,14 +3,7 @@ import { ComponentClass } from 'react';
 import { View, Text, Image, Button, Form } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
-import {
-  AtButton,
-  AtInputNumber,
-  AtModal,
-  AtModalHeader,
-  AtModalContent,
-  AtModalAction,
-} from 'taro-ui';
+import { AtButton, AtInputNumber, AtModal, AtModalHeader, AtModalContent, AtModalAction } from 'taro-ui';
 import CheckItem from '../../components/checkItem/checkItemComponent';
 import Login from '../../components/login/loginComponent';
 
@@ -33,33 +26,33 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ cart, common }) => ({
   ...cart,
-  ...common,
+  ...common
 }))
 class Cart extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '购物车',
+    navigationBarTitleText: '购物车'
   };
 
   async componentDidShow() {
     const res = await this.props.dispatch({
-      type: 'cart/Index',
+      type: 'cart/Index'
     });
     if (res.errno === 401) {
       this.setState({
-        nologin: true,
+        nologin: true
       });
     } else {
       this.setState({
-        nologin: false,
+        nologin: false
       });
     }
-    this.setState({ checkAll: !this.props.cartList.find(ele => !ele.checked) });
+    this.setState({ checkAll: !this.props.cartList.find((ele) => !ele.checked) });
   }
   async onPullDownRefresh() {
     await this.props.dispatch({
-      type: 'cart/Index',
+      type: 'cart/Index'
     });
-    this.setState({ checkAll: !this.props.cartList.find(ele => !ele.checked) });
+    this.setState({ checkAll: !this.props.cartList.find((ele) => !ele.checked) });
     Taro.stopPullDownRefresh();
   }
   loginBtn = () => {
@@ -68,7 +61,7 @@ class Cart extends Component<IProps, {}> {
   loginSuccess = () => {
     this.onPullDownRefresh();
   };
-  getFormId = e => {
+  getFormId = (e) => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
     formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
@@ -76,18 +69,18 @@ class Cart extends Component<IProps, {}> {
     this.props.dispatch({
       type: 'common/save',
       payload: {
-        formIdArr,
-      },
+        formIdArr
+      }
     });
   };
-  handleCheckAll = async value => {
+  handleCheckAll = async (value) => {
     this.setState({ checkAll: value });
     await this.props.dispatch({
       type: 'cart/Check',
       payload: {
         isChecked: value ? 1 : 0,
-        productIds: this.props.cartList.map(ele => ele.product_id),
-      },
+        productIds: this.props.cartList.map((ele) => ele.product_id)
+      }
     });
   };
   checkItem = async (goods, value) => {
@@ -95,12 +88,12 @@ class Cart extends Component<IProps, {}> {
       type: 'cart/Check',
       payload: {
         isChecked: value ? 1 : 0,
-        productIds: [goods.product_id],
-      },
+        productIds: [goods.product_id]
+      }
     });
-    this.setState({ checkAll: !this.props.cartList.find(ele => !ele.checked) });
+    this.setState({ checkAll: !this.props.cartList.find((ele) => !ele.checked) });
   };
-  nextTab = url => {
+  nextTab = (url) => {
     Taro.switchTab({ url });
   };
 
@@ -125,22 +118,22 @@ class Cart extends Component<IProps, {}> {
         id: goods.id,
         goodsId: goods.goods_id,
         productId: goods.product_id,
-        number: value,
-      },
+        number: value
+      }
     });
   };
-  delCart = async goods => {
+  delCart = async (goods) => {
     await this.props.dispatch({
       type: 'cart/Del',
       payload: {
-        productIds: [goods.product_id],
-      },
+        productIds: [goods.product_id]
+      }
     });
   };
   state = {
     checkAll: false,
     nologin: false,
-    noCommunityOpen: false,
+    noCommunityOpen: false
   };
 
   render() {
@@ -155,10 +148,7 @@ class Cart extends Component<IProps, {}> {
           <AtModalHeader>提示</AtModalHeader>
           <AtModalContent>本小区暂无小区长，请选择绑定附近小区作为代收点。</AtModalContent>
           <AtModalAction>
-            <Button
-              type="primary"
-              onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}
-            >
+            <Button type="primary" onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}>
               去更换小区
             </Button>
           </AtModalAction>
@@ -174,12 +164,7 @@ class Cart extends Component<IProps, {}> {
                   登录
                 </AtButton>
               ) : (
-                <AtButton
-                  formType="submit"
-                  size="small"
-                  type="secondary"
-                  onClick={this.nextTab.bind(this, '/pages/index/index')}
-                >
+                <AtButton formType="submit" size="small" type="secondary" onClick={this.nextTab.bind(this, '/pages/index/index')}>
                   去逛逛
                 </AtButton>
               )}
@@ -188,20 +173,13 @@ class Cart extends Component<IProps, {}> {
         </Form>
 
         <View className="ul">
-          {cartList.map(ele => (
+          {cartList.map((ele) => (
             <View key={ele.id} className="li">
               <Text className="erduufont ed-shanchu" onClick={this.delCart.bind(this, ele)} />
               <View className="cb">
-                <CheckItem
-                  value={ele.id}
-                  checked={!!ele.checked}
-                  onChange={this.checkItem.bind(this, ele)}
-                />
+                <CheckItem value={ele.id} checked={!!ele.checked} onChange={this.checkItem.bind(this, ele)} />
               </View>
-              <View
-                className="img-wrap"
-                onClick={this.nextPage.bind(this, '/pages/goods/index?id=' + ele.goods_id)}
-              >
+              <View className="img-wrap" onClick={this.nextPage.bind(this, '/pages/goods/index?id=' + ele.goods_id)}>
                 <Image className="img" src={ele.pic_url + '@!300X300'} />
               </View>
               <View className="right">
@@ -210,9 +188,7 @@ class Cart extends Component<IProps, {}> {
                 <View className="price-wrap">
                   <View className="price">
                     <View className="retail">团购价</View>
-                    <View className="vip">
-                      ￥{(ele.retail_price * ele.number).toFixed(1)}
-                    </View>
+                    <View className="vip">￥{(ele.retail_price * ele.number).toFixed(1)}</View>
                   </View>
                 </View>
                 <View className="input-number">
@@ -234,22 +210,13 @@ class Cart extends Component<IProps, {}> {
         {cartList && cartList.length ? (
           <View className="bottom">
             <View className="check-wrap">
-              <CheckItem
-                checked={checkAll}
-                value="all"
-                label="全选"
-                onChange={this.handleCheckAll}
-              />
+              <CheckItem checked={checkAll} value="all" label="全选" onChange={this.handleCheckAll} />
             </View>
-              <View className="cart-wrap">
-                合计
-                <Text className="main-color">
-                  ￥{cartTotal.checkedGoodsAmount ? cartTotal.checkedGoodsAmount.toFixed(1) : ''}
-                </Text>
-                {cartTotal.checkedGoodsAmount >= 49 ? (
-                  <Text className="info-color">免配送费</Text>
-                ) : null}
-              </View>
+            <View className="cart-wrap">
+              合计
+              <Text className="main-color">￥{cartTotal.checkedGoodsAmount ? cartTotal.checkedGoodsAmount.toFixed(1) : ''}</Text>
+              {cartTotal.checkedGoodsAmount >= 49 ? <Text className="info-color">免配送费</Text> : null}
+            </View>
             <View className="add-cart">
               <Form reportSubmit onSubmit={this.getFormId}>
                 <AtButton

@@ -23,15 +23,13 @@ type PageState = {}
 interface PageDvaProps {
   dispatch: Function,
 }
-
 interface PageOwnProps {
-  //父组件要传
+  // 父组件要传放这
 }
 interface PageStateProps {
-  // 自己要用的
+  // 自己要用的放这
 }
 type IProps = PageStateProps & PageDvaProps & PageOwnProps
-
 @connect(({ ${dirName}, loading }) => ({
   ...${dirName},
 }))
@@ -39,13 +37,10 @@ class ${titleCase(dirName)} extends Component<IProps, {}> {
   config = {
     navigationBarTitleText: '${dirName}',
   };
-
   componentDidMount() {
-
   };
-
   render() {
-    const {  } = this.props;
+    const { } = this.props;
     return (
       <View className="${dirName}-page">
         ${dirName}
@@ -59,7 +54,6 @@ export default  ${titleCase(dirName)} as ComponentClass<PageOwnProps, PageState>
 // scss文件模版
 const scssTep = `
 @import "../../static/css/mixin";
-
 .${dirName}-page {
 
 }
@@ -67,13 +61,11 @@ const scssTep = `
 
 // model文件模版
 const modelTep = `import * as Api from '../service/apiService';
-
 export default {
   namespace: '${dirName}',
   state: {
 
   },
-
   effects: {
     * load({ payload }, { call, put }) {
       const res = yield call(Api.Demo, { payload });
@@ -81,25 +73,22 @@ export default {
         yield put({ 
           type: 'save',
           payload: {
-            topData: res.data,
+            topData: res.data, // 模拟
           } 
         });
       }
     },
   },
-
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload };
     },
   },
-
 };
 `;
 
 // service页面模版
 const serviceTep = `export const ${dirName} = data => Request({ url: '/url', method: 'GET', data });
-
 // 模板自动生成占位 勿删`;
 
 const apptsTep = `'pages/index/index',
@@ -114,7 +103,8 @@ import common from './common';`
 try {
   fs.mkdirSync(`./src/pages/${dirName}`); // mkdir $1
 } catch (e) {
-  console.log(`${dirName}目录已存在`);
+  console.log(`${dirName}目录已存在，生成失败`);
+  process.exit(0);
 }
 fs.writeFileSync(`./src/pages/${dirName}/index.tsx`, indexTep);
 fs.writeFileSync(`./src/pages/${dirName}/index.scss`, scssTep);

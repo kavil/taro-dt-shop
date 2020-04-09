@@ -1,309 +1,307 @@
-@import "../../static/css/mixin";
+@import '../../static/css/mixin';
 .cart-page {
-    padding-bottom: 100px;
-    .replace{
-        background: $color-ex;
-        border: 1px solid $color-ex;
-        color: #999;
+  padding-bottom: 100px;
+  .replace {
+    background: $color-ex;
+    border: 1px solid $color-ex;
+    color: #999;
+  }
+  &.bg {
+    background: $bg-color-base;
+  }
+  .ul {
+    background: #fff;
+  }
+  .at-icon.at-icon-check {
+    color: #fff;
+  }
+  .at-checkbox::after,
+  .at-checkbox::before {
+    border-top: 2px solid #fff;
+    border-bottom: 0;
+  }
+  .li {
+    padding: 30px 20px 30px 0;
+    border-bottom: 1px solid $border;
+    @include fj();
+    align-items: center;
+    position: relative;
+    .ed-shanchu {
+      position: absolute;
+      padding: 10px;
+      top: 15px;
+      right: 20px;
+      color: $font-info;
+      font-size: 28px;
     }
-    &.bg {
-        background: $bg-color-base;
+    .cb {
+      width: 128px;
     }
-    .ul {
-        background: #fff;
+    .img-wrap {
+      margin-left: -40px;
+      margin-right: 20px;
+      position: relative;
+      z-index: 1;
+      @include wh(160px, 160px);
+      .img {
+        @include wh(160px, 160px);
+      }
     }
-    .at-icon.at-icon-check {
-        color: #fff;
-    }
-    .at-checkbox::after,
-    .at-checkbox::before {
-        border-top: 2px solid #fff;
-        border-bottom: 0;
-    }
-    .li {
-        padding: 30px 20px 30px 0;
-        border-bottom: 1PX solid $border;
-        @include fj();
-        align-items: center;
-        position: relative;
-        .ed-shanchu {
-            position: absolute;
-            padding: 10px;
-            top: 15px;
-            right: 20px;
-            color: $font-info;
-            font-size: 28px;
-        }
-        .cb {
-            width: 128px;
-        }
-        .img-wrap {
-            margin-left: -40px;
-            margin-right: 20px;
-            position: relative;
-            z-index: 1;
-            @include wh(160px, 160px);
-            .img {
-                @include wh(160px, 160px);
-            }
-        }
-        .right {
-            flex: 1;
-            .b {
-                @include ddd;
-                width: 400px;
-                font-size: 28px;
-                margin-bottom: 10px;
-            }
-            .p {
-                margin: 0;
-            }
-        }
-        .price {
-            @include fj('center');
-            flex-direction: column;
-        }
-        .retail {
-            color: $color-brand-light;
-            font-size: 24px;
-        }
-        .vip {
-            color: $color-brand;
-            font-size: 40px;
-            font-weight: 600;
-            @include fj(flex-start);
-            align-items: center;
-            line-height: 1;
-            .label {
-                font-size: 22px;
-                margin-left: 10px;
-                border-radius: 10px;
-                border: 1PX solid $color-dan;
-                color: $color-brand-light;
-                line-height: 1.1;
-                padding: 0 5px;
-            }
-        }
-        .input-number {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-        }
-    }
-    .info-color {
-        color: $font-info;
-        font-size: 20px;
-        margin-left: 3px;
-    }
-    .main-color {
-        color: $color-brand;
-    }
-    .bottom {
-        position: fixed;
-        bottom: 0;
-        height: 100px;
-        width: 100%;
-        background: #fff;
-        z-index: 2;
-        box-shadow: 0 0 3px 3px $border;
-        @include fj();
-        .check-wrap {
-            line-height: 100px;
-            width: 30%;
-        }
-        .cart-wrap {
-            position: relative;
-            line-height: 100px;
-            width: 40%;
-            font-size: 28px;
-            border-right: 1PX solid $border;
-            .erduufont {
-                color: $font-default;
-            }
-        }
-        .cart-wrap {
-            border: 0;
-        }
-        .add-cart {
-            flex: 1;
-            .at-button--primary {
-                border-radius: 0;
-                height: 100%;
-            }
-            .at-button__text {
-                color: #fff;
-            }
-        }
-    }
-    .tip {
-        padding: 10px 20px;
-        font-size: 24px;
-        background: $color-dan;
-        color: $font-default;
-        .text {
-            padding: 6px 10px;
-            border: 1PX solid $color-brand;
-            border-radius: 8px;
-            margin: 2px 10px;
-            color: $color-brand;
-            display: inline-block;
-        }
-    }
-    .bar {
-        height: 20px;
-        width: 100%;
-        background: url('http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-bg-bd30f2bfeb.png') 0 0 repeat-x #fff;
-        background-size: 10% 50%;
-        margin-bottom: 20px;
-    }
-    .title {
-        margin-bottom: 20px;
-    }
-    .address-wrap {
-        padding: 0 20px;
-        background: #fff;
-        .top {
-            padding-bottom: 20px;
-        }
-        .select-addr {
-            padding: 40px;
-            @include fj(space-around);
-        }
-        .p {
-            font-size: 28px;
-            margin-top: 0;
-        }
-    }
-    .community-wrap {
-        font-size: 36px;
-        font-weight: 400px;
-        margin-top: 20px;
-        @include fj('start');
-        display: inline-flex;
-        align-items: center;
-        width: 100%;
-        image {
-            margin: 0 10px 0 0;
-            @include wh(40px,
-            40px);
-        }
-    }
-    .colonel-wrap {
-        position: relative;
-        @include fj(flex-start);
-        align-items: center;
-        .badge {
-            position: absolute;
-            line-height: 1.1;
-            top: 0;
-            left: 24px;
-            padding: 3px 8px;
-            font-size: 20px;
-            width: 60px;
-            color: #fff;
-            background: $color-deep;
-            border-radius: 14px 14px 14px 0;
-            box-shadow: 0 4px 8px 0 rgba(233, 59, 61, 0.20);
-        }
-        .ava-wrap {
-            width: 100px;
-        }
-        .info {
-            flex: 1;
-            padding-left: 20px;
-        }
-        .name {
-            font-size: 26px;
-            color: $font-default;
-            @include ddd;
-        }
-    }
-    .gsi-wrap {
-        padding: 20px 10px;
-        position: relative;
-        background: #fff;
-        margin: 0 10px;
-        .img-wrap {
-            position: relative;
-            z-index: 1;
-            @include wh(140px,
-            140px);
-            margin: 10px 10px 10px 0;
-            .img {
-                @include wh(140px,
-                140px);
-            }
-        }
-        .goods-simple-item {
-            display: flex;
-            flex-wrap: nowrap;
-        }
-        .total-num {
-            background: #fff;
-            position: absolute;
-            right: 0;
-            top: 102px;
-            line-height: 140px;
-            font-size: 24px;
-            color: $font-default;
-            padding: 0 10px;
-            z-index: 1;
-        }
-        .place {
-            width: 100px;
-        }
-    }
-    .send {
-        @include fj;
-        margin-top: 20px;
-    }
-    .label {
-        color: $font-default;
+    .right {
+      flex: 1;
+      .b {
+        @include ddd;
+        width: 400px;
         font-size: 28px;
+        margin-bottom: 10px;
+      }
+      .p {
+        margin: 0;
+      }
     }
-    .value {
-        font-weight: 500;
-        font-size: 30px;
-        &.red {
-            color: $color-deep;
-        }
+    .price {
+      @include fj('center');
+      flex-direction: column;
     }
-    .block-wrap {
-        margin: 30px 10px;
-        padding: 10px;
-        background: #fff;
-        .at-list::after {
-            border: 0;
-        }
-        .item {
-            @include fj;
-            padding: 10px 0;
-            align-items: center;
-            &.mh {
-                min-height: 80px;
-            }
-        }
-        .span {
-            font-size: 26px;
-        }
-        .b {
-            font-weight: 500;
-        }
-        .go {
-            vertical-align: -4px;
-        }
+    .retail {
+      color: $color-brand-light;
+      font-size: 24px;
     }
-    .big {
-        color: $color-primary;
-    }
-    .center {
-        text-align: center;
-    }
-    .input-wrap {
-        border-bottom: 1px solid #ddd;
-        padding: 5px 10px;
-        font-size: 28px;
+    .vip {
+      color: $color-brand;
+      font-size: 40px;
+      font-weight: 600;
+      @include fj(flex-start);
+      align-items: center;
+      line-height: 1;
+      .label {
+        font-size: 22px;
         margin-left: 10px;
-        flex: 1;
+        border-radius: 10px;
+        border: 1px solid $color-dan;
+        color: $color-brand-light;
+        line-height: 1.1;
+        padding: 0 5px;
+      }
     }
+    .input-number {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+    }
+  }
+  .info-color {
+    color: $font-info;
+    font-size: 20px;
+    margin-left: 3px;
+  }
+  .main-color {
+    color: $color-brand;
+  }
+  .bottom {
+    position: fixed;
+    bottom: 0;
+    height: 100px;
+    width: 100%;
+    background: #fff;
+    z-index: 2;
+    box-shadow: 0 0 3px 3px $border;
+    @include fj();
+    .check-wrap {
+      line-height: 100px;
+      width: 30%;
+    }
+    .cart-wrap {
+      position: relative;
+      line-height: 100px;
+      width: 40%;
+      font-size: 28px;
+      border-right: 1px solid $border;
+      .erduufont {
+        color: $font-default;
+      }
+    }
+    .cart-wrap {
+      border: 0;
+    }
+    .add-cart {
+      flex: 1;
+      .at-button--primary {
+        border-radius: 0;
+        height: 100%;
+      }
+      .at-button__text {
+        color: #fff;
+      }
+    }
+  }
+  .tip {
+    padding: 10px 20px;
+    font-size: 24px;
+    background: $color-dan;
+    color: $font-default;
+    .text {
+      padding: 6px 10px;
+      border: 1px solid $color-brand;
+      border-radius: 8px;
+      margin: 2px 10px;
+      color: $color-brand;
+      display: inline-block;
+    }
+  }
+  .bar {
+    height: 20px;
+    width: 100%;
+    background: url('http://yanxuan.nosdn.127.net/hxm/yanxuan-wap/p/20161201/style/img/icon-normal/address-bg-bd30f2bfeb.png') 0 0 repeat-x
+      #fff;
+    background-size: 10% 50%;
+    margin-bottom: 20px;
+  }
+  .title {
+    margin-bottom: 20px;
+  }
+  .address-wrap {
+    padding: 0 20px;
+    background: #fff;
+    .top {
+      padding-bottom: 20px;
+    }
+    .select-addr {
+      padding: 40px;
+      @include fj(space-around);
+    }
+    .p {
+      font-size: 28px;
+      margin-top: 0;
+    }
+  }
+  .community-wrap {
+    font-size: 36px;
+    font-weight: 400px;
+    margin-top: 20px;
+    @include fj('start');
+    display: inline-flex;
+    align-items: center;
+    width: 100%;
+    image {
+      margin: 0 10px 0 0;
+      @include wh(40px, 40px);
+    }
+  }
+  .colonel-wrap {
+    position: relative;
+    @include fj(flex-start);
+    align-items: center;
+    .badge {
+      position: absolute;
+      line-height: 1.1;
+      top: 0;
+      left: 24px;
+      padding: 3px 8px;
+      font-size: 20px;
+      width: 60px;
+      color: #fff;
+      background: $color-deep;
+      border-radius: 14px 14px 14px 0;
+      box-shadow: 0 4px 8px 0 rgba(233, 59, 61, 0.2);
+    }
+    .ava-wrap {
+      width: 100px;
+    }
+    .info {
+      flex: 1;
+      padding-left: 20px;
+    }
+    .name {
+      font-size: 26px;
+      color: $font-default;
+      @include ddd;
+    }
+  }
+  .gsi-wrap {
+    padding: 20px 10px;
+    position: relative;
+    background: #fff;
+    margin: 0 10px;
+    .img-wrap {
+      position: relative;
+      z-index: 1;
+      @include wh(140px, 140px);
+      margin: 10px 10px 10px 0;
+      .img {
+        @include wh(140px, 140px);
+      }
+    }
+    .goods-simple-item {
+      display: flex;
+      flex-wrap: nowrap;
+    }
+    .total-num {
+      background: #fff;
+      position: absolute;
+      right: 0;
+      top: 102px;
+      line-height: 140px;
+      font-size: 24px;
+      color: $font-default;
+      padding: 0 10px;
+      z-index: 1;
+    }
+    .place {
+      width: 100px;
+    }
+  }
+  .send {
+    @include fj;
+    margin-top: 20px;
+  }
+  .label {
+    color: $font-default;
+    font-size: 28px;
+  }
+  .value {
+    font-weight: 500;
+    font-size: 30px;
+    &.red {
+      color: $color-deep;
+    }
+  }
+  .block-wrap {
+    margin: 30px 10px;
+    padding: 10px;
+    background: #fff;
+    .at-list::after {
+      border: 0;
+    }
+    .item {
+      @include fj;
+      padding: 10px 0;
+      align-items: center;
+      &.mh {
+        min-height: 80px;
+      }
+    }
+    .span {
+      font-size: 26px;
+    }
+    .b {
+      font-weight: 500;
+    }
+    .go {
+      vertical-align: -4px;
+    }
+  }
+  .big {
+    color: $color-primary;
+  }
+  .center {
+    text-align: center;
+  }
+  .input-wrap {
+    border-bottom: 1px solid #ddd;
+    padding: 5px 10px;
+    font-size: 28px;
+    margin-left: 10px;
+    flex: 1;
+  }
 }

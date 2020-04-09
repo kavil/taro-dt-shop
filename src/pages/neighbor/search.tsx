@@ -25,11 +25,11 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ neighbor, common }) => ({
   ...common,
-  ...neighbor,
+  ...neighbor
 }))
 class NeighborSearch extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '选择附近小区点',
+    navigationBarTitleText: '选择附近小区点'
   };
 
   async componentDidMount() {
@@ -49,8 +49,8 @@ class NeighborSearch extends Component<IProps, {}> {
         type: 'neighbor/Search',
         payload: {
           latitude: local.latitude,
-          longitude: local.longitude,
-        },
+          longitude: local.longitude
+        }
       });
       this.setState({ local, loaded: true });
     }
@@ -68,7 +68,7 @@ class NeighborSearch extends Component<IProps, {}> {
     if (errMsg === 'openSetting:ok') this.componentDidMount();
   };
 
-  onConfirm = async e => {
+  onConfirm = async (e) => {
     const value = e.detail.value.trim();
     if (this.timeCo) clearTimeout(this.timeCo);
     const { local }: any = this.state;
@@ -79,13 +79,13 @@ class NeighborSearch extends Component<IProps, {}> {
       payload: {
         name: value,
         latitude: local.latitude,
-        longitude: local.longitude,
-      },
+        longitude: local.longitude
+      }
     });
     this.setState({ loaded: true });
   };
 
-  searchCommunity = async val => {
+  searchCommunity = async (val) => {
     const value = val.trim();
     if (!value) return;
     this.setState({ searchValue: value });
@@ -99,18 +99,18 @@ class NeighborSearch extends Component<IProps, {}> {
         payload: {
           name: value,
           latitude: local.latitude,
-          longitude: local.longitude,
-        },
+          longitude: local.longitude
+        }
       });
       this.setState({ loaded: true });
     }, 1500);
   };
 
-  bindOk = async value => {
+  bindOk = async (value) => {
     await Taro.showModal({
       title: '提示',
       content: `已成功绑定 ${value.name}`,
-      showCancel: false,
+      showCancel: false
     });
     if (this.$router.params.mode === 'redirect') {
       Taro.switchTab({ url: '/pages/index/index' });
@@ -125,7 +125,7 @@ class NeighborSearch extends Component<IProps, {}> {
     searchValue: '',
     noApply: true,
     local: {},
-    loaded: false,
+    loaded: false
   };
 
   render() {
@@ -134,23 +134,11 @@ class NeighborSearch extends Component<IProps, {}> {
     return (
       <View className="neighbor-page">
         <View className="search-wrap">
-          <AtSearchBar
-            focus
-            fixed
-            value={searchValue}
-            placeholder="搜索小区"
-            onChange={this.searchCommunity}
-            onConfirm={this.onConfirm}
-          />
+          <AtSearchBar focus fixed value={searchValue} placeholder="搜索小区" onChange={this.searchCommunity} onConfirm={this.onConfirm} />
         </View>
         <View className="pad20 pt">
-          {SearchList.map(ele => (
-            <CommunityItem
-              key={ele.id}
-              item={ele}
-              noApply={noApply}
-              onChange={this.bindOk.bind(this, ele)}
-            />
+          {SearchList.map((ele) => (
+            <CommunityItem key={ele.id} item={ele} noApply={noApply} onChange={this.bindOk.bind(this, ele)} />
           ))}
           {!SearchList.length && loaded && <View className="nodata">该地区暂无小区长</View>}
         </View>

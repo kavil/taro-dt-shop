@@ -27,11 +27,11 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
   ...colonel,
   ...common,
   loading: loading.effects['colonel/Apply'],
-  getPhoneLoading: loading.effects['common/login'],
+  getPhoneLoading: loading.effects['common/login']
 }))
 class Colonelapply extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '小区长申请',
+    navigationBarTitleText: '小区长申请'
   };
 
   async componentDidMount() {
@@ -41,21 +41,21 @@ class Colonelapply extends Component<IProps, {}> {
     if (parentId && parentId !== this.props.userInfo.id) {
       const res = await this.props.dispatch({
         type: 'colonel/User',
-        payload: { id: parentId },
+        payload: { id: parentId }
       });
       if (res.errno !== 0) return;
       this.setState({
-        parent: res.data,
+        parent: res.data
       });
     }
     await this.props.dispatch({
-      type: 'common/wxCode',
+      type: 'common/wxCode'
     });
     const cfg = await this.props.dispatch({
-      type: 'common/UploadSign',
+      type: 'common/UploadSign'
     });
     this.setState({
-      uploadHeaders: cfg,
+      uploadHeaders: cfg
     });
   }
   onSubmit = async () => {
@@ -89,16 +89,16 @@ class Colonelapply extends Component<IProps, {}> {
       type: 'colonel/Apply',
       payload: {
         ...fm,
-        images: fm.images.map(res => res.url).join(','),
-        ewm: fm.ewm.map(res => res.url).join(','),
-        parent: this.state.parent['id'],
-      },
+        images: fm.images.map((res) => res.url).join(','),
+        ewm: fm.ewm.map((res) => res.url).join(','),
+        parent: this.state.parent['id']
+      }
     });
     if (res) {
       const modal = await Taro.showModal({
         title: '提示',
         content: '提交成功，请注意接听来电',
-        showCancel: false,
+        showCancel: false
       });
       if (modal.confirm) {
         Taro.navigateBack();
@@ -139,12 +139,11 @@ class Colonelapply extends Component<IProps, {}> {
     }
     formModel[label] = value;
     this.setState({
-      formModel: { ...formModel },
+      formModel: { ...formModel }
     });
   };
   async upImg(filePath, uploadHeaders) {
-    const aliyunFileKey =
-      'dtshop' + filePath.replace(/wxfile:\/\/tmp_/, '').replace(/http:\/\/[^\.]*.[^\.]*\./, '');
+    const aliyunFileKey = 'dtshop' + filePath.replace(/wxfile:\/\/tmp_/, '').replace(/http:\/\/[^\.]*.[^\.]*\./, '');
     const uped = await Taro.uploadFile({
       url: uploadHeaders.host,
       filePath,
@@ -154,23 +153,23 @@ class Colonelapply extends Component<IProps, {}> {
         policy: uploadHeaders.policy,
         OSSAccessKeyId: uploadHeaders.OSSAccessKeyId,
         signature: uploadHeaders.signature,
-        success_action_status: '200',
-      },
+        success_action_status: '200'
+      }
     });
     return { uped, aliyunFileKey };
   }
-  nextPage = url => {
+  nextPage = (url) => {
     Taro.navigateTo({ url });
   };
-  lookBig = img => {
+  lookBig = (img) => {
     console.log(img);
     Taro.previewImage({
       current: img + '@!q90',
-      urls: [img + '@!q90'],
+      urls: [img + '@!q90']
     });
   };
 
-  getPhone = async event => {
+  getPhone = async (event) => {
     if (event.detail.errMsg !== 'getPhoneNumber:ok') {
       tip('获取手机号失败');
       return;
@@ -179,8 +178,8 @@ class Colonelapply extends Component<IProps, {}> {
       type: 'common/BindPhone',
       payload: {
         encryptedData: event.detail.encryptedData,
-        iv: event.detail.iv,
-      },
+        iv: event.detail.iv
+      }
     });
     if (res.errno === 0) {
       this.setState({ formModel: { ...this.state.formModel, mobile: res.data } });
@@ -192,13 +191,13 @@ class Colonelapply extends Component<IProps, {}> {
   onShareAppMessage() {
     return {
       title: this.props.userInfo.nickName + '喊你申请小区长',
-      path: `/pages/colonelApply/index?id=${this.props.userInfo.id}`,
+      path: `/pages/colonelApply/index?id=${this.props.userInfo.id}`
     };
   }
   onPullDownRefresh() {
     Taro.stopPullDownRefresh();
   }
-  nextTab = url => {
+  nextTab = (url) => {
     Taro.switchTab({ url });
   };
   state = {
@@ -208,7 +207,7 @@ class Colonelapply extends Component<IProps, {}> {
     },
     uploadHeaders: null,
     getPhoneLoading: false,
-    parent: {},
+    parent: {}
   };
 
   render() {
@@ -220,9 +219,7 @@ class Colonelapply extends Component<IProps, {}> {
         <View />
         <View className="pad40 h2">
           小区长申请表
-          <View className="p">
-            小区长是联系小区用户和平台的纽带，是有编制无约束的新合作模式。
-          </View>
+          <View className="p">小区长是联系小区用户和平台的纽带，是有编制无约束的新合作模式。</View>
         </View>
         <View className="pad40">
           <View className="ava-wrap">
@@ -273,11 +270,7 @@ class Colonelapply extends Component<IProps, {}> {
                   </View>
                 ) : (
                   <View className="select-addr">
-                    <AtButton
-                      size="small"
-                      type="secondary"
-                      onClick={this.nextPage.bind(this, '/pages/neighbor/search?noApply=true')}
-                    >
+                    <AtButton size="small" type="secondary" onClick={this.nextPage.bind(this, '/pages/neighbor/search?noApply=true')}>
                       绑定小区
                     </AtButton>
                   </View>
@@ -286,11 +279,7 @@ class Colonelapply extends Component<IProps, {}> {
 
               {userInfo.communityId && (
                 <View className="ex">
-                  <AtButton
-                    type="secondary"
-                    size="small"
-                    onClick={this.nextPage.bind(this, '/pages/neighbor/search?noApply=true')}
-                  >
+                  <AtButton type="secondary" size="small" onClick={this.nextPage.bind(this, '/pages/neighbor/search?noApply=true')}>
                     更换
                   </AtButton>
                 </View>

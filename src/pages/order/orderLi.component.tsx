@@ -25,27 +25,27 @@ type IProps = PageOwnProps & DispatchOption & PageDispatchProps;
 @connect(({ order, cart, common }) => ({
   ...order,
   ...cart,
-  ...common,
+  ...common
 }))
 export class OrderLi extends Component<IProps, {}> {
   props: any = {
-    order: {},
+    order: {}
   };
 
   cancel = async () => {
     const res = await Taro.showModal({
       title: '提示',
-      content: '确定取消订单？',
+      content: '确定取消订单？'
     });
     if (res.confirm) {
       await this.props.dispatch({
         type: 'order/Cancel',
         payload: {
-          orderId: this.props.order.id,
-        },
+          orderId: this.props.order.id
+        }
       });
       await this.props.dispatch({
-        type: 'order/orderList',
+        type: 'order/orderList'
       });
     }
   };
@@ -56,8 +56,8 @@ export class OrderLi extends Component<IProps, {}> {
     const payParam = await this.props.dispatch({
       type: 'cart/Prepay',
       payload: {
-        orderId,
-      },
+        orderId
+      }
     });
     if (!payParam) {
       return;
@@ -71,17 +71,17 @@ export class OrderLi extends Component<IProps, {}> {
         signType: payParam.signType,
         paySign: payParam.paySign,
 
-        success: res => {
+        success: (res) => {
           if (res.errMsg === 'requestPayment:fail cancel') {
             Taro.redirectTo({
-              url: `/pages/order/purchased?orderId=${orderId}&type=no`,
+              url: `/pages/order/purchased?orderId=${orderId}&type=no`
             });
           } else {
             Taro.redirectTo({
-              url: `/pages/order/purchased?orderId=${orderId}&type=ok`,
+              url: `/pages/order/purchased?orderId=${orderId}&type=ok`
             });
           }
-        },
+        }
       });
     } else {
       await Taro.requestPayment({
@@ -90,21 +90,21 @@ export class OrderLi extends Component<IProps, {}> {
         package: payParam.package,
         signType: payParam.signType,
         paySign: payParam.paySign,
-        success: res => {
+        success: (res) => {
           if (res.errMsg === 'requestPayment:fail cancel') {
             tip('支付失败，请重新支付');
           } else {
             Taro.redirectTo({
-              url: `/pages/order/purchasedShop?orderId=${orderId}&type=ok`,
+              url: `/pages/order/purchasedShop?orderId=${orderId}&type=ok`
             });
           }
-        },
+        }
       });
     }
   };
   refund = () => {};
   onTimeUp = () => {};
-  countdown = add_time => {
+  countdown = (add_time) => {
     const cha = (new Date(add_time).getTime() + 3600000 - new Date().getTime()) / 1000;
     const day = Math.floor(cha / 86400);
     const time: any = [];
@@ -125,7 +125,7 @@ export class OrderLi extends Component<IProps, {}> {
       300: '已发货',
       301: '已完成',
       400: '已退款',
-      401: '已退货',
+      401: '已退货'
     };
     const op = order.handleOption;
     const countdown = this.countdown(order.add_time);
@@ -159,7 +159,7 @@ export class OrderLi extends Component<IProps, {}> {
           )}
         </View>
         {order.orderGoods &&
-          order.orderGoods.map(item => {
+          order.orderGoods.map((item) => {
             return (
               <View className="center" key={item.id}>
                 <View className="main">

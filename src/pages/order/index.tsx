@@ -29,18 +29,18 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
 @connect(({ order, common }) => ({
   ...order,
-  ...common,
+  ...common
 }))
 export default class Order extends Component<IProps, {}> {
   config = {
     navigationBarTitleText: '我的订单',
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#f8f8f8'
   };
 
   async componentDidMount() {
     const current = Number(this.$router.params.tab);
     console.log(current, '[][][');
-    
+
     this.handleClick(current || 0);
   }
   componentWillUnmount() {
@@ -51,14 +51,14 @@ export default class Order extends Component<IProps, {}> {
         refresh: true,
         loadOver: false,
         orderList: [],
-        search: undefined,
-      },
+        search: undefined
+      }
     });
   }
   state = {
     current: 0,
     search: '',
-    manage: false,
+    manage: false
   };
   constructor() {
     super(...arguments);
@@ -66,7 +66,7 @@ export default class Order extends Component<IProps, {}> {
   async handleClick(value) {
     this.setState({
       current: value,
-      search: '',
+      search: ''
     });
     const statusRange = [undefined, 0, 201, 301, 400];
     const status = statusRange[value];
@@ -77,8 +77,8 @@ export default class Order extends Component<IProps, {}> {
         status,
         page: 1, // 归位
         refresh: true,
-        loadOver: false,
-      },
+        loadOver: false
+      }
     });
     this.getOrderList();
   }
@@ -88,8 +88,8 @@ export default class Order extends Component<IProps, {}> {
       payload: {
         page: 1, // 归位
         refresh: true,
-        loadOver: false,
-      },
+        loadOver: false
+      }
     });
     this.getOrderList();
   }
@@ -97,14 +97,14 @@ export default class Order extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'order/save',
       payload: {
-        page: this.props.page + 1,
-      },
+        page: this.props.page + 1
+      }
     });
     this.getOrderList();
   }
   getOrderList() {
     this.props.dispatch({
-      type: 'order/OrderList',
+      type: 'order/OrderList'
     });
   }
 
@@ -115,15 +115,15 @@ export default class Order extends Component<IProps, {}> {
       payload: {
         search: this.state.search,
         loadOver: false,
-        refresh: true,
-      },
+        refresh: true
+      }
     });
     this.getOrderList();
   }
 
   async onSearchChange(value) {
     this.setState({
-      search: value,
+      search: value
     });
     if (this.timeCo) clearTimeout(this.timeCo);
     this.timeCo = setTimeout(async () => {
@@ -139,7 +139,7 @@ export default class Order extends Component<IProps, {}> {
       { title: '全部' },
       { title: '待付款' },
       { title: '待收货' },
-      { title: '待评价' },
+      { title: '待评价' }
       // { title: '退换' },
     ];
     return (
@@ -156,7 +156,7 @@ export default class Order extends Component<IProps, {}> {
           <AtTabsPane current={current} index={0}>
             {orderList && orderList.length ? (
               <View className="order-ul">
-                {orderList.map(order => {
+                {orderList.map((order) => {
                   return <OrderLi key={order.id} order={order} />;
                 })}
               </View>
@@ -172,7 +172,7 @@ export default class Order extends Component<IProps, {}> {
           <AtTabsPane current={current} index={1}>
             {orderList && orderList.length ? (
               <View className="order-ul">
-                {orderList.map(order => {
+                {orderList.map((order) => {
                   return <OrderLi key={order.id} order={order} />;
                 })}
               </View>
@@ -188,7 +188,7 @@ export default class Order extends Component<IProps, {}> {
           <AtTabsPane current={current} index={2}>
             {orderList && orderList.length ? (
               <View className="order-ul">
-                {orderList.map(order => {
+                {orderList.map((order) => {
                   return <OrderLi key={order.id} order={order} />;
                 })}
               </View>
@@ -204,7 +204,7 @@ export default class Order extends Component<IProps, {}> {
           <AtTabsPane current={current} index={3}>
             {orderList && orderList.length ? (
               <View className="order-ul">
-                {orderList.map(order => {
+                {orderList.map((order) => {
                   return <OrderLi key={order.id} order={order} />;
                 })}
               </View>
@@ -220,7 +220,7 @@ export default class Order extends Component<IProps, {}> {
           <AtTabsPane current={current} index={4}>
             {orderList && orderList.length ? (
               <View className="order-ul">
-                {orderList.map(order => {
+                {orderList.map((order) => {
                   return <OrderLi key={order.id} order={order} />;
                 })}
               </View>

@@ -27,11 +27,11 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ neighbor, common }) => ({
   ...neighbor,
-  ...common,
+  ...common
 }))
 class Neighbor extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '邻居圈',
+    navigationBarTitleText: '邻居圈'
   };
 
   async componentDidShow() {
@@ -61,8 +61,8 @@ class Neighbor extends Component<IProps, {}> {
             type: 'neighbor/NearbyList',
             payload: {
               latitude: local.latitude,
-              longitude: local.longitude,
-            },
+              longitude: local.longitude
+            }
           });
       }
       this.setState({ init: true });
@@ -73,11 +73,11 @@ class Neighbor extends Component<IProps, {}> {
     await this.componentDidShow();
     Taro.stopPullDownRefresh();
   }
-  refresh = async value => {
+  refresh = async (value) => {
     await Taro.showModal({
       title: '提示',
       content: `已成功绑定 ${value.name}`,
-      showCancel: false,
+      showCancel: false
     });
     await this.componentDidShow();
   };
@@ -90,11 +90,11 @@ class Neighbor extends Component<IProps, {}> {
     Taro.login();
     Taro.eventCenter.trigger('login', true);
   };
-  loginSuccess = async _ => {
+  loginSuccess = async (_) => {
     this.componentDidShow();
   };
-  searchCommunity = _ => {};
-  gotoSearch = e => {
+  searchCommunity = (_) => {};
+  gotoSearch = (e) => {
     e.preventDefault();
     e.stopPropagation();
     Taro.navigateTo({ url: '/pages/neighbor/search' });
@@ -104,7 +104,7 @@ class Neighbor extends Component<IProps, {}> {
     tip('暂未开放');
   };
 
-  nextPage = url => {
+  nextPage = (url) => {
     Taro.navigateTo({ url });
   };
 
@@ -113,7 +113,7 @@ class Neighbor extends Component<IProps, {}> {
     myCommunity: false,
     init: false,
     localSetting: true,
-    userInfo: {},
+    userInfo: {}
   };
 
   render() {
@@ -211,19 +211,11 @@ class Neighbor extends Component<IProps, {}> {
                   <View className="pad20">
                     <View className="h3">附近小区</View>
                     <View className="search-wrap">
-                      <AtSearchBar
-                        value=""
-                        placeholder="搜索小区"
-                        onChange={this.searchCommunity}
-                      />
+                      <AtSearchBar value="" placeholder="搜索小区" onChange={this.searchCommunity} />
                       <View className="search-mask" onClick={this.gotoSearch} />
                     </View>
-                    {NearbyList.map(ele => (
-                      <CommunityItem
-                        key={ele.id}
-                        item={ele}
-                        onChange={this.refresh.bind(this, ele)}
-                      />
+                    {NearbyList.map((ele) => (
+                      <CommunityItem key={ele.id} item={ele} onChange={this.refresh.bind(this, ele)} />
                     ))}
                     {NearbyList && !NearbyList.length && (
                       <View className="p" style={{ textAlign: 'center', marginTop: '30px' }}>

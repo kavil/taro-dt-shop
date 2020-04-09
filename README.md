@@ -8,18 +8,27 @@
 
 React + Taro + Dva + Sass + TS
 
+
+命令行快速生成模板页面
+npm tpl 'page-name'
+
+自动从iconfont更新
+npm icon 'iconfont下载链接后缀'
+
+node >= 12.0.0
+
+Taro >= v2.0.0
+
+
 ## 项目运行
+
 
 ```
 
-
 cd taro-dva-ts
 
-# 全局安装taro脚手架
-npm install -g @tarojs/cli
-
 # 安装项目依赖
-npm install
+yarn
 
 # 微信小程序
 npm run dev:weapp
@@ -30,6 +39,12 @@ npm run dev:alipay
 # 百度小程序
 npm run dev:swan
 
+# 字节跳动小程序
+npm run dev:tt
+
+# QQ小程序
+npm run dev:qq
+
 # H5
 npm run dev:h5
 
@@ -37,7 +52,7 @@ npm run dev:h5
 npm run dev:rn
 
 # pages模版快速生成
-npm run tep `文件名`
+npm run tpl `文件名`
 
 ```
 
@@ -60,28 +75,25 @@ npm run tep `文件名`
     ├── .rn_temp               // RN编译结果目录
     ├── dist                   // 小程序编译结果目录
     ├── config                 // Taro配置目录
-    │   ├── dev.js                 // 开发时配置
-    │   ├── index.js               // 默认配置
-    │   └── prod.js                // 打包时配置
-    ├── site                   // H5静态文件（打包文件）
+    │   ├── dev.ts                 // 开发时配置
+    │   ├── index.ts               // 默认配置
+    │   └── prod.ts                // 打包时配置
     ├── src                    // 源码目录
     │   ├── components             // 组件
     │   ├── config                 // 项目开发配置
-    │   ├── images                 // 图片文件
     │   ├── models                 // redux models
     │   ├── pages                  // 页面文件目录
-    │   │   └── home
-    │   │       ├── index.js           // 页面逻辑
+    │   │   └── account
+    │   │       ├── index.ts           // 页面逻辑
     │   │       ├── index.scss         // 页面样式
     │   ├── service            // 页面api等服务
-    │   ├── styles             // 样式文件
+    │   ├── static             // 字体、图片
     │   ├── utils              // 常用工具类
-    │   ├── app.js             // 入口文件
+    │   ├── app.ts             // 入口文件
     │   └── index.html
     ├── package.json
-    ├── template.js            // pages模版快速生成脚本,执行命令 npm run tpl `文件名`
-    └── get-iconfont.js        // iconfont快速更新,执行命令 npm run iconfont
-
+    ├── template.ts            // pages模版快速生成脚本,执行命令 npm run tpl `文件名`
+    └── get-iconfont.ts        // iconfont快速更新,执行命令 npm run iconfont
 
 # 文档
 

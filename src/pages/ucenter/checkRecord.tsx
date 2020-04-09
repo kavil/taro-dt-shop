@@ -29,11 +29,11 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
 @connect(({ pickup }) => ({
   ...pickup,
-  List: pickup.checkRecordList,
+  List: pickup.checkRecordList
 }))
 export default class CheckRecordList extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '核销记录列表',
+    navigationBarTitleText: '核销记录列表'
   };
 
   componentDidMount = () => {
@@ -47,14 +47,14 @@ export default class CheckRecordList extends Component<IProps, {}> {
         page: 1, // 归位
         refresh: true,
         loadOver: false,
-        List: [],
-      },
+        List: []
+      }
     });
   };
 
   getList() {
     this.props.dispatch({
-      type: 'pickup/CheckRecordList',
+      type: 'pickup/CheckRecordList'
     });
   }
 
@@ -65,8 +65,8 @@ export default class CheckRecordList extends Component<IProps, {}> {
         page: 1, // 归位
         refresh: true,
         loadOver: false,
-        List: [],
-      },
+        List: []
+      }
     });
     this.getList();
   }
@@ -74,14 +74,14 @@ export default class CheckRecordList extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'pickup/save',
       payload: {
-        page: this.props.page + 1,
-      },
+        page: this.props.page + 1
+      }
     });
     this.getList();
   }
   nextPage(url) {
     Taro.navigateTo({
-      url: url,
+      url: url
     });
   }
 
@@ -91,7 +91,7 @@ export default class CheckRecordList extends Component<IProps, {}> {
       <View className="score-page check-record">
         {List && List.length ? (
           <View className="base-ul">
-            {List.map(li => (
+            {List.map((li) => (
               <View>
                 <View className="top">
                   <View className="user">

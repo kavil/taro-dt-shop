@@ -32,19 +32,19 @@ type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
   ...cart,
   neighbor,
   userInfoLoading: loading.effects['common/getUserInfo'],
-  loginLoading: loading.effects['common/login'],
+  loginLoading: loading.effects['common/login']
 }))
 class Login extends Component<IProps, {}> {
   componentDidMount() {
-    Taro.eventCenter.on('login', status => {
+    Taro.eventCenter.on('login', (status) => {
       if (typeof status !== 'boolean') {
         this.setState({
           shopPlanId: status.shopPlanId,
-          next: status.next,
+          next: status.next
         });
       }
       this.setState({
-        openLogin: !!status,
+        openLogin: !!status
       });
     });
   }
@@ -56,22 +56,22 @@ class Login extends Component<IProps, {}> {
   }
   componentWillReceiveProps(props) {
     this.setState({
-      openLogin: props.show,
+      openLogin: props.show
     });
   }
 
-  loginFun = async event => {
+  loginFun = async (event) => {
     if (event.detail.errMsg !== 'getUserInfo:ok') return;
     const userInfo = await this.props.dispatch({
-      type: 'common/getUserInfo',
+      type: 'common/getUserInfo'
     });
     const code = await this.props.dispatch({
-      type: 'common/wxCode',
+      type: 'common/wxCode'
     });
     if (!userInfo) {
       Taro.showToast({
         title: '登录失败，请重试',
-        icon: 'none',
+        icon: 'none'
       });
       return;
     } else {
@@ -79,8 +79,8 @@ class Login extends Component<IProps, {}> {
         type: 'common/login',
         payload: {
           code,
-          userInfo,
-        },
+          userInfo
+        }
       });
 
       if (this.props.userInfo && this.props.userInfo.communityId) {
@@ -99,10 +99,10 @@ class Login extends Component<IProps, {}> {
       }
 
       await this.props.dispatch({
-        type: 'cart/Index',
+        type: 'cart/Index'
       });
       this.setState({
-        openLogin: false,
+        openLogin: false
       });
       if (this.props.onChange) this.props.onChange(userInfo, this.state.next);
     }
@@ -112,15 +112,15 @@ class Login extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'neighbor/BindId',
       payload: {
-        id: communityId,
-      },
+        id: communityId
+      }
     });
     await this.props.dispatch({
-      type: 'common/UserInfo',
+      type: 'common/UserInfo'
     });
   }
 
-  getFormId = e => {
+  getFormId = (e) => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
     formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
@@ -128,14 +128,14 @@ class Login extends Component<IProps, {}> {
     this.props.dispatch({
       type: 'common/save',
       payload: {
-        formIdArr,
-      },
+        formIdArr
+      }
     });
   };
   state = {
     openLogin: false,
     shopPlanId: null,
-    next: null,
+    next: null
   };
 
   render() {

@@ -1,16 +1,7 @@
 import { ComponentClass } from 'react';
 import Taro, { Component, Config } from '@tarojs/taro';
 import { connect } from '@tarojs/redux';
-import {
-  View,
-  Image,
-  Text,
-  ScrollView,
-  Button,
-  Swiper,
-  SwiperItem,
-  Form,
-} from '@tarojs/components';
+import { View, Image, Text, ScrollView, Button, Swiper, SwiperItem, Form } from '@tarojs/components';
 import {
   AtSearchBar,
   AtTabs,
@@ -23,7 +14,7 @@ import {
   AtModalHeader,
   AtModalContent,
   AtModalAction,
-  AtAvatar,
+  AtAvatar
 } from 'taro-ui';
 import Login from '../../components/login/loginComponent';
 import GoodsItem from '../../components/goods/goodsComponent';
@@ -68,7 +59,7 @@ type IProps = PageStateProps & PageDva & PageOwnProps & PageState;
 
 @connect(({ common, goods }) => ({
   ...common,
-  ...goods,
+  ...goods
 }))
 class Index extends Component<IProps, {}> {
   /**
@@ -79,7 +70,7 @@ class Index extends Component<IProps, {}> {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '寻味知途·社区团购',
+    navigationBarTitleText: '寻味知途·社区团购'
     // navigationBarBackgroundColor: '#fff',
     // navigationBarTextStyle: 'white',
     // backgroundTextStyle: 'dark',
@@ -91,7 +82,7 @@ class Index extends Component<IProps, {}> {
 
     return {
       title: `【${userInfo.name}】今日开团链接`,
-      path: `/pages/index/index?communityId=${userInfo.communityId}`,
+      path: `/pages/index/index?communityId=${userInfo.communityId}`
     };
   }
   async componentDidMount() {
@@ -105,7 +96,7 @@ class Index extends Component<IProps, {}> {
     // }
     setTimeout(() => {
       this.setState({
-        addmyappTip: true,
+        addmyappTip: true
       });
     }, 5 * 1000);
     Taro.showShareMenu();
@@ -113,20 +104,20 @@ class Index extends Component<IProps, {}> {
     this.props
       .dispatch({
         // A D
-        type: 'common/spread',
+        type: 'common/spread'
       })
-      .then(adRes => {
+      .then((adRes) => {
         this.setState({
-          indexAd: adRes.filter(ele => ele.ad_position_id === 1),
+          indexAd: adRes.filter((ele) => ele.ad_position_id === 1)
         });
-        const curtainRes = adRes.find(ele => ele.ad_position_id === 3);
+        const curtainRes = adRes.find((ele) => ele.ad_position_id === 3);
         if (curtainRes && Taro.getStorageSync('index-curtain') !== curtainRes.image_url) {
           this.setState({ curtainRes, curtainOpened: true, curtainPng: curtainRes.image_url });
         }
       });
 
     await this.props.dispatch({
-      type: 'goods/getCate',
+      type: 'goods/getCate'
     });
     const cateTopList: any = [];
     const cateImgList: any = [];
@@ -142,7 +133,7 @@ class Index extends Component<IProps, {}> {
     if (this.props.endTime) {
       setTimeout(() => {
         this.setState({
-          countdownPlan: Countdown(this.props.endTime),
+          countdownPlan: Countdown(this.props.endTime)
         });
       }, 1000);
     }
@@ -158,8 +149,8 @@ class Index extends Component<IProps, {}> {
       payload: {
         listName: 'cate0',
         parent_id: cate.id,
-        promot_cate_id: cate.type === 2 ? cate.id : null,
-      },
+        promot_cate_id: cate.type === 2 ? cate.id : null
+      }
     });
     this.setState({ inited: true });
   }
@@ -168,14 +159,14 @@ class Index extends Component<IProps, {}> {
     const msList = await this.props.dispatch({
       type: 'goods/MsList',
       payload: {
-        goods_type: 2,
-      },
+        goods_type: 2
+      }
     });
     if (msList.data.length) {
       const mstItem: any = this.whatTime(this.props.mspTime);
       if (!mstItem) {
         this.setState({
-          mstItem,
+          mstItem
         });
         return;
       }
@@ -184,9 +175,7 @@ class Index extends Component<IProps, {}> {
       let msTime = '';
 
       let msText = '距开始';
-      if (
-        getTime() < getTime(this.nowPre() + this.props.mspTime[this.props.mspTime.length - 1].end)
-      ) {
+      if (getTime() < getTime(this.nowPre() + this.props.mspTime[this.props.mspTime.length - 1].end)) {
         if (mstItem.before) {
           msTime = getLocalTime(nowPre);
         } else {
@@ -197,7 +186,7 @@ class Index extends Component<IProps, {}> {
           countdown: Countdown(msTime),
           msTime,
           msText,
-          mstItem,
+          mstItem
         });
       }
     }
@@ -205,17 +194,10 @@ class Index extends Component<IProps, {}> {
 
   nowPre = () => {
     const now = new Date();
-    return (
-      now.getFullYear().toString() +
-      '/' +
-      (now.getMonth() + 1).toString() +
-      '/' +
-      now.getDate().toString() +
-      ' '
-    );
+    return now.getFullYear().toString() + '/' + (now.getMonth() + 1).toString() + '/' + now.getDate().toString() + ' ';
   };
 
-  whatTime = msTime => {
+  whatTime = (msTime) => {
     const now = getTime();
     for (let i = 0; i < msTime.length; i++) {
       const mst = msTime[i];
@@ -247,7 +229,7 @@ class Index extends Component<IProps, {}> {
     const { cateTopList }: any = this.state;
 
     if (this.props.cateList) {
-      const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
+      const cate = this.props.cateList.find((ele) => ele.name === cateTopList[value].name);
       await this.props.dispatch({
         type: 'goods/List',
         payload: {
@@ -255,8 +237,8 @@ class Index extends Component<IProps, {}> {
           parent_id: cate.id,
           promot_cate_id: cate.type === 2 ? cate.id : null,
           refresh: true,
-          loadOver: false,
-        },
+          loadOver: false
+        }
       });
     }
     Taro.stopPullDownRefresh();
@@ -266,14 +248,14 @@ class Index extends Component<IProps, {}> {
     const value = this.state.current;
     const { cateTopList }: any = this.state;
 
-    const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
+    const cate = this.props.cateList.find((ele) => ele.name === cateTopList[value].name);
     await this.props.dispatch({
       type: 'goods/List',
       payload: {
         listName: `cate${value}`,
         parent_id: cate.id,
-        promot_cate_id: cate.type === 2 ? cate.id : null,
-      },
+        promot_cate_id: cate.type === 2 ? cate.id : null
+      }
     });
   }
 
@@ -292,16 +274,16 @@ class Index extends Component<IProps, {}> {
   }
   async handleClick(value) {
     this.setState({
-      current: value,
+      current: value
     });
     setTimeout(() => {
       Taro.pageScrollTo({
         scrollTop: 0,
-        duration: 0,
+        duration: 0
       });
     }, 100);
     const { cateTopList }: any = this.state;
-    const cate = this.props.cateList.find(ele => ele.name === cateTopList[value].name);
+    const cate = this.props.cateList.find((ele) => ele.name === cateTopList[value].name);
 
     await this.props.dispatch({
       type: 'goods/List',
@@ -309,14 +291,14 @@ class Index extends Component<IProps, {}> {
         listName: `cate${value}`,
         parent_id: cate.id,
         promot_cate_id: cate.type === 2 ? cate.id : null,
-        goods_type: cate.name === '预售' ? 3 : null,
-      },
+        goods_type: cate.name === '预售' ? 3 : null
+      }
     });
   }
 
   handNull = () => {};
 
-  addCartOk = async goods => {
+  addCartOk = async (goods) => {
     if (this.props.userInfo.id && !this.props.userInfo.colonelId) {
       this.setState({ noCommunityOpen: true });
       return;
@@ -330,8 +312,8 @@ class Index extends Component<IProps, {}> {
         type: 'cart/Add',
         payload: {
           productId: goods.sku[0].id,
-          goodsId: goods.id,
-        },
+          goodsId: goods.id
+        }
       });
       if (res.errno === 0)
         setTimeout(() => {
@@ -346,7 +328,7 @@ class Index extends Component<IProps, {}> {
   handleCloseSku = () => {
     this.setState({ openSku: false });
   };
-  handleChangeSku = async payload => {
+  handleChangeSku = async (payload) => {
     if (!payload) {
       setTimeout(() => {
         Taro.login(); // 经验 先获取到code 不容易失效
@@ -357,7 +339,7 @@ class Index extends Component<IProps, {}> {
     // 加入购物车
     const res = await this.props.dispatch({
       type: 'cart/Add',
-      payload,
+      payload
     });
     if (res) {
       setTimeout(() => {
@@ -366,7 +348,7 @@ class Index extends Component<IProps, {}> {
     }
   };
 
-  newDate = date => {
+  newDate = (date) => {
     if (!date) return 0;
     return new Date(date.replace(/-/g, '/'));
   };
@@ -375,23 +357,23 @@ class Index extends Component<IProps, {}> {
     this.setState({ noCommunityOpen: false, colonelOpen: false });
   };
 
-  makeCall = phoneNumber => {
+  makeCall = (phoneNumber) => {
     Taro.makePhoneCall({ phoneNumber });
   };
 
   openColonel = () => {
     this.setState({ colonelOpen: true });
   };
-  lookBig = img => {
+  lookBig = (img) => {
     Taro.previewImage({
       current: img + '@!q90',
-      urls: [img + '@!q90'],
+      urls: [img + '@!q90']
     });
   };
-  viewGoods = ele => {
+  viewGoods = (ele) => {
     if (ele.linkto) this.nextPage('/pages/goods/index?id=' + ele.linkto);
   };
-  getFormId = e => {
+  getFormId = (e) => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
     formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
@@ -399,8 +381,8 @@ class Index extends Component<IProps, {}> {
     this.props.dispatch({
       type: 'common/save',
       payload: {
-        formIdArr,
-      },
+        formIdArr
+      }
     });
   };
 
@@ -418,7 +400,7 @@ class Index extends Component<IProps, {}> {
     indexAd: [],
     noCommunityOpen: false,
     colonelOpen: false,
-    inited: undefined,
+    inited: undefined
   };
 
   render() {
@@ -440,10 +422,10 @@ class Index extends Component<IProps, {}> {
       noCommunityOpen,
       colonelOpen,
       inited,
-      countdownPlan,
+      countdownPlan
     }: any = this.state;
 
-    const tabList = cateTopList.map(ele => {
+    const tabList = cateTopList.map((ele) => {
       return { title: ele.name };
     });
     const getCateImg = (cate_id, j, list) => {
@@ -464,10 +446,7 @@ class Index extends Component<IProps, {}> {
           <AtModalHeader>提示</AtModalHeader>
           <AtModalContent>本小区暂无小区长，请选择绑定附近小区作为代收点。</AtModalContent>
           <AtModalAction>
-            <Button
-              type="primary"
-              onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}
-            >
+            <Button type="primary" onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}>
               去更换小区
             </Button>
           </AtModalAction>
@@ -482,12 +461,8 @@ class Index extends Component<IProps, {}> {
               </View>
               <View className="name">{userInfo.colonelInfo.nickName}</View>
             </View>
-            <View className="p">
-              您购买的物品将统一配送至小区长代收点，由小区长负责您的售后。联系小区长进小区群，享受更多服务。
-            </View>
-            {userInfo.colonelInfo.house && (
-              <View className="p">收货点：{userInfo.colonelInfo.house}</View>
-            )}
+            <View className="p">您购买的物品将统一配送至小区长代收点，由小区长负责您的售后。联系小区长进小区群，享受更多服务。</View>
+            {userInfo.colonelInfo.house && <View className="p">收货点：{userInfo.colonelInfo.house}</View>}
             {userInfo.colonelInfo.ewm && (
               <View className="colonel-ewm">
                 <Image
@@ -503,9 +478,7 @@ class Index extends Component<IProps, {}> {
           </AtModalContent>
           <AtModalAction>
             <Button onClick={this.onCloseOpen}>关闭</Button>
-            <Button onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}>
-              切换附近小区
-            </Button>
+            <Button onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}>切换附近小区</Button>
           </AtModalAction>
         </AtModal>
         <Login show={false} onChange={this.loginSuccess} />
@@ -547,25 +520,17 @@ class Index extends Component<IProps, {}> {
               <View className="colonel-info">
                 <View className="name ddd">{userInfo.colonelInfo.nickName}</View>
                 <View className="p ddd">{userInfo.name}</View>
-                {userInfo.colonelInfo.house && (
-                  <View className="p ddd">提货位置:{userInfo.colonelInfo.house}</View>
-                )}
+                {userInfo.colonelInfo.house && <View className="p ddd">提货位置:{userInfo.colonelInfo.house}</View>}
               </View>
             </View>
           ) : (
-            <View
-              className="colonel-div"
-              onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}
-            >
+            <View className="colonel-div" onClick={this.nextPage.bind(this, '/pages/neighbor/search', 'noOpen')}>
               点击绑定小区团购
             </View>
           )}
           <View className="search-wrap">
             <AtSearchBar value="" onChange={this.handNull} />
-            <View
-              className="search-mask"
-              onClick={this.nextPage.bind(this, '/pages/index/search')}
-            />
+            <View className="search-mask" onClick={this.nextPage.bind(this, '/pages/index/search')} />
             {title ? (
               <View className="timedown">
                 <Text className="b">{title}</Text>·距结束
@@ -597,14 +562,7 @@ class Index extends Component<IProps, {}> {
           </View>
         ) : null}
 
-        <AtTabs
-          className="tabs"
-          current={current}
-          swipeable={false}
-          scroll={true}
-          tabList={tabList}
-          onClick={this.handleClick}
-        >
+        <AtTabs className="tabs" current={current} swipeable={false} scroll={true} tabList={tabList} onClick={this.handleClick}>
           {tabList.map((_, i) => (
             <AtTabsPane key={i} current={current} index={i}>
               {current === 0 && indexAd.length && (
@@ -615,10 +573,7 @@ class Index extends Component<IProps, {}> {
                         <Image
                           mode="widthFix"
                           className="img"
-                          src={
-                            ele.image_url +
-                            (getIndexAdClass() === 'index-ad big' ? '@!710X900' : '@!900X383')
-                          }
+                          src={ele.image_url + (getIndexAdClass() === 'index-ad big' ? '@!710X900' : '@!900X383')}
                         />
                       </SwiperItem>
                     ))}
@@ -657,11 +612,7 @@ class Index extends Component<IProps, {}> {
                             <View className="p">已结束</View>
                           ) : (
                             <View className="p">
-                              {mstItem.i > i
-                                ? '已结束'
-                                : mstItem.i == i && !mstItem.before
-                                ? '抢购中'
-                                : '即将开始'}
+                              {mstItem.i > i ? '已结束' : mstItem.i == i && !mstItem.before ? '抢购中' : '即将开始'}
                             </View>
                           )}
                         </View>
@@ -670,7 +621,7 @@ class Index extends Component<IProps, {}> {
                   </View>
                   <ScrollView scrollX={true}>
                     <View className="scroll-view-wrap">
-                      {MsList.map(ele => (
+                      {MsList.map((ele) => (
                         <GoodsItem key={ele.id} type="mini" goods={ele} onChange={this.addCartOk} />
                       ))}
                     </View>
@@ -680,20 +631,14 @@ class Index extends Component<IProps, {}> {
               <View>
                 {List[`cate${i}`]
                   ? List[`cate${i}`].list.map((ele, j) => (
-                      <View
-                        className="item-wrap"
-                        key={ele.id}
-                        style={{ display: current === i ? 'block' : 'none' }}
-                      >
+                      <View className="item-wrap" key={ele.id} style={{ display: current === i ? 'block' : 'none' }}>
                         {getCateImg(ele.category_id, j, List[`cate${i}`].list) ? (
                           <View className="cate-img">
                             <Image
                               lazyLoad
                               mode="widthFix"
                               className="img"
-                              src={
-                                getCateImg(ele.category_id, j, List[`cate${i}`].list) + '@!900X200'
-                              }
+                              src={getCateImg(ele.category_id, j, List[`cate${i}`].list) + '@!900X200'}
                             />
                           </View>
                         ) : null}
@@ -715,9 +660,7 @@ class Index extends Component<IProps, {}> {
             </AtTabsPane>
           ))}
         </AtTabs>
-        {openSku && (
-          <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />
-        )}
+        {openSku && <Sku goods={curGoods} onChange={this.handleChangeSku} onClose={this.handleCloseSku} />}
       </View>
     );
   }

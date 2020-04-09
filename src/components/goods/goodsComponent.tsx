@@ -28,33 +28,33 @@ type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
 
 @connect(({ goods, common }) => ({
   ...goods,
-  formIdArr: common.formIdArr,
+  formIdArr: common.formIdArr
 }))
 class GoodsItem extends Component<IProps, {}> {
   static defaultProps = {
-    goods: {},
+    goods: {}
   };
   // 有点麻烦 以后再做
-  blurCartNumber = value => {
+  blurCartNumber = (value) => {
     console.log(value);
   };
 
-  changeCartNumber = value => {
+  changeCartNumber = (value) => {
     console.log(value);
   };
 
   componentDidMount() {
     if (this.props.goods.over_time)
       this.setState({
-        countdown: Countdown(this.props.goods.over_time),
+        countdown: Countdown(this.props.goods.over_time)
       });
   }
-  addCart = value => {
+  addCart = (value) => {
     console.log(value, 'addCart');
     // this.setState({ numberStatus: true });
     let goodsNumber = 0;
     if (!value.sku) value.sku = [];
-    value.sku.forEach(ele => {
+    value.sku.forEach((ele) => {
       goodsNumber += ele.goods_number;
     });
 
@@ -85,7 +85,7 @@ class GoodsItem extends Component<IProps, {}> {
   nextPage() {
     Taro.navigateTo({ url: `/pages/goods/index?id=${this.props.goods.id}` });
   }
-  getFormId = e => {
+  getFormId = (e) => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
     formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
@@ -93,14 +93,14 @@ class GoodsItem extends Component<IProps, {}> {
     this.props.dispatch({
       type: 'common/save',
       payload: {
-        formIdArr,
-      },
+        formIdArr
+      }
     });
   };
 
   state = {
     numberStatus: false,
-    countdown: {},
+    countdown: {}
   };
 
   render() {
@@ -108,7 +108,7 @@ class GoodsItem extends Component<IProps, {}> {
     const { numberStatus }: any = this.state;
     let goodsNumber = 0;
     if (!goods.sku) return null;
-    goods.sku.forEach(ele => {
+    goods.sku.forEach((ele) => {
       goodsNumber += ele.goods_number;
     });
     const { counter_price, retail_price, vip_price } = goods.sku[0];
@@ -138,10 +138,7 @@ class GoodsItem extends Component<IProps, {}> {
             {goods.goods_brief}
           </Button>
           <Button plain={true} className="sale-wrap plain" onClick={this.nextPage}>
-            <View
-              className="sale-slide"
-              style={{ width: (goodsNumber / (goods.sell_volume + goodsNumber)) * 100 + '%' }}
-            />
+            <View className="sale-slide" style={{ width: (goodsNumber / (goods.sell_volume + goodsNumber)) * 100 + '%' }} />
             {!!goodsNumber ? `仅剩${goodsNumber}${goods.goods_unit}` : '已售罄'}
           </Button>
           {/* </Form> */}
@@ -167,13 +164,7 @@ class GoodsItem extends Component<IProps, {}> {
               ) : type === 'mini' ? (
                 <Image className="cartImg" src={cartImg} onClick={this.addCart.bind(this, goods)} />
               ) : (
-                <AtButton
-                  type="primary"
-                  circle
-                  size="small"
-                  className="btn-shopping"
-                  onClick={this.addCart.bind(this, goods)}
-                >
+                <AtButton type="primary" circle size="small" className="btn-shopping" onClick={this.addCart.bind(this, goods)}>
                   马上抢
                 </AtButton>
               )}

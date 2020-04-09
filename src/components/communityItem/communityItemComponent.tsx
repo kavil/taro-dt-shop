@@ -25,7 +25,7 @@ interface PageOwnProps {
 type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
 @connect(({ neighbor, common }) => ({
   ...common,
-  ...neighbor,
+  ...neighbor
 }))
 class CommunityItem extends Component<IProps, {}> {
   bind = async () => {
@@ -37,11 +37,11 @@ class CommunityItem extends Component<IProps, {}> {
     const res = await this.props.dispatch({
       type: 'neighbor/Bind',
       payload: {
-        ...this.props.item,
-      },
+        ...this.props.item
+      }
     });
     await this.props.dispatch({
-      type: 'common/UserInfo',
+      type: 'common/UserInfo'
     });
     if (res) this.props.onChange('bind ok');
   };
@@ -49,11 +49,11 @@ class CommunityItem extends Component<IProps, {}> {
     const res = await this.props.dispatch({
       type: 'neighbor/Bind',
       payload: {
-        ...this.props.item,
-      },
+        ...this.props.item
+      }
     });
     await this.props.dispatch({
-      type: 'common/UserInfo',
+      type: 'common/UserInfo'
     });
     if (res) Taro.navigateTo({ url: '/pages/colonelApply/index' });
   };

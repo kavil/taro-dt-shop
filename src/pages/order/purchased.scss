@@ -1,184 +1,183 @@
-@import "../../static/css/mixin";
+@import '../../static/css/mixin';
 .purchased-page {
-    padding: 10px 0;
-    .result {
-        text-align: center;
+  padding: 10px 0;
+  .result {
+    text-align: center;
+  }
+  .erduufont {
+    font-size: 100px;
+  }
+  .ed-cuo {
+    color: red;
+  }
+  .p {
+    text-align: left;
+  }
+  .text {
+    color: #999;
+    margin-top: 10px;
+    font-size: 24px;
+  }
+  .op {
+    @include fj(space-around);
+    padding-top: 40px;
+  }
+  .h4 {
+    padding: 0;
+  }
+  .long {
+    padding: 20px 30px;
+    background: #fafafa;
+    margin-top: 20px;
+    min-height: 400px;
+  }
+  .more {
+    font-size: 24px;
+    color: #aaa;
+  }
+  .long-li {
+    padding: 10px;
+    @include fj();
+    font-size: 28px;
+    color: #999;
+    .img {
+      width: 46px;
+      height: 46px;
+      border: 5px solid #fff;
+      border-radius: 50%;
+      overflow: hidden;
     }
-    .erduufont {
-        font-size: 100px;
+    .img-wrap {
+      flex: 1;
+      @include fj(start);
+      align-items: center;
     }
-    .ed-cuo {
-        color: red;
+    .info {
+      width: 300px;
+      text-align: right;
     }
+    .b {
+      font-weight: 500;
+      font-size: 108%;
+      color: $color-brand-dark;
+    }
+  }
+  .sell-me {
+    padding: 10px 30px;
+    background: $color-dan;
+  }
+  .bew {
+    @include fj(center);
+    align-items: center;
     .p {
-        text-align: left;
+      padding: 0 10px;
     }
-    .text {
-        color: #999;
-        margin-top: 10px;
-        font-size: 24px
-    }
-    .op {
-        @include fj(space-around);
-        padding-top: 40px;
-    }
-    .h4 {
-        padding: 0;
-    }
-    .long {
-        padding: 20px 30px;
-        background: #fafafa;
-        margin-top: 20px;
-        min-height:400px;
-    }
-    .more{
-        font-size: 24px;
-        color: #aaa;
-    }
-    .long-li {
-        padding: 10px;
-        @include fj();
-        font-size: 28px;
-        color: #999;
-        .img {
-            width: 46px;
-            height: 46px;
-            border: 5px solid #fff;
-            border-radius: 50%;
-            overflow: hidden;
-        }
-        .img-wrap {
-            flex: 1;
-            @include fj(start);
-            align-items: center;
-        }
-        .info {
-            width: 300px;
-            text-align: right;
-        }
-        .b {
-            font-weight: 500;
-            font-size: 108%;
-            color: $color-brand-dark;
-        }
-    }
-    .sell-me {
-        padding: 10px 30px;
-        background: $color-dan;
-    }
-    .bew {
-        @include fj(center);
-        align-items: center;
-        .p  {
-            padding: 0 10px;
-        }
-    }
+  }
 }
-.kh{
-    .text{
-        padding: 10px 40px 0;
-        font-weight: 100;
-        font-size: 30px;
-        color: #111;
-        width: 540px;
-        display: inline-block;
-        margin: 0 auto;
-    }
-
+.kh {
+  .text {
+    padding: 10px 40px 0;
+    font-weight: 100;
+    font-size: 30px;
+    color: #111;
+    width: 540px;
+    display: inline-block;
+    margin: 0 auto;
+  }
 }
-.active{
-    color: $color-deep;
-    font-weight: 500;
+.active {
+  color: $color-deep;
+  font-weight: 500;
 }
 .share-bottom {
-    position: fixed;
-    bottom: 0;
-    border-radius: 20px 20px 0 0;
-    background: #fefefe;
-    width: 100%;
-    font-size: 24px;
-    font-weight: 300;
-    line-height: 1.2;
-    z-index: 3;
-    text-align: center;
-    padding-top: 20px;
-    box-shadow:0 0 30px 10px #ddd;
+  position: fixed;
+  bottom: 0;
+  border-radius: 20px 20px 0 0;
+  background: #fefefe;
+  width: 100%;
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.2;
+  z-index: 3;
+  text-align: center;
+  padding-top: 20px;
+  box-shadow: 0 0 30px 10px #ddd;
+  @include fj();
+  flex-direction: column;
+  .p-text {
+    width: 508px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+  }
+  .share-bottom-in {
     @include fj();
-    flex-direction: column;
-    .p-text{
-        width: 508px;
-        margin: 0 auto;
-        margin-bottom: 20px;
-    }
-    .share-bottom-in{
-        @include fj();
-        height: 160px;
-    }
+    height: 160px;
+  }
 
-    .close.erduufont{
-        margin-top: -100px;
-        border-radius: 50%;
-        border: 1PX solid #ddd;
-        color: #aaa;
-        width: 60px;
-        height: 60px;
-        line-height: 60px;
-        font-size: 50px;
-        position:absolute;
-        left:50%;
-        transform:translateX(-50%);
-        background:#fff;
-    }
-    .share-item {
-        flex: 1;
-        padding: 0;
-        border: 0;
-        line-height: 1;
-        font-size: 24px;
-    }
-    .erduufont {
-        font-size: 90px;
-        color: #777;
-        display: block;
-        margin-bottom: 10px;
-    }
-}
-.center {
-    position: fixed;
-    top: 40%;
+  .close.erduufont {
+    margin-top: -100px;
+    border-radius: 50%;
+    border: 1px solid #ddd;
+    color: #aaa;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    font-size: 50px;
+    position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 3;
-    .at-activity-indicator__body {
-        text-align: center;
-    }
-    .at-activity-indicator__content {
-        color: #eee;
-        font-size: 28px;
-        font-weight: 300;
-    }
+    background: #fff;
+  }
+  .share-item {
+    flex: 1;
+    padding: 0;
+    border: 0;
+    line-height: 1;
+    font-size: 24px;
+  }
+  .erduufont {
+    font-size: 90px;
+    color: #777;
+    display: block;
+    margin-bottom: 10px;
+  }
+}
+.center {
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  .at-activity-indicator__body {
+    text-align: center;
+  }
+  .at-activity-indicator__content {
+    color: #eee;
+    font-size: 28px;
+    font-weight: 300;
+  }
 }
 
 .loading {
-    background: rgba(0, 0, 0, .6);
-    padding: 30px;
-    border-radius: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 30px;
+  border-radius: 10px;
 }
 .curtain {
-    display: block;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, .4);
-    z-index: 2;
+  display: block;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 2;
 }
 .shareImage {
-    width: 70%;
-    position: fixed;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 3;
+  width: 70%;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
 }

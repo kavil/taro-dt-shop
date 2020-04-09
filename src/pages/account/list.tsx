@@ -27,11 +27,11 @@ type PageOwnProps = {
 type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
 @connect(({ account }) => ({
-  ...account,
+  ...account
 }))
 export default class List extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '明细列表',
+    navigationBarTitleText: '明细列表'
   };
 
   componentDidMount = () => {
@@ -40,7 +40,7 @@ export default class List extends Component<IProps, {}> {
 
   getAccountList() {
     this.props.dispatch({
-      type: 'account/accountList',
+      type: 'account/accountList'
     });
   }
 
@@ -53,8 +53,8 @@ export default class List extends Component<IProps, {}> {
         opType,
         page: 1, // 归位
         refresh: true,
-        loadOver: false,
-      },
+        loadOver: false
+      }
     });
     this.getAccountList();
   }
@@ -65,8 +65,8 @@ export default class List extends Component<IProps, {}> {
       payload: {
         page: 1, // 归位
         refresh: true,
-        loadOver: false,
-      },
+        loadOver: false
+      }
     });
     this.getAccountList();
   }
@@ -74,14 +74,14 @@ export default class List extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'account/save',
       payload: {
-        page: this.props.page + 1,
-      },
+        page: this.props.page + 1
+      }
     });
     this.getAccountList();
   }
   nextPage(url) {
     Taro.navigateTo({
-      url: url,
+      url: url
     });
   }
 
@@ -91,33 +91,23 @@ export default class List extends Component<IProps, {}> {
     const { accountList } = this.props;
     return (
       <View className="account-page list">
-        <Picker
-          className="pick"
-          mode="selector"
-          range={this.typeRange}
-          value={this.props.opType}
-          onChange={this.changeType.bind(this)}
-        >
+        <Picker className="pick" mode="selector" range={this.typeRange} value={this.props.opType} onChange={this.changeType.bind(this)}>
           {this.typeRange[this.props.opType]}
           <Text className="erduufont ed-back down" />
         </Picker>
         {accountList && accountList.length ? (
           <View className="base-ul">
-            {accountList.map(item => {
+            {accountList.map((item) => {
               return (
-                <View
-                  key={item.id}
-                  className="li"
-                  onClick={this.nextPage.bind(this, `./detail?id=${item.id}`)}
-                >
+                <View key={item.id} className="li" onClick={this.nextPage.bind(this, `./detail?id=${item.id}`)}>
                   <View className="left">
                     {item.orderId != 0 ? (
                       <View className="h2">{'订单号' + item.orderId}</View>
-                    ) : (item.opType === 2 ? (
+                    ) : item.opType === 2 ? (
                       <View className="h2">提现到零钱</View>
                     ) : (
                       '调账'
-                    ))}
+                    )}
 
                     <View className="type">[{this.typeRange[item.opType]}]</View>
                     <View className="time">{item.createdTime}</View>

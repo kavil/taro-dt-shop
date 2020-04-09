@@ -26,11 +26,11 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 
 @connect(({ order, common }) => ({
   ...order,
-  ...common,
+  ...common
 }))
 export default class purchased extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '支付结果',
+    navigationBarTitleText: '支付结果'
   };
 
   async componentDidMount() {
@@ -38,14 +38,14 @@ export default class purchased extends Component<IProps, {}> {
     const Detail = await this.props.dispatch({
       type: 'order/Detail',
       payload: {
-        id: orderId,
-      },
+        id: orderId
+      }
     });
     const selled = await this.props.dispatch({
       type: 'goods/selledUsers',
       payload: {
-        goods_id: Detail.orderGoods ? Detail.orderGoods[0].goods_id : 0,
-      },
+        goods_id: Detail.orderGoods ? Detail.orderGoods[0].goods_id : 0
+      }
     });
     this.setState({ Detail, selled, orderId });
     Taro.showShareMenu();
@@ -69,8 +69,8 @@ export default class purchased extends Component<IProps, {}> {
     const payParam = await this.props.dispatch({
       type: 'cart/Prepay',
       payload: {
-        orderId: this.$router.params.orderId,
-      },
+        orderId: this.$router.params.orderId
+      }
     });
     if (!payParam) {
       return;
@@ -81,17 +81,17 @@ export default class purchased extends Component<IProps, {}> {
       package: payParam.package,
       signType: payParam.signType,
       paySign: payParam.paySign,
-      success: res => {
+      success: (res) => {
         if (res.errMsg === 'requestPayment:fail cancel') {
           Taro.redirectTo({
-            url: `/pages/order/purchased?orderId=${this.$router.params.id}&type=no`,
+            url: `/pages/order/purchased?orderId=${this.$router.params.id}&type=no`
           });
         } else {
           Taro.redirectTo({
-            url: `/pages/order/purchased?orderId=${this.$router.params.id}&type=ok`,
+            url: `/pages/order/purchased?orderId=${this.$router.params.id}&type=ok`
           });
         }
-      },
+      }
     });
   };
   lookMore = async () => {
@@ -101,8 +101,8 @@ export default class purchased extends Component<IProps, {}> {
       type: 'goods/selledUsers',
       payload: {
         goods_id: Detail.orderGoods ? Detail.orderGoods[0].goods_id : 0,
-        page: _page,
-      },
+        page: _page
+      }
     });
     // selled.data.concat(_selled)
     const data = selled.data.concat(_selled.data);
@@ -119,12 +119,8 @@ export default class purchased extends Component<IProps, {}> {
     let { Detail }: any = this.state;
 
     return {
-      title: `@${this.props.userInfo.colonelInfo.nickName}，我是「${
-        this.props.userInfo.nickName
-      }」，刚刚下单请小区长确认下订单哦`,
-      path: `/pages/goods/index?id=${Detail.orderGoods[0].goods_id}&communityId=${
-        this.props.userInfo.communityId
-      }`,
+      title: `@${this.props.userInfo.colonelInfo.nickName}，我是「${this.props.userInfo.nickName}」，刚刚下单请小区长确认下订单哦`,
+      path: `/pages/goods/index?id=${Detail.orderGoods[0].goods_id}&communityId=${this.props.userInfo.communityId}`
     };
   }
 
@@ -133,7 +129,7 @@ export default class purchased extends Component<IProps, {}> {
     selled: {},
     orderId: null,
     page: 1,
-    nomore: false,
+    nomore: false
   };
   render() {
     const {} = this.props;
@@ -152,9 +148,7 @@ export default class purchased extends Component<IProps, {}> {
             <View className="h4">支付成功，请小区长及时处理订单</View>
             <View className="bew">
               <View className="p">订单金额：{Detail.actual_price}元</View>
-              {Detail.score && Detail.score.score ? (
-                <View className="p">积分：{Detail.score ? Detail.score.score || 0 : '无'}</View>
-              ) : null}
+              {Detail.score && Detail.score.score ? <View className="p">积分：{Detail.score ? Detail.score.score || 0 : '无'}</View> : null}
             </View>
             <View className="long">
               <View className="info">刚刚购买用户</View>
@@ -166,11 +160,7 @@ export default class purchased extends Component<IProps, {}> {
                     <View className="name">{ele.userInfo.nickName}</View>
                   </View>
                   <View className="info">
-                    <Text className="goods">
-                      {ele.goods_name.length > 6
-                        ? ele.goods_name.substr(0, 6) + '...'
-                        : ele.goods_name}
-                    </Text>
+                    <Text className="goods">{ele.goods_name.length > 6 ? ele.goods_name.substr(0, 6) + '...' : ele.goods_name}</Text>
                     <Text className="b"> + {ele.number}</Text>
                   </View>
                 </View>

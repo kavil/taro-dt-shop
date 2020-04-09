@@ -15,7 +15,7 @@ import './app.scss';
 
 const dvaApp = dva.createApp({
   initialState: {},
-  models: models,
+  models: models
 });
 const store = dvaApp.getStore();
 
@@ -55,7 +55,7 @@ class App extends Component {
       'pages/neighbor/active',
       'pages/goods/index',
       'pages/cart/index',
-      'pages/cart/checkout',
+      'pages/cart/checkout'
     ],
     window: {
       backgroundTextStyle: 'dark',
@@ -64,7 +64,7 @@ class App extends Component {
       navigationBarTextStyle: 'black',
       enablePullDownRefresh: true,
       onReachBottomDistance: 100,
-      backgroundColor: '#f1f1f1',
+      backgroundColor: '#f1f1f1'
     },
     tabBar: {
       backgroundColor: '#fafafa',
@@ -76,37 +76,37 @@ class App extends Component {
           pagePath: 'pages/index/index',
           iconPath: 'static/images/home.png',
           selectedIconPath: 'static/images/home-a.png',
-          text: '首页',
+          text: '首页'
         },
-        // {
-        //   pagePath: 'pages/neighbor/index',
-        //   iconPath: 'static/images/circle.png',
-        //   selectedIconPath: 'static/images/circle-a.png',
-        //   text: '邻居圈',
-        // },
+        {
+          pagePath: 'pages/neighbor/index',
+          iconPath: 'static/images/circle.png',
+          selectedIconPath: 'static/images/circle-a.png',
+          text: '邻居圈'
+        },
         {
           pagePath: 'pages/cart/index',
           iconPath: 'static/images/cart.png',
           selectedIconPath: 'static/images/cart-a.png',
-          text: '购物车',
+          text: '购物车'
         },
         {
           pagePath: 'pages/ucenter/index',
           iconPath: 'static/images/me.png',
           selectedIconPath: 'static/images/me-a.png',
-          text: '我的',
-        },
-      ],
+          text: '我的'
+        }
+      ]
     },
     permission: {
       'scope.userLocation': {
-        desc: '你的位置信息将用于查询附近小区',
-      },
+        desc: '你的位置信息将用于查询附近小区'
+      }
     },
-    navigateToMiniProgramAppIdList: ['wx022960c7a872290f'],
+    navigateToMiniProgramAppIdList: ['wx022960c7a872290f']
   };
 
-  async componentDidMount() {
+  async componentDidMounta() {
     const up = Taro.getUpdateManager();
 
     up.onUpdateReady(() => {
@@ -115,12 +115,12 @@ class App extends Component {
         content: '检测到有新版本',
         showCancel: false,
         confirmText: '立即更新',
-        success: res => {
+        success: (res) => {
           if (res.confirm) {
             // 新的版本已经下载好，调用 applyUpdate 应用新版本并重启
             up.applyUpdate();
           }
-        },
+        }
       });
     });
 
@@ -129,7 +129,7 @@ class App extends Component {
 
     if (Taro.getStorageSync('token')) {
       const userInfo = await store.dispatch({
-        type: 'common/UserInfo',
+        type: 'common/UserInfo'
       });
 
       if (communityId) {
@@ -149,7 +149,7 @@ class App extends Component {
       // }
       // }
       store.dispatch({
-        type: 'cart/Index',
+        type: 'cart/Index'
       });
     }
   }
@@ -158,11 +158,11 @@ class App extends Component {
     await store.dispatch({
       type: 'neighbor/BindId',
       payload: {
-        id: communityId,
-      },
+        id: communityId
+      }
     });
     await store.dispatch({
-      type: 'common/UserInfo',
+      type: 'common/UserInfo'
     });
   }
 
@@ -170,7 +170,7 @@ class App extends Component {
 
   componentDidHide() {
     store.dispatch({
-      type: 'common/formId',
+      type: 'common/formId'
     });
   }
 

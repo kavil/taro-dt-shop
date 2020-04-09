@@ -11,14 +11,12 @@ export default {
     refresh: true,
     search: undefined,
     orderList: [],
-    Detail: null,
+    Detail: null
   },
 
   effects: {
     *OrderList(_, { call, put, select }) {
-      const { loadOver, orderList, refresh, page, size, status, search } = yield select(
-        state => state.order
-      );
+      const { loadOver, orderList, refresh, page, size, status, search } = yield select((state) => state.order);
       console.log(loadOver, 'loadOver');
 
       if (loadOver) return;
@@ -32,13 +30,13 @@ export default {
         payload: {
           orderList: refresh ? res.data.data : orderList.concat(res.data.data),
           loadOver: res.data.data.length < size,
-          refresh: false,
-        },
+          refresh: false
+        }
       });
     },
     *Detail({ payload }, { call, put, select }) {
-      const { orderList } = yield select(state => state.order);
-      let detail = orderList.find(ele => ele.id === payload.id);
+      const { orderList } = yield select((state) => state.order);
+      let detail = orderList.find((ele) => ele.id === payload.id);
       if (detail) return detail;
       const res = yield call(Api.orderDetail, payload);
       if (res.errno === 0) {
@@ -47,18 +45,18 @@ export default {
       return null;
     },
     *Cancel({ payload }, { call, put, select }) {
-      const { orderList } = yield select(state => state.order);
+      const { orderList } = yield select((state) => state.order);
       const res = yield call(Api.orderCancel, payload);
       if (res.errno === 0) {
-        const tmp = orderList.filter(ele => {
+        const tmp = orderList.filter((ele) => {
           if (ele.id === payload.orderId) return false;
           return true;
         });
         yield put({
           type: 'save',
           payload: {
-            orderList: tmp,
-          },
+            orderList: tmp
+          }
         });
       }
     },
@@ -68,12 +66,12 @@ export default {
         return res.data;
       }
       return null;
-    },
+    }
   },
 
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload };
-    },
-  },
+    }
+  }
 };

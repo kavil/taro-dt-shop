@@ -21,11 +21,11 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ neighbor, common }) => ({
   ...neighbor,
-  ...common,
+  ...common
 }))
 class Active extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '邻居圈',
+    navigationBarTitleText: '邻居圈'
   };
 
   async componentDidShow() {}
@@ -34,12 +34,12 @@ class Active extends Component<IProps, {}> {
     Taro.stopPullDownRefresh();
   }
 
-  loginSuccess = async _ => {
+  loginSuccess = async (_) => {
     this.componentDidShow();
   };
 
   state = {
-    userInfo: {},
+    userInfo: {}
   };
 
   render() {

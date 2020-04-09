@@ -2,17 +2,7 @@ import Taro, { Component } from '@tarojs/taro';
 import { ComponentClass } from 'react';
 import { View, Image, Text, Form, Button } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
-import {
-  AtList,
-  AtListItem,
-  AtTag,
-  AtButton,
-  AtModal,
-  AtModalHeader,
-  AtModalContent,
-  AtModalAction,
-  AtAvatar,
-} from 'taro-ui';
+import { AtList, AtListItem, AtTag, AtButton, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtAvatar } from 'taro-ui';
 import Login from '../../components/login/loginComponent';
 import './index.scss';
 import { tip } from '../../utils/tool';
@@ -37,11 +27,11 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 @connect(({ ucenter, common, account }) => ({
   ...common,
   ...ucenter,
-  ...account,
+  ...account
 }))
 class Ucenter extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '个人中心',
+    navigationBarTitleText: '个人中心'
   };
 
   async componentDidShow() {
@@ -60,19 +50,19 @@ class Ucenter extends Component<IProps, {}> {
       await this.nextPage('/pages/' + this.$router.params.to + '/index');
     }
     await this.props.dispatch({
-      type: 'account/load',
+      type: 'account/load'
     });
   }
 
   async onPullDownRefresh() {
     this.componentDidMount();
     await this.props.dispatch({
-      type: 'common/UserInfo',
+      type: 'common/UserInfo'
     });
     Taro.stopPullDownRefresh();
   }
 
-  nextPage = url => {
+  nextPage = (url) => {
     if (!this.props.userInfo.id) {
       tip('请先授权登录');
       return;
@@ -87,12 +77,12 @@ class Ucenter extends Component<IProps, {}> {
   };
   callme = () => {
     Taro.makePhoneCall({
-      phoneNumber: '18979084445',
+      phoneNumber: '18979084445'
     });
   };
   callkf = () => {
     Taro.makePhoneCall({
-      phoneNumber: '18979084445',
+      phoneNumber: '18979084445'
     });
   };
   nextMini = () => {
@@ -101,11 +91,11 @@ class Ucenter extends Component<IProps, {}> {
       path: '/pages/index/index?colonelId=' + this.props.userInfo.id,
       envVersion: 'trial',
       extraData: {
-        colonelId: this.props.userInfo.id,
-      },
+        colonelId: this.props.userInfo.id
+      }
     });
   };
-  getFormId = e => {
+  getFormId = (e) => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
     formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
@@ -113,48 +103,48 @@ class Ucenter extends Component<IProps, {}> {
     this.props.dispatch({
       type: 'common/save',
       payload: {
-        formIdArr,
-      },
+        formIdArr
+      }
     });
   };
 
   scanCode = async () => {
     const res: any = await Taro.scanCode({
-      onlyFromCamera: true,
+      onlyFromCamera: true
     });
     console.log(res);
     if (res.errMsg !== 'scanCode:ok') {
       Taro.showModal({
         title: '错误提示',
         content: '扫一扫错误，请重试',
-        showCancel: false,
+        showCancel: false
       });
       return;
     }
     const cardInfo = await this.props.dispatch({
       type: 'ucenter/CardCheckOut',
       payload: {
-        checkcode: res.result,
-      },
+        checkcode: res.result
+      }
     });
     if (!cardInfo.id) {
       Taro.showModal({
         title: '错误提示',
         content: '无效二维码',
-        showCancel: false,
+        showCancel: false
       });
       return;
     }
     this.setState({
       cardInfo,
       checkcode: res.result,
-      open: true,
+      open: true
     });
   };
 
   cancel() {
     this.setState({
-      open: false,
+      open: false
     });
   }
 
@@ -162,18 +152,18 @@ class Ucenter extends Component<IProps, {}> {
     const res = await this.props.dispatch({
       type: 'ucenter/CardcheckIt',
       payload: {
-        checkcode: this.state.checkcode,
-      },
+        checkcode: this.state.checkcode
+      }
     });
     console.log(res, 'hhhhhhhres');
     this.setState({
-      open: false,
+      open: false
     });
     if (res) {
       await Taro.showModal({
         title: '提示',
         content: '核销成功',
-        showCancel: false,
+        showCancel: false
       });
     }
   };
@@ -181,7 +171,7 @@ class Ucenter extends Component<IProps, {}> {
   state = {
     open: false,
     checkcode: null,
-    cardInfo: null,
+    cardInfo: null
   };
 
   render() {
@@ -226,39 +216,19 @@ class Ucenter extends Component<IProps, {}> {
           <View className="divsion" />
           <View className="h4">我自己的订单</View>
           <View className="operate-wrap">
-            <Button
-              className="li plain"
-              formType="submit"
-              plain
-              onClick={this.nextPage.bind(this, '/pages/order/index')}
-            >
+            <Button className="li plain" formType="submit" plain onClick={this.nextPage.bind(this, '/pages/order/index')}>
               <Text className="erduufont ed-peihuodan red" />
               全部订单
             </Button>
-            <Button
-              className="li plain"
-              formType="submit"
-              plain
-              onClick={this.nextPage.bind(this, '/pages/order/index?tab=1')}
-            >
+            <Button className="li plain" formType="submit" plain onClick={this.nextPage.bind(this, '/pages/order/index?tab=1')}>
               <Text className="erduufont ed-tixian" />
               待付款
             </Button>
-            <Button
-              className="li plain"
-              formType="submit"
-              plain
-              onClick={this.nextPage.bind(this, '/pages/order/index?tab=2')}
-            >
+            <Button className="li plain" formType="submit" plain onClick={this.nextPage.bind(this, '/pages/order/index?tab=2')}>
               <Text className="erduufont ed-quhuo" />
               待收货
             </Button>
-            <Button
-              className="li plain"
-              formType="submit"
-              plain
-              onClick={this.nextPage.bind(this, '/pages/order/index?tab=3')}
-            >
+            <Button className="li plain" formType="submit" plain onClick={this.nextPage.bind(this, '/pages/order/index?tab=3')}>
               <Text className="erduufont ed-comment" />
               待评价
             </Button>
@@ -277,27 +247,15 @@ class Ucenter extends Component<IProps, {}> {
                   <Text className="erduufont ed-saoyisao" />
                   扫码核销
                 </Button>
-                <Button
-                  className="li plain"
-                  plain
-                  onClick={this.nextPage.bind(this, '/pages/ucenter/checkRecord')}
-                >
+                <Button className="li plain" plain onClick={this.nextPage.bind(this, '/pages/ucenter/checkRecord')}>
                   <Text className="erduufont ed-dingdan" />
                   核销列表
                 </Button>
-                <Button
-                  className="li plain"
-                  plain
-                  onClick={this.nextPage.bind(this, '/pages/shop/index?id=' + userInfo.cshopId)}
-                >
+                <Button className="li plain" plain onClick={this.nextPage.bind(this, '/pages/shop/index?id=' + userInfo.cshopId)}>
                   <Text className="erduufont ed-dianpu" />
                   查看门店
                 </Button>
-                <Button
-                  className="li plain"
-                  plain
-                  onClick={this.nextPage.bind(this, '/pages/ucenter/shopUser')}
-                >
+                <Button className="li plain" plain onClick={this.nextPage.bind(this, '/pages/ucenter/shopUser')}>
                   <Text className="erduufont ed-chengyuan" />
                   成员管理
                 </Button>
@@ -321,22 +279,13 @@ class Ucenter extends Component<IProps, {}> {
               <View className="ul">
                 {userInfo.roleId >= 0 && (
                   <AtList>
-                    <Button
-                      className="li plain"
-                      plain
-                      onClick={this.nextPage.bind(this, '/pages/deliver/index')}
-                    >
+                    <Button className="li plain" plain onClick={this.nextPage.bind(this, '/pages/deliver/index')}>
                       <AtListItem arrow="right" title="配送路线" />
                     </Button>
                   </AtList>
                 )}
                 <AtList>
-                  <Button
-                    className="li plain"
-                    formType="submit"
-                    plain
-                    onClick={this.nextPage.bind(this, '/pages/neighbor/search')}
-                  >
+                  <Button className="li plain" formType="submit" plain onClick={this.nextPage.bind(this, '/pages/neighbor/search')}>
                     <AtListItem arrow="right" title="切换小区" />
                   </Button>
                 </AtList>
@@ -346,12 +295,7 @@ class Ucenter extends Component<IProps, {}> {
           <View className="divsion" />
           <View className="ul">
             <AtList>
-              <Button
-                className="li plain"
-                formType="submit"
-                plain
-                onClick={this.nextPage.bind(this, '/pages/account/index')}
-              >
+              <Button className="li plain" formType="submit" plain onClick={this.nextPage.bind(this, '/pages/account/index')}>
                 <AtListItem
                   className="em"
                   arrow="right"
@@ -366,28 +310,13 @@ class Ucenter extends Component<IProps, {}> {
               >
                 <AtListItem className="em" arrow="right" title="测试链接" />
               </Button> */}
-              <Button
-                className="li plain"
-                formType="submit"
-                plain
-                onClick={this.nextPage.bind(this, '/pages/ucenter/coupon')}
-              >
+              <Button className="li plain" formType="submit" plain onClick={this.nextPage.bind(this, '/pages/ucenter/coupon')}>
                 <AtListItem arrow="right" title="我的红包" />
               </Button>
-              <Button
-                className="li plain"
-                formType="submit"
-                plain
-                onClick={this.nextPage.bind(this, '/pages/ucenter/score')}
-              >
+              <Button className="li plain" formType="submit" plain onClick={this.nextPage.bind(this, '/pages/ucenter/score')}>
                 <AtListItem arrow="right" title="我的积分" />
               </Button>
-              <Button
-                className="li plain"
-                formType="submit"
-                plain
-                onClick={this.nextPage.bind(this, '/pages/ucenter/card')}
-              >
+              <Button className="li plain" formType="submit" plain onClick={this.nextPage.bind(this, '/pages/ucenter/card')}>
                 <AtListItem arrow="right" title="我的卡券" />
               </Button>
             </AtList>
@@ -396,23 +325,13 @@ class Ucenter extends Component<IProps, {}> {
           <View className="divsion" />
           <View className="ul">
             <AtList>
-              <Button
-                className="li plain"
-                formType="submit"
-                plain
-                onClick={this.nextPage.bind(this, '/pages/colonelApply/index')}
-              >
+              <Button className="li plain" formType="submit" plain onClick={this.nextPage.bind(this, '/pages/colonelApply/index')}>
                 <AtListItem arrow="right" title="小区长申请" />
               </Button>
               <Button className="li plain" formType="submit" plain onClick={this.callme}>
                 <AtListItem arrow="right" title="供应商联系" />
               </Button>
-              <Button
-                className="li plain"
-                formType="submit"
-                plain
-                onClick={this.nextPage.bind(this, '/pages/pickup/index')}
-              >
+              <Button className="li plain" formType="submit" plain onClick={this.nextPage.bind(this, '/pages/pickup/index')}>
                 <AtListItem arrow="right" title="商铺门店入驻" />
               </Button>
             </AtList>

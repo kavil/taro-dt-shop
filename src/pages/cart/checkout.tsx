@@ -4,15 +4,7 @@ import { View, Text, Image, Button, ScrollView, Input, Switch, Form } from '@tar
 import communityImg from '../../static/images/community.png';
 import { connect } from '@tarojs/redux';
 import './index.scss';
-import {
-  AtAvatar,
-  AtButton,
-  AtModal,
-  AtModalHeader,
-  AtModalContent,
-  AtModalAction,
-  AtInput,
-} from 'taro-ui';
+import { AtAvatar, AtButton, AtModal, AtModalHeader, AtModalContent, AtModalAction, AtInput } from 'taro-ui';
 import { tip } from '../../utils/tool';
 
 type PageState = {};
@@ -36,11 +28,11 @@ type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 @connect(({ cart, loading, common }) => ({
   ...cart,
   ...common,
-  getPhoneLoading: loading.effects['common/login'],
+  getPhoneLoading: loading.effects['common/login']
 }))
 class CheckOut extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '结算',
+    navigationBarTitleText: '结算'
   };
 
   async componentDidShow() {
@@ -48,21 +40,21 @@ class CheckOut extends Component<IProps, {}> {
       type: 'cart/Checkout',
       payload: {
         score: this.state.score,
-        couponId: this.props.couponId,
-      },
+        couponId: this.props.couponId
+      }
     });
     this.setState({
       ...res,
-      couponList: res.couponList,
+      couponList: res.couponList
     });
     this.setState({
-      postscript: this.props.userInfo.postscript,
+      postscript: this.props.userInfo.postscript
     });
     if (!this.props.userInfo.mobile) {
       setTimeout(() => {
         this.setState({ openModal: true });
         this.props.dispatch({
-          type: 'common/wxCode',
+          type: 'common/wxCode'
         });
       }, 100);
     }
@@ -72,13 +64,13 @@ class CheckOut extends Component<IProps, {}> {
     Taro.stopPullDownRefresh();
   }
 
-  nextTab = url => {
+  nextTab = (url) => {
     Taro.switchTab({ url });
   };
-  nextPage = url => {
+  nextPage = (url) => {
     Taro.navigateTo({ url });
   };
-  getPhone = async event => {
+  getPhone = async (event) => {
     if (event.detail.errMsg !== 'getPhoneNumber:ok') {
       tip('获取手机号失败');
       return;
@@ -87,22 +79,22 @@ class CheckOut extends Component<IProps, {}> {
       type: 'common/BindPhone',
       payload: {
         encryptedData: event.detail.encryptedData,
-        iv: event.detail.iv,
-      },
+        iv: event.detail.iv
+      }
     });
     if (res.errno === 0) {
       this.setState({ openModal: false });
     }
   };
-  changePostscript = postscript => {
+  changePostscript = (postscript) => {
     this.setState({ postscript });
   };
-  setScore = async e => {
+  setScore = async (e) => {
     console.log(e);
 
     this.setState(
       {
-        score: e.target.value,
+        score: e.target.value
       },
       () => {
         this.componentDidShow();
@@ -117,7 +109,7 @@ class CheckOut extends Component<IProps, {}> {
   };
   makePhone = () => {
     Taro.makePhoneCall({
-      phoneNumber: this.props.userInfo.colonelInfo.mobile,
+      phoneNumber: this.props.userInfo.colonelInfo.mobile
     });
   };
 
@@ -140,15 +132,15 @@ class CheckOut extends Component<IProps, {}> {
     console.log(res);
     if (res.errMsg === 'chooseAddress:fail cancel') return;
     this.setState({
-      myAddress: res,
+      myAddress: res
     });
   };
-  inputPostscript = async postscript => {
+  inputPostscript = async (postscript) => {
     console.log(postscript);
     this.setState({ postscript });
   };
 
-  submitOrder = async isReplace => {
+  submitOrder = async (isReplace) => {
     const { userInfo, dispatch, couponId } = this.props;
     const { myAddress, score, postscript } = this.state;
     if (!userInfo.uid) {
@@ -170,21 +162,21 @@ class CheckOut extends Component<IProps, {}> {
     const payload = {
       couponId,
       score,
-      postscript,
+      postscript
     };
     if (myAddress) {
       Object.assign(payload, myAddress);
     }
     const orderRes = await dispatch({
       type: 'cart/OrderSubmit',
-      payload,
+      payload
     });
     if (!orderRes) return;
     const payParam = await dispatch({
       type: 'cart/Prepay',
       payload: {
-        orderId: orderRes.id,
-      },
+        orderId: orderRes.id
+      }
     });
     if (!payParam) {
       Taro.switchTab({ url: '/pages/ucenter/index?to=order' });
@@ -196,28 +188,28 @@ class CheckOut extends Component<IProps, {}> {
       package: payParam.package,
       signType: payParam.signType,
       paySign: payParam.paySign,
-      success: res => {
+      success: (res) => {
         if (res.errMsg === 'requestPayment:fail cancel') {
           Taro.redirectTo({
-            url: `/pages/order/purchased?orderId=${orderRes.id}&type=no`,
+            url: `/pages/order/purchased?orderId=${orderRes.id}&type=no`
           });
         } else {
           Taro.redirectTo({
-            url: `/pages/order/purchased?orderId=${orderRes.id}&type=ok`,
+            url: `/pages/order/purchased?orderId=${orderRes.id}&type=ok`
           });
         }
       },
-      fail: res => {
+      fail: (res) => {
         if (res.errMsg === 'requestPayment:fail cancel') {
           Taro.redirectTo({
-            url: `/pages/order/purchased?orderId=${orderRes.id}&type=no`,
+            url: `/pages/order/purchased?orderId=${orderRes.id}&type=no`
           });
         } else {
           Taro.redirectTo({
-            url: `/pages/order/purchased?orderId=${orderRes.id}&type=ok`,
+            url: `/pages/order/purchased?orderId=${orderRes.id}&type=ok`
           });
         }
-      },
+      }
     });
   };
 
@@ -228,7 +220,7 @@ class CheckOut extends Component<IProps, {}> {
     this.setState({ openModalRep: false });
   };
 
-  getFormId = e => {
+  getFormId = (e) => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
     formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
@@ -236,8 +228,8 @@ class CheckOut extends Component<IProps, {}> {
     this.props.dispatch({
       type: 'common/save',
       payload: {
-        formIdArr,
-      },
+        formIdArr
+      }
     });
   };
 
@@ -258,7 +250,7 @@ class CheckOut extends Component<IProps, {}> {
     openModal: false,
     openModalRep: false,
     postscript: '',
-    addrSet: false,
+    addrSet: false
   };
 
   render() {
@@ -277,12 +269,12 @@ class CheckOut extends Component<IProps, {}> {
       totalScore,
       couponList,
       postscript,
-      addrSet,
+      addrSet
     }: any = this.state;
 
-    const cgl1 = checkedGoodsList.filter(ele => ele.goods_type !== 3);
-    const cgl2 = checkedGoodsList.filter(ele => ele.goods_type === 3);
-    const couponInfo = couponList.find(ele => ele.id === couponId);
+    const cgl1 = checkedGoodsList.filter((ele) => ele.goods_type !== 3);
+    const cgl2 = checkedGoodsList.filter((ele) => ele.goods_type === 3);
+    const couponInfo = couponList.find((ele) => ele.id === couponId);
     console.log(couponInfo);
 
     return (
@@ -323,11 +315,7 @@ class CheckOut extends Component<IProps, {}> {
               </View>
             ) : (
               <View className="select-addr">
-                <AtButton
-                  size="small"
-                  type="secondary"
-                  onClick={this.nextPage.bind(this, '/pages/neighbor/search')}
-                >
+                <AtButton size="small" type="secondary" onClick={this.nextPage.bind(this, '/pages/neighbor/search')}>
                   绑定小区
                 </AtButton>
               </View>
@@ -353,9 +341,7 @@ class CheckOut extends Component<IProps, {}> {
                   <View className="name">{userInfo.nickName}</View>
                   <View className="name">{userInfo.mobile}</View>
                   {myAddress ? (
-                    <View className="p">
-                      {myAddress.cityName + myAddress.countyName + myAddress.detailInfo}
-                    </View>
+                    <View className="p">{myAddress.cityName + myAddress.countyName + myAddress.detailInfo}</View>
                   ) : (
                     <View>
                       {!addrSet ? (
@@ -363,12 +349,7 @@ class CheckOut extends Component<IProps, {}> {
                           选择地址
                         </AtButton>
                       ) : (
-                        <AtButton
-                          size="small"
-                          type="secondary"
-                          openType="openSetting"
-                          onOpenSetting={this.openAddrSet}
-                        >
+                        <AtButton size="small" type="secondary" openType="openSetting" onOpenSetting={this.openAddrSet}>
                           选择地址
                         </AtButton>
                       )}
@@ -386,7 +367,7 @@ class CheckOut extends Component<IProps, {}> {
             <View className="title">次日达</View>
             <ScrollView scrollX={true}>
               <View className="goods-simple-item">
-                {cgl1.map(ele => (
+                {cgl1.map((ele) => (
                   <View key={ele.id} className="img-wrap">
                     <Image className="img" src={ele.pic_url + '@!200X200'} />
                   </View>
@@ -410,7 +391,7 @@ class CheckOut extends Component<IProps, {}> {
             <View className="title">预售</View>
             <ScrollView scrollX={true}>
               <View className="goods-simple-item">
-                {cgl2.map(ele => (
+                {cgl2.map((ele) => (
                   <View className="img-wrap">
                     <Image className="img" src={ele.pic_url + '@!200X200'} />
                   </View>
@@ -430,15 +411,10 @@ class CheckOut extends Component<IProps, {}> {
           </View>
         )}
         <View className="block-wrap">
-          <View
-            className="item mh"
-            onClick={this.nextPage.bind(this, '/pages/ucenter/coupon?type=use')}
-          >
+          <View className="item mh" onClick={this.nextPage.bind(this, '/pages/ucenter/coupon?type=use')}>
             <View className="label">红包</View>
             <View className="value">
-              {couponList.find(ele => ele.id === couponId)
-                ? couponList.find(ele => ele.id === couponId).name
-                : '无可用红包'}
+              {couponList.find((ele) => ele.id === couponId) ? couponList.find((ele) => ele.id === couponId).name : '无可用红包'}
               <Text className="erduufont ed-back go" />
             </View>
           </View>
@@ -452,13 +428,7 @@ class CheckOut extends Component<IProps, {}> {
                 </View>
               </View>
               <View className="value">
-                <Switch
-                  color="#f39b8b"
-                  disabled={totalScore < 100}
-                  checked={score}
-                  onClick={this.scoreClick}
-                  onChange={this.setScore}
-                />
+                <Switch color="#f39b8b" disabled={totalScore < 100} checked={score} onClick={this.scoreClick} onChange={this.setScore} />
               </View>
             </View>
           )}
@@ -499,11 +469,7 @@ class CheckOut extends Component<IProps, {}> {
 
           <View className="add-cart">
             <Form reportSubmit onSubmit={this.getFormId}>
-              <AtButton
-                type="primary"
-                formType="submit"
-                onClick={this.submitOrder.bind(this, null)}
-              >
+              <AtButton type="primary" formType="submit" onClick={this.submitOrder.bind(this, null)}>
                 提交订单
               </AtButton>
             </Form>
@@ -516,12 +482,7 @@ class CheckOut extends Component<IProps, {}> {
             <View style={{ textAlign: 'center' }}>需要绑定手机号才能继续下单</View>
           </AtModalContent>
           <AtModalAction>
-            <Button
-              loading={getPhoneloading}
-              openType="getPhoneNumber"
-              onGetPhoneNumber={this.getPhone}
-              type="primary"
-            >
+            <Button loading={getPhoneloading} openType="getPhoneNumber" onGetPhoneNumber={this.getPhone} type="primary">
               确定
             </Button>
           </AtModalAction>

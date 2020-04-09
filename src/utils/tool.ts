@@ -4,13 +4,12 @@ export function tip(title: string) {
   return Taro.showToast({
     title,
     icon: 'none',
-    duration: 1500,
+    duration: 1500
   });
 }
 
 export function Countdown(over_time) {
-  const cha = parseInt(((new Date(over_time.replace(/-/g, '/')).getTime() - new Date().getTime()) /
-    1000) as any);
+  const cha = parseInt(((new Date(over_time.replace(/-/g, '/')).getTime() - new Date().getTime()) / 1000) as any);
 
   const isShowDay = cha > 86400;
   const day = Math.floor(cha / 86400);
@@ -51,12 +50,16 @@ export function getTextTime(time?) {
   if (time) {
     date = new Date(time);
   } else {
-    date = new Date()
+    date = new Date();
   }
-  const dateText = date.getFullYear().toString() + '/'
-    + ten(Number(date.getMonth() + 1).toString()) + '/'
-    + date.getDate().toString()
-    + ' ' + date.toLocaleString('zh', { hour12: false }).split(' ')[1]
+  const dateText =
+    date.getFullYear().toString() +
+    '/' +
+    ten(Number(date.getMonth() + 1).toString()) +
+    '/' +
+    date.getDate().toString() +
+    ' ' +
+    date.toLocaleString('zh', { hour12: false }).split(' ')[1];
 
   return dateText;
 }

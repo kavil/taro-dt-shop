@@ -6,7 +6,7 @@ export default {
   state: {
     cartList: [],
     cartTotal: {},
-    couponId: null,
+    couponId: null
   },
 
   effects: {
@@ -18,8 +18,8 @@ export default {
           type: 'save',
           payload: {
             cartList,
-            cartTotal,
-          },
+            cartTotal
+          }
         });
       }
       return res;
@@ -32,8 +32,8 @@ export default {
           type: 'save',
           payload: {
             cartList,
-            cartTotal,
-          },
+            cartTotal
+          }
         });
       }
       return res;
@@ -43,8 +43,8 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          couponId: res.data.couponId,
-        },
+          couponId: res.data.couponId
+        }
       });
       return res.data;
     },
@@ -56,8 +56,8 @@ export default {
           type: 'save',
           payload: {
             cartList,
-            cartTotal,
-          },
+            cartTotal
+          }
         });
       }
       return res;
@@ -70,8 +70,8 @@ export default {
           type: 'save',
           payload: {
             cartList,
-            cartTotal,
-          },
+            cartTotal
+          }
         });
       }
       return res;
@@ -84,14 +84,14 @@ export default {
           type: 'save',
           payload: {
             cartList,
-            cartTotal,
-          },
+            cartTotal
+          }
         });
       }
       return res;
     },
     *OrderSubmit({ payload }, { call, select }) {
-      const { cityId } = yield select(state => state.common);
+      const { cityId } = yield select((state) => state.common);
       const res = yield call(Api.orderSubmit, { ...payload, cityId });
       if (res && res.errno === 0) {
         return res.data;
@@ -99,7 +99,7 @@ export default {
       return null;
     },
     *OrderSubmitShop({ payload }, { call, select }) {
-      const { cityId } = yield select(state => state.common);
+      const { cityId } = yield select((state) => state.common);
       const res = yield call(Api.orderSubmitShop, { ...payload, cityId });
       if (res && res.errno === 0) {
         return res.data;
@@ -112,7 +112,7 @@ export default {
         return res.data;
       }
       return null;
-    },
+    }
   },
 
   reducers: {
@@ -126,7 +126,7 @@ export default {
           } else {
             Taro.setTabBarBadge({
               index: 1,
-              text: payload.cartTotal.checkedGoodsCount.toString(),
+              text: payload.cartTotal.checkedGoodsCount.toString()
             });
           }
         } catch (error) {
@@ -134,6 +134,6 @@ export default {
         }
       }
       return { ...state, ...payload };
-    },
-  },
+    }
+  }
 };

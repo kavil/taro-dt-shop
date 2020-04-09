@@ -29,11 +29,11 @@ type IProps = PageState & PageOwnProps & PageDva & PageStateProps;
   ...common,
   ...cart,
   userInfoLoading: loading.effects['common/getUserInfo'],
-  loginLoading: loading.effects['common/login'],
+  loginLoading: loading.effects['common/login']
 }))
 class Login extends Component<IProps, {}> {
   config: Config = {
-    navigationBarTitleText: '寻味知途·社区团购',
+    navigationBarTitleText: '寻味知途·社区团购'
   };
 
   componentDidMount() {}
@@ -44,18 +44,18 @@ class Login extends Component<IProps, {}> {
     Taro.eventCenter.trigger('login', false);
   }
 
-  loginFun = async event => {
+  loginFun = async (event) => {
     if (event.detail.errMsg !== 'getUserInfo:ok') return;
     const userInfo = await this.props.dispatch({
-      type: 'common/getUserInfo',
+      type: 'common/getUserInfo'
     });
     const code = await this.props.dispatch({
-      type: 'common/wxCode',
+      type: 'common/wxCode'
     });
     if (!userInfo) {
       Taro.showToast({
         title: '登录失败，请重试',
-        icon: 'none',
+        icon: 'none'
       });
       return;
     } else {
@@ -63,19 +63,19 @@ class Login extends Component<IProps, {}> {
         type: 'common/login',
         payload: {
           code,
-          userInfo,
-        },
+          userInfo
+        }
       });
       if (!res) {
         Taro.showToast({
           title: '登录失败，请重试',
-          icon: 'none',
+          icon: 'none'
         });
         return;
       }
 
       this.props.dispatch({
-        type: 'cart/Index',
+        type: 'cart/Index'
       });
       if (this.props.userInfo && this.props.userInfo.communityId) {
         let url = '/pages/index/index';
@@ -111,23 +111,23 @@ class Login extends Component<IProps, {}> {
     await this.props.dispatch({
       type: 'neighbor/BindId',
       payload: {
-        id: communityId,
-      },
+        id: communityId
+      }
     });
     await this.props.dispatch({
-      type: 'common/UserInfo',
+      type: 'common/UserInfo'
     });
   }
 
-  getFormId = e => {
+  getFormId = (e) => {
     const formId = e.detail.formId;
     const formIdArr = [...this.props.formIdArr];
     formIdArr.push({ formId, createdTime: Math.floor(new Date().getTime() / 1000) });
     this.props.dispatch({
       type: 'common/save',
       payload: {
-        formIdArr,
-      },
+        formIdArr
+      }
     });
   };
   render() {

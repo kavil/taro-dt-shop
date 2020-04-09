@@ -3,15 +3,7 @@ import { ComponentClass } from 'react';
 import { View, Map, Text, Button } from '@tarojs/components';
 import { connect } from '@tarojs/redux';
 import './index.scss';
-import {
-  AtButton,
-  AtCalendar,
-  AtModalHeader,
-  AtModalContent,
-  AtModalAction,
-  AtModal,
-  AtRadio,
-} from 'taro-ui';
+import { AtButton, AtCalendar, AtModalHeader, AtModalContent, AtModalAction, AtModal, AtRadio } from 'taro-ui';
 import { getLocalTime, getTime, getTextTime } from '../../utils/tool';
 import posiImg1 from '../../static/images/posi1.png';
 import posiImg2 from '../../static/images/posi2.png';
@@ -33,17 +25,17 @@ interface PageStateProps {
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ deliver, loading }) => ({
-  ...deliver,
+  ...deliver
 }))
 class Deliver extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '智能配送路线',
+    navigationBarTitleText: '智能配送路线'
   };
 
   async componentDidMount() {
     this.setState({
       startTmp: getTextTime(getTime() - 86400000 * 2).split(' ')[0] + ' 23:59:59',
-      endTmp: getTextTime(getTime() - 86400000 * 1).split(' ')[0] + ' 23:59:59',
+      endTmp: getTextTime(getTime() - 86400000 * 1).split(' ')[0] + ' 23:59:59'
     });
 
     // 获取地理位置
@@ -77,25 +69,25 @@ class Deliver extends Component<IProps, {}> {
     Taro.openLocation({
       latitude: curMarker.latitude,
       longitude: curMarker.longitude,
-      name: curMarker.title,
+      name: curMarker.title
     });
   }
 
   openDateFun = async () => {
     this.setState({
-      openDate: true,
+      openDate: true
     });
   };
-  changeDate = async e => {
+  changeDate = async (e) => {
     this.setState({
       start: getTextTime(e.value.start).split(' ')[0] + ' 23:59:59',
-      end: getTextTime(e.value.end).split(' ')[0] + ' 23:59:59',
+      end: getTextTime(e.value.end).split(' ')[0] + ' 23:59:59'
     });
   };
-  closeDate = async e => {
+  closeDate = async (e) => {
     await this.computer();
     this.setState({
-      openDate: false,
+      openDate: false
     });
   };
 
@@ -104,11 +96,11 @@ class Deliver extends Component<IProps, {}> {
       type: 'deliver/Community',
       payload: {
         startTime: this.state.start,
-        endTime: this.state.end,
-      },
+        endTime: this.state.end
+      }
     });
 
-    const markers = deliverCommunity.map(ele => {
+    const markers = deliverCommunity.map((ele) => {
       return {
         id: ele.id,
         title: ele.name + (ele.colonel.house ? '·' + ele.colonel.house : ''),
@@ -125,7 +117,7 @@ class Deliver extends Component<IProps, {}> {
           padding: 3,
           borderRadius: 5,
           fontSize: 12,
-          borderWidth: 1,
+          borderWidth: 1
         },
         label: {
           content: ele.name,
@@ -135,8 +127,8 @@ class Deliver extends Component<IProps, {}> {
           fontSize: 10,
           borderWidth: 1,
           bgColor: '#ffffff',
-          anchorX: -20,
-        },
+          anchorX: -20
+        }
       };
     });
 
@@ -160,15 +152,15 @@ class Deliver extends Component<IProps, {}> {
     this.setState({ markers });
   }
 
-  markerTap = async e => {
+  markerTap = async (e) => {
     console.log(e);
     const { markers }: any = this.state;
-    const curMarker = markers.find(ele => ele.id === e.markerId);
+    const curMarker = markers.find((ele) => ele.id === e.markerId);
 
     this.setState({ curMarker });
   };
 
-  handleRadio = async e => {
+  handleRadio = async (e) => {
     console.log(e);
     const line = Number(e);
     const { curMarker }: any = this.state;
@@ -176,12 +168,12 @@ class Deliver extends Component<IProps, {}> {
       type: 'deliver/Setline',
       payload: {
         communityId: curMarker.id,
-        line,
-      },
+        line
+      }
     });
     if (!res) return;
     const { markers, posiImg }: any = this.state;
-    markers.forEach(ele => {
+    markers.forEach((ele) => {
       if (ele.id === curMarker.id) {
         ele.line = line;
         ele.iconPath = posiImg[line];
@@ -190,12 +182,11 @@ class Deliver extends Component<IProps, {}> {
 
     this.setState({
       curMarker: { ...curMarker, line, iconPath: posiImg[line] },
-      markers: [...markers],
+      markers: [...markers]
     });
   };
 
   showLineFun = () => {
-    
     this.setState({ showLine: !this.state.showLine });
   };
 
@@ -209,24 +200,12 @@ class Deliver extends Component<IProps, {}> {
     polyline: [],
     curMarker: null,
     posiImg: [null, posiImg1, posiImg2],
-    showLine: false,
+    showLine: false
   };
 
   render() {
     const {} = this.props;
-    const {
-      localSetting,
-      local,
-      start,
-      end,
-      openDate,
-      startTmp,
-      endTmp,
-      markers,
-      polyline,
-      curMarker,
-      showLine
-    }: any = this.state;
+    const { localSetting, local, start, end, openDate, startTmp, endTmp, markers, polyline, curMarker, showLine }: any = this.state;
     return (
       <View className="deliver-page">
         {openDate && (
@@ -275,7 +254,7 @@ class Deliver extends Component<IProps, {}> {
                 <AtRadio
                   options={[
                     { label: '设为大货车线路', value: 1 },
-                    { label: '设为三轮车线路', value: 2 },
+                    { label: '设为三轮车线路', value: 2 }
                   ]}
                   value={curMarker.line}
                   onClick={this.handleRadio.bind(this)}

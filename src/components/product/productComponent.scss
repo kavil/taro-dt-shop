@@ -1,96 +1,96 @@
-@import "../../static/css/mixin";
+@import '../../static/css/mixin';
 // @import "../../static/iconfont/iconfont.scss";
 
 button.plain {
-    padding: 0;
-    color: inherit;
-    font-size: inherit;
-    margin: inherit;
-    text-align: initial;
-    line-height: initial;
-    border: 0;
-    box-sizing: initial;
-    border-radius: 0;
-    overflow: inherit;
+  padding: 0;
+  color: inherit;
+  font-size: inherit;
+  margin: inherit;
+  text-align: initial;
+  line-height: initial;
+  border: 0;
+  box-sizing: initial;
+  border-radius: 0;
+  overflow: inherit;
 }
-.po{
-    position: relative;
+.po {
+  position: relative;
 }
 .shop-li {
-    @include fj;
-    padding: 20px 15px;
-    box-shadow: 0 0 5px 3px #ededed;
-    border-radius: 5px;
-    margin-top: 20px;
-    position: relative;
+  @include fj;
+  padding: 20px 15px;
+  box-shadow: 0 0 5px 3px #ededed;
+  border-radius: 5px;
+  margin-top: 20px;
+  position: relative;
 
-    .img-wrap {
-        @include wh(180px, 180px);
-        position: relative;
-        .img {
-            @include wh(180px, 180px);
-        }
+  .img-wrap {
+    @include wh(180px, 180px);
+    position: relative;
+    .img {
+      @include wh(180px, 180px);
     }
-    .right-wrap {
-        padding: 0 0 0 25px;
-        flex: 1;
-        overflow: hidden;
-    }
-    .op-wrap{
-        padding-right: 15px;
-        width: 100px;
-        height: 100%;
-        @include fj(space-around);
-        flex-direction: column;
-        position: absolute;
-        right: 0;
-        top: 0;
-    }
-    .title {
-        @include ddd();
-        width: 100%;
-        font-weight: 200;
-        line-height: 1;
-        margin-bottom: 10px;
-    }
-    .desc {
-        @include ddd();
-        width: 100%;
-        color: $font-default;
-        font-size: 24px;
-    }
-    .p{
-        line-height: 1;
-        color: $font-info;
-    }
-    .money{
-        color: $font-default;
-        line-height:1;
-        display:inline-block;
-    }
-    .small{
-        font-size: 80%;
-    }
-    .shop-type {
-        font-size: 28px;
-        line-height: 1.2;
-        padding: 14px 0 14px;
-    }
-    .purple-tag{
-        padding: 5px;
-        font-size: 24px;
-        border-radius: 2px 2px 2px 0;
-        position: relative;
-        background: #bc86bc;
-        color: #fff;
-        display: inline-block;
-        vertical-align: 5px;
-        line-height: 1;
-    }
-    .bt{
-        padding: 10px 0
-    }
-    .del{
-        text-decoration: line-through;
-    }
+  }
+  .right-wrap {
+    padding: 0 0 0 25px;
+    flex: 1;
+    overflow: hidden;
+  }
+  .op-wrap {
+    padding-right: 15px;
+    width: 100px;
+    height: 100%;
+    @include fj(space-around);
+    flex-direction: column;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .title {
+    @include ddd();
+    width: 100%;
+    font-weight: 200;
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .desc {
+    @include ddd();
+    width: 100%;
+    color: $font-default;
+    font-size: 24px;
+  }
+  .p {
+    line-height: 1;
+    color: $font-info;
+  }
+  .money {
+    color: $font-default;
+    line-height: 1;
+    display: inline-block;
+  }
+  .small {
+    font-size: 80%;
+  }
+  .shop-type {
+    font-size: 28px;
+    line-height: 1.2;
+    padding: 14px 0 14px;
+  }
+  .purple-tag {
+    padding: 5px;
+    font-size: 24px;
+    border-radius: 2px 2px 2px 0;
+    position: relative;
+    background: #bc86bc;
+    color: #fff;
+    display: inline-block;
+    vertical-align: 5px;
+    line-height: 1;
+  }
+  .bt {
+    padding: 10px 0;
+  }
+  .del {
+    text-decoration: line-through;
+  }
 }

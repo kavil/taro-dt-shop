@@ -30,14 +30,14 @@ type IProps = PageStateProps & PageDispatchProps & PageOwnProps;
 @connect(({ order, common, goods }) => ({
   ...order,
   ...common,
-  ...goods,
+  ...goods
 }))
 export default class purchasedShop extends Component<IProps, {}> {
   config = {
     navigationBarTitleText: '支付结果',
     usingComponents: {
-      canvasdrawer: '../../components/canvasdrawer/canvasdrawer',
-    },
+      canvasdrawer: '../../components/canvasdrawer/canvasdrawer'
+    }
   };
 
   async componentDidMount() {
@@ -45,8 +45,8 @@ export default class purchasedShop extends Component<IProps, {}> {
     const Detail = await this.props.dispatch({
       type: 'order/goodsDetail',
       payload: {
-        orderId,
-      },
+        orderId
+      }
     });
 
     this.setState({ Detail, orderId });
@@ -74,16 +74,14 @@ export default class purchasedShop extends Component<IProps, {}> {
 
     return {
       title: `全城吃喝玩乐嗨通通免费，我是「${userInfo.nickName}」，邀你一起来狂欢`,
-      path: `/pages/goods/index?id=${Detail.goods_id}&f=${userInfo.id}&c=${
-        userInfo.communityId
-      }&p=${Detail.shopPlanId}`,
-      imageUrl: Detail.goodsInfo.share_img,
+      path: `/pages/goods/index?id=${Detail.goods_id}&f=${userInfo.id}&c=${userInfo.communityId}&p=${Detail.shopPlanId}`,
+      imageUrl: Detail.goodsInfo.share_img
     };
   }
 
   shareBtn = async () => {
     this.setState({
-      shareStart: !this.state.shareStart,
+      shareStart: !this.state.shareStart
     });
   };
 
@@ -97,26 +95,24 @@ export default class purchasedShop extends Component<IProps, {}> {
     const { Detail, shareImage }: any = this.state;
     const { userInfo }: any = this.props;
     this.setState({
-      shareImgStart: true,
+      shareImgStart: true
     });
 
     Detail.goodsInfo.sku = [
       {
         retail_price: Detail.actual_price,
-        counter_price: Detail.goods_price,
-      },
+        counter_price: Detail.goods_price
+      }
     ];
 
     if (!shareImage) {
-      const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${Detail.id}&f=${userInfo.id}&p=${
-        Detail.shopPlanId
-      }&c=${userInfo.communityId}&page=pages/goods/index&width=280px`;
+      const ewm = `${baseUrl}/index/getWXACodeUnlimit?id=${Detail.id}&f=${userInfo.id}&p=${Detail.shopPlanId}&c=${userInfo.communityId}&page=pages/goods/index&width=280px`;
       this.setState({ goodsShare: goodsShare(userInfo, Detail.goodsInfo, ewm) });
       return;
     }
     try {
       const res = await Taro.saveImageToPhotosAlbum({
-        filePath: shareImage || '',
+        filePath: shareImage || ''
       });
 
       if (res.errMsg === 'saveImageToPhotosAlbum:ok') {
@@ -140,7 +136,7 @@ export default class purchasedShop extends Component<IProps, {}> {
   closeShare() {
     this.setState({
       shareStart: false,
-      shareImgStart: false,
+      shareImgStart: false
     });
   }
 
@@ -149,7 +145,7 @@ export default class purchasedShop extends Component<IProps, {}> {
     Taro.hideLoading();
     if (errMsg === 'canvasdrawer:ok') {
       this.setState({
-        shareImage: tempFilePath,
+        shareImage: tempFilePath
       });
     }
   }
@@ -157,7 +153,7 @@ export default class purchasedShop extends Component<IProps, {}> {
     const bigImg = no ? img : img + '@!q90';
     Taro.previewImage({
       current: bigImg,
-      urls: [bigImg],
+      urls: [bigImg]
     });
   };
 
@@ -168,18 +164,11 @@ export default class purchasedShop extends Component<IProps, {}> {
     shareStart: false,
     shareImgStart: false,
     checkSave: true,
-    goodsShare: {},
+    goodsShare: {}
   };
   render() {
     const {} = this.props;
-    const {
-      Detail,
-      shareStart,
-      shareImgStart,
-      shareImage,
-      checkSave,
-      goodsShare,
-    }: any = this.state;
+    const { Detail, shareStart, shareImgStart, shareImage, checkSave, goodsShare }: any = this.state;
 
     return (
       <View className="purchased-page">
@@ -187,20 +176,9 @@ export default class purchasedShop extends Component<IProps, {}> {
           <View>
             <View className="curtain" onClick={this.closeShare} />
             {shareImage ? (
-              <Image
-                className="shareImage"
-                mode="widthFix"
-                src={shareImage}
-                onClick={this.lookBig.bind(this, shareImage)}
-              />
+              <Image className="shareImage" mode="widthFix" src={shareImage} onClick={this.lookBig.bind(this, shareImage)} />
             ) : (
-              <AtActivityIndicator
-                content="分享图生成中"
-                className="center loading"
-                size={80}
-                mode="center"
-                color="#fff"
-              />
+              <AtActivityIndicator content="分享图生成中" className="center loading" size={80} mode="center" color="#fff" />
             )}
           </View>
         )}
@@ -220,32 +198,18 @@ export default class purchasedShop extends Component<IProps, {}> {
               )}
               <View className="share-bottom-in">
                 {!shareImgStart ? (
-                  <Button
-                    className="share-item"
-                    plain={true}
-                    open-type="share"
-                    onClick={this.closeShare}
-                  >
+                  <Button className="share-item" plain={true} open-type="share" onClick={this.closeShare}>
                     <Text className="erduufont ed-weixin" />
                     分享群或好友
                   </Button>
                 ) : (
-                  <Button
-                    className="share-item"
-                    plain={true}
-                    onClick={this.lookBig.bind(this, shareImage)}
-                  >
+                  <Button className="share-item" plain={true} onClick={this.lookBig.bind(this, shareImage)}>
                     <Text className="erduufont ed-weixin" />
                     点击出现大图，长按分享群或好友
                   </Button>
                 )}
                 {checkSave ? (
-                  <Button
-                    className="share-item"
-                    plain={true}
-                    formType="submit"
-                    onClick={this.saveImage}
-                  >
+                  <Button className="share-item" plain={true} formType="submit" onClick={this.saveImage}>
                     <Text className="erduufont ed-xiazai" />
                     {shareImage ? '保存图片' : '生成图片分享'}
                   </Button>
@@ -282,12 +246,7 @@ export default class purchasedShop extends Component<IProps, {}> {
               您已加入全城狂欢队伍，分享并成功推荐购买后可以赚取佣金
               <Text className="active">￥{Detail.distributeMoney}</Text>，不限次数。
             </View>
-            <Image
-              lazyLoad
-              mode="widthFix"
-              className="img"
-              src={Detail.goodsInfo.share_img + '@!q90'}
-            />
+            <Image lazyLoad mode="widthFix" className="img" src={Detail.goodsInfo.share_img + '@!q90'} />
           </View>
 
           <View className="pad40">
@@ -297,12 +256,8 @@ export default class purchasedShop extends Component<IProps, {}> {
             <View className="text">点击转发给好友或群，通过你的链接下单成功后，佣金立即到账</View>
           </View>
           <View className="op">
-            <AtButton onClick={this.nextTab.bind(this, '/pages/ucenter/index', 'gotoOrder')}>
-              查看订单
-            </AtButton>
-            <AtButton onClick={this.nextTab.bind(this, '/pages/ucenter/index', 'gotoCard')}>
-              立即使用
-            </AtButton>
+            <AtButton onClick={this.nextTab.bind(this, '/pages/ucenter/index', 'gotoOrder')}>查看订单</AtButton>
+            <AtButton onClick={this.nextTab.bind(this, '/pages/ucenter/index', 'gotoCard')}>立即使用</AtButton>
           </View>
         </View>
       </View>

@@ -1,64 +1,64 @@
-@import "../../static/css/mixin";
+@import '../../static/css/mixin';
 .community-item {
+  @include fj();
+  border-bottom: 1px solid $border;
+  border-radius: 5px;
+  padding: 20px;
+  align-items: center;
+  margin-top: 20px;
+  .p {
+    font-size: 25px;
+    color: $font-info;
+  }
+  .h4 {
+    font-weight: 500;
+  }
+  .info {
     @include fj();
-    border-bottom: 1PX solid $border;
-    border-radius: 5px;
-    padding: 20px;
+    flex: 1;
     align-items: center;
-    margin-top: 20px;
-    .p {
-        font-size: 25px;
-        color: $font-info;
+  }
+  .left {
+    @include fj();
+    flex-direction: column;
+    flex: 1;
+  }
+  .right {
+    @include fj();
+    align-items: flex-end;
+    width: 80px;
+    overflow: hidden;
+    padding-right: 40px;
+  }
+  .colonel-wrap {
+    @include fj();
+    align-items: center;
+    padding-top: 10px;
+    position: relative;
+    .badge {
+      position: absolute;
+      line-height: 1.1;
+      top: 0;
+      left: 24px;
+      padding: 3px 8px;
+      font-size: 20px;
+      width: 60px;
+      color: #fff;
+      background: $color-deep;
+      border-radius: 14px 14px 14px 0;
+      box-shadow: 0 4px 8px 0 rgba(233, 59, 61, 0.2);
     }
-    .h4 {
-        font-weight: 500;
+    .colonel {
+      text-align: center;
     }
-    .info {
-        @include fj();
-        flex: 1;
-        align-items: center;
+    .name {
+      font-size: 24px;
+      color: $font-default;
+      @include ddd;
     }
-    .left {
-        @include fj();
-        flex-direction: column;
-        flex: 1;
-    }
-    .right {
-        @include fj();
-        align-items: flex-end;
-        width: 80px;
-        overflow: hidden;
-        padding-right: 40px;
-    }
-    .colonel-wrap {
-        @include fj();
-        align-items: center;
-        padding-top: 10px;
-        position: relative;
-        .badge {
-            position: absolute;
-            line-height: 1.1;
-            top: 0;
-            left: 24px;
-            padding: 3px 8px;
-            font-size: 20px;
-            width: 60px;
-            color: #fff;
-            background: $color-deep;
-            border-radius: 14px 14px 14px 0;
-            box-shadow: 0 4px 8px 0 rgba(233, 59, 61, 0.20);
-        }
-        .colonel {
-            text-align: center;
-        }
-        .name {
-            font-size: 24px;
-            color: $font-default;
-            @include ddd;
-        }
-    }
+  }
 }
 
 .white {
-    color: #fff;
+  color: #fff;
 }

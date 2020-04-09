@@ -11,7 +11,7 @@ let dispatch;
 function createApp(opt) {
   // redux日志
   // opt.onAction = [createLogger()];
-  opt.onError = err => {
+  opt.onError = (err) => {
     console.error(err);
     Taro.hideLoading();
     Taro.showToast({ title: '服务器错误', image: sadImg });
@@ -24,7 +24,7 @@ function createApp(opt) {
     global = {};
   }
 
-  if (!global.registered) opt.models.forEach(model => app.model(model));
+  if (!global.registered) opt.models.forEach((model) => app.model(model));
   global.registered = true;
   app.start();
 
@@ -41,5 +41,5 @@ export default {
   createApp,
   getDispatch() {
     return app.dispatch;
-  },
+  }
 };

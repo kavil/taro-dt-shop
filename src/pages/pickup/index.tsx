@@ -20,11 +20,11 @@ interface PageStateProps {
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ pickup }) => ({
-  ...pickup,
+  ...pickup
 }))
 class Pickup extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '加入门店',
+    navigationBarTitleText: '加入门店'
   };
 
   componentDidMount() {}
@@ -39,45 +39,45 @@ class Pickup extends Component<IProps, {}> {
     const res = await this.props.dispatch({
       type: 'pickup/getcodeInfo',
       payload: {
-        getcode: this.state.code,
-      },
+        getcode: this.state.code
+      }
     });
     if (res) {
       this.setState({
-        open: true,
+        open: true
       });
     }
   }
 
   cancel() {
     this.setState({
-      open: false,
+      open: false
     });
   }
 
   async sure() {
     this.setState({
       loading: true,
-      open: false,
+      open: false
     });
 
     const res = await this.props.dispatch({
       type: 'pickup/getcodeUse',
       payload: {
-        getcode: this.state.code,
-      },
+        getcode: this.state.code
+      }
     });
     this.setState({
-      loading: false,
+      loading: false
     });
     if (res) {
       await Taro.showModal({
         title: '提示',
         content: '加入成功',
-        showCancel: false,
+        showCancel: false
       });
       await this.props.dispatch({
-        type: 'common/UserInfo',
+        type: 'common/UserInfo'
       });
       Taro.navigateBack();
     }
@@ -86,11 +86,11 @@ class Pickup extends Component<IProps, {}> {
   state = {
     code: undefined,
     loading: false,
-    open: false,
+    open: false
   };
 
   props: any = {
-    getcodeInfo: {},
+    getcodeInfo: {}
   };
 
   render() {
@@ -102,32 +102,17 @@ class Pickup extends Component<IProps, {}> {
           加入店铺<View className="p">新门店需要联系工作人员18503050275入驻，获得邀请码</View>
         </View>
         <View className="code-wrap pad40 tac">
-          <Input
-            className="input"
-            maxLength={4}
-            type="digit"
-            onInput={this.onInput}
-            value={code}
-            focus
-            confirmHold
-          />
+          <Input className="input" maxLength={4} type="digit" onInput={this.onInput} value={code} focus confirmHold />
           <View className="p">请输入4位店铺邀请码</View>
         </View>
         <View className="pad40">
-          <AtButton
-            onClick={this.onConfirm.bind(this, code)}
-            loading={loading}
-            disabled={loading}
-            type="primary"
-          >
+          <AtButton onClick={this.onConfirm.bind(this, code)} loading={loading} disabled={loading} type="primary">
             确定
           </AtButton>
         </View>
 
         <AtModal isOpened={open}>
-          <AtModalHeader>
-            {getcodeInfo.getcodeStatus ? '确认加入该门店' : '该邀请码已失效'}
-          </AtModalHeader>
+          <AtModalHeader>{getcodeInfo.getcodeStatus ? '确认加入该门店' : '该邀请码已失效'}</AtModalHeader>
           <AtModalContent>
             <View>{getcodeInfo.shop.name}</View>
             <View className="fj">

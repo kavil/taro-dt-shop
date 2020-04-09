@@ -4,7 +4,7 @@ export default {
   namespace: 'neighbor',
   state: {
     NearbyList: [],
-    SearchList: [],
+    SearchList: []
   },
 
   effects: {
@@ -14,8 +14,8 @@ export default {
         yield put({
           type: 'save',
           payload: {
-            NearbyList: res.data,
-          },
+            NearbyList: res.data
+          }
         });
       }
     },
@@ -30,16 +30,16 @@ export default {
       yield put({
         type: 'save',
         payload: {
-          SearchList: [],
-        },
+          SearchList: []
+        }
       });
       const res = yield call(Api.communitySearch, payload);
       if (res.errno === 0) {
         yield put({
           type: 'save',
           payload: {
-            SearchList: res.data,
-          },
+            SearchList: res.data
+          }
         });
       }
     },
@@ -50,12 +50,12 @@ export default {
     *BindId({ payload }, { call, put }) {
       const res = yield call(Api.communityBindId, payload);
       return res.errno === 0;
-    },
+    }
   },
 
   reducers: {
     save(state, { payload }) {
       return { ...state, ...payload };
-    },
-  },
+    }
+  }
 };

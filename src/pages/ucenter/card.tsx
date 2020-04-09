@@ -22,16 +22,16 @@ interface PageStateProps {
 type IProps = PageStateProps & PageDvaProps & PageOwnProps;
 
 @connect(({ ucenter }) => ({
-  ...ucenter,
+  ...ucenter
 }))
 class Card extends Component<IProps, {}> {
   config = {
-    navigationBarTitleText: '我的卡券',
+    navigationBarTitleText: '我的卡券'
   };
 
   async componentDidMount() {
     await this.props.dispatch({
-      type: 'ucenter/Card',
+      type: 'ucenter/Card'
     });
   }
 
@@ -39,9 +39,9 @@ class Card extends Component<IProps, {}> {
     await this.componentDidMount();
     Taro.stopPullDownRefresh();
   }
-  handleClick = async current => {
+  handleClick = async (current) => {
     this.setState({
-      current,
+      current
     });
     await this.props.dispatch({
       type: 'ucenter/save',
@@ -51,9 +51,9 @@ class Card extends Component<IProps, {}> {
           used: !!current,
           page: 1, // 归位
           refresh: true,
-          loadOver: false,
-        },
-      },
+          loadOver: false
+        }
+      }
     });
     await this.getCardList();
   };
@@ -63,15 +63,15 @@ class Card extends Component<IProps, {}> {
       payload: {
         card: {
           ...this.props.card,
-          page: this.props.card.page + 1,
-        },
-      },
+          page: this.props.card.page + 1
+        }
+      }
     });
     await this.getCardList();
   }
   getCardList() {
     this.props.dispatch({
-      type: 'ucenter/Card',
+      type: 'ucenter/Card'
     });
   }
   makePhoneCall(phoneNumber) {
@@ -81,10 +81,10 @@ class Card extends Component<IProps, {}> {
     Taro.openLocation({
       latitude: item.lat,
       longitude: item.lng,
-      name: item.address + item.name,
+      name: item.address + item.name
     });
   }
-  useIt = async ele => {
+  useIt = async (ele) => {
     if (getTime(ele.use_end_date) < getTime()) {
       tip('已过期');
       return;
@@ -93,8 +93,8 @@ class Card extends Component<IProps, {}> {
       isOpened: true,
       cur: {
         ...ele,
-        png: `${baseUrl}/card/qr?code=${ele.checkcode}`,
-      },
+        png: `${baseUrl}/card/qr?code=${ele.checkcode}`
+      }
     });
   };
 
@@ -109,7 +109,7 @@ class Card extends Component<IProps, {}> {
   state = {
     current: 0,
     curtainPng: '',
-    cur: null,
+    cur: null
   };
 
   render() {
@@ -118,7 +118,7 @@ class Card extends Component<IProps, {}> {
 
     const { cardList } = card;
 
-    const classText = ele => {
+    const classText = (ele) => {
       const now = getTime();
       let res = 'cli';
       if (getTime(ele.use_end_date) < now) {
@@ -138,57 +138,34 @@ class Card extends Component<IProps, {}> {
           </View>
         </AtCurtain>
         <View className="pad40">
-          <AtSegmentedControl
-            values={['待使用', '已使用']}
-            onClick={this.handleClick.bind(this)}
-            current={current}
-          />
+          <AtSegmentedControl values={['待使用', '已使用']} onClick={this.handleClick.bind(this)} current={current} />
         </View>
         <View className="card-ul">
           {cardList && cardList.length ? (
-            cardList.map(ele => (
+            cardList.map((ele) => (
               <View key={ele.id} className={classText(ele)}>
                 <View className="cicle l" />
                 <View className="cicle r" />
-                <View
-                  className="head"
-                  onClick={this.nextPage.bind(this, '/pages/shop/product?id=' + ele.productId)}
-                >
+                <View className="head" onClick={this.nextPage.bind(this, '/pages/shop/product?id=' + ele.productId)}>
                   <View className="title">{ele.name}</View>
                   {/* <View className="p">{ele.desc}</View> */}
-                  <View className="p">
-                    有效期至 {' '}
-                    {ele.use_end_date ? ele.use_end_date.split(' ')[0] : '无限制'}
-                  </View>
+                  <View className="p">有效期至 {ele.use_end_date ? ele.use_end_date.split(' ')[0] : '无限制'}</View>
                 </View>
                 <View className="ewm" onClick={this.useIt.bind(this, ele)}>
                   <Text className="erduufont ed-ewm" />
                 </View>
                 <View className="foot">
                   可用店铺
-                  {ele.shop.map(s => (
+                  {ele.shop.map((s) => (
                     <View className="foot-in" key={s.id}>
-                      <View
-                        className="sli"
-                        onClick={this.nextPage.bind(this, '/pages/shop/index?id=' + ele.shopId)}
-                      >
+                      <View className="sli" onClick={this.nextPage.bind(this, '/pages/shop/index?id=' + ele.shopId)}>
                         {s.name}
                       </View>
                       <View className="op-wrap">
-                        <AtButton
-                          type="secondary"
-                          size="small"
-                          className="bt"
-                          onClick={this.makePhoneCall.bind(this, s.phone)}
-                        >
+                        <AtButton type="secondary" size="small" className="bt" onClick={this.makePhoneCall.bind(this, s.phone)}>
                           电话
                         </AtButton>
-                        <AtButton
-                          type="secondary"
-                          size="small"
-                          className="bt"
-                          onClick={this.navMap.bind(this, s)}
-                        >
+                        <AtButton type="secondary" size="small" className="bt" onClick={this.navMap.bind(this, s)}>
                           导航
                         </AtButton>
                       </View>
